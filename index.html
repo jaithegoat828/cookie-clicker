@@ -3,199 +3,667 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cookie Clicker+</title>
+<title>Cookie Clicker+ by Jai</title>
 
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: "Comic Sans MS", cursive; background: linear-gradient(135deg,#8B6F47,#D4A574); height:100vh; display:flex; overflow:hidden; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #fff7e6 0%, #f3e0c2 40%, #d4a574 100%);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#333;
+  }
+  .game {
+    width: min(1100px, 100vw - 20px);
+    height: min(650px, 100vh - 20px);
+    background:#ffffffdd;
+    border-radius:18px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.18);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .header {
+    padding:14px 20px 10px;
+    border-bottom:1px solid #e0d0b0;
+    background:linear-gradient(to right,#fff,#fffaf0);
+  }
+  .title {
+    font-size:24px;
+    font-weight:700;
+    color:#b37a1f;
+  }
+  .subtitle {
+    font-size:12px;
+    color:#888;
+    margin-top:2px;
+  }
+  .subtitle span {
+    font-weight:600;
+    color:#c28a2a;
+  }
+  .main {
+    flex:1;
+    display:flex;
+  }
+  .left {
+    flex:0 0 45%;
+    border-right:1px solid #e0d0b0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    background:linear-gradient(135deg,#fffdf7,#f7ebd6);
+  }
+  .stats {
+    background:#fff;
+    border-radius:12px;
+    padding:14px 18px;
+    box-shadow:0 8px 18px rgba(0,0,0,0.08);
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    min-width:260px;
+  }
+  .stat-label {
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:#999;
+  }
+  .stat-value {
+    font-size:20px;
+    font-weight:700;
+    color:#c28a2a;
+  }
+  .cookie-btn {
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    border:none;
+    cursor:pointer;
+    background:
+      radial-gradient(circle at 30% 30%, #fff4c7 0%, #ffe08a 35%, #f0b94a 60%, #c27a2a 100%);
+    box-shadow:
+      inset -10px -10px 18px rgba(0,0,0,0.25),
+      inset 8px 8px 14px rgba(255,255,255,0.4),
+      0 16px 30px rgba(0,0,0,0.35);
+    font-size:120px;
+    transition:transform 0.06s ease, box-shadow 0.06s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .cookie-btn:active {
+    transform:scale(0.92);
+    box-shadow:
+      inset -6px -6px 12px rgba(0,0,0,0.3),
+      inset 4px 4px 10px rgba(255,255,255,0.3),
+      0 8px 18px rgba(0,0,0,0.3);
+  }
+  .right {
+    flex:0 0 55%;
+    display:flex;
+    flex-direction:column;
+    background:#faf6ee;
+  }
+  .tabs {
+    display:flex;
+    border-bottom:1px solid #e0d0b0;
+    background:#fffaf0;
+  }
+  .tab {
+    flex:1;
+    text-align:center;
+    padding:10px 0;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    color:#a07a2a;
+    border-bottom:2px solid transparent;
+    transition:background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .tab.active {
+    background:#fff;
+    border-bottom-color:#d49b2a;
+    color:#d49b2a;
+  }
+  .panel {
+    flex:1;
+    overflow-y:auto;
+    padding:10px 10px 14px;
+  }
+  .section-title {
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:#999;
+    margin:4px 2px 6px;
+  }
+  .card {
+    background:#fff;
+    border-radius:10px;
+    padding:10px 12px;
+    margin-bottom:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    box-shadow:0 4px 10px rgba(0,0,0,0.06);
+    cursor:pointer;
+    transition:transform 0.08s ease, box-shadow 0.08s ease, border 0.08s ease;
+    border:1px solid transparent;
+    position:relative;
+    overflow:hidden;
+  }
+  .card.locked {
+    opacity:0.35;
+    cursor:not-allowed;
+  }
+  .card:hover:not(.locked) {
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,0.12);
+  }
+  .card.flash {
+    animation:flash 0.35s ease-out;
+  }
+  @keyframes flash {
+    0% { box-shadow:0 0 0 rgba(255,215,0,0.0); }
+    40% { box-shadow:0 0 18px rgba(255,215,0,0.9); }
+    100% { box-shadow:0 0 0 rgba(255,215,0,0.0); }
+  }
+  .card-main {
+    display:flex;
+    gap:8px;
+  }
+  .card-icon {
+    font-size:20px;
+  }
+  .card-text-title {
+    font-size:14px;
+    font-weight:600;
+    color:#b37a1f;
+  }
+  .card-text-sub {
+    font-size:11px;
+    color:#777;
+    margin-top:2px;
+  }
+  .card-right {
+    text-align:right;
+    font-size:11px;
+  }
+  .price {
+    font-weight:700;
+    color:#c28a2a;
+    font-size:13px;
+  }
+  .owned {
+    color:#999;
+    margin-top:2px;
+  }
+  .rarity-tag {
+    display:inline-block;
+    padding:2px 6px;
+    border-radius:999px;
+    font-size:10px;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .rarity-common { background:#f2f2f2; color:#666; }
+  .rarity-uncommon { background:#e3f7e3; color:#2f7a2f; }
+  .rarity-rare { background:#e3ecff; color:#3057b3; }
+  .rarity-epic { background:#f3e3ff; color:#7a2fb3; }
+  .rarity-legendary { background:#fff3d1; color:#b37a1f; }
+  .rarity-mythic { background:#ffe6f5; color:#b31f7a; }
 
-  .container { flex:1; display:flex; }
-  .left { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+  .float {
+    position:fixed;
+    font-size:20px;
+    font-weight:700;
+    color:#d49b2a;
+    text-shadow:0 0 6px rgba(255,255,255,0.8);
+    pointer-events:none;
+    animation:rise 0.9s ease-out forwards;
+  }
+  @keyframes rise {
+    0% { opacity:1; transform:translateY(0); }
+    100% { opacity:0; transform:translateY(-70px); }
+  }
 
-  .stats { background:#fff; padding:20px; border-radius:10px; box-shadow:0 8px 16px rgba(0,0,0,0.2); text-align:center; }
-  .stat-label { font-size:12px; color:#666; text-transform:uppercase; }
-  .stat-value { font-size:28px; font-weight:bold; color:#D4AF37; }
+  .panel::-webkit-scrollbar { width:6px; }
+  .panel::-webkit-scrollbar-track { background:transparent; }
+  .panel::-webkit-scrollbar-thumb { background:#d4b27a; border-radius:3px; }
 
-  .cookie { width:260px; height:260px; border-radius:50%; background: radial-gradient(circle at 35% 35%, #FFE68C, #FFD700 40%, #DAA520 70%, #B8860B); border:none; cursor:pointer; font-size:120px; box-shadow: inset -8px -8px 16px rgba(0,0,0,0.2), inset 6px 6px 12px rgba(255,255,255,0.3), 0 10px 30px rgba(0,0,0,0.3); transition:0.05s; }
-  .cookie:active { transform:scale(0.92); }
-
-  .right { width:350px; background:#1A1A1A; border-left:3px solid #8B6F47; display:flex; flex-direction:column; }
-  .store-title { background:#2B2B2B; color:#FFE68C; padding:14px; font-size:18px; font-weight:bold; border-bottom:2px solid #8B6F47; }
-  .store-list { flex:1; overflow-y:auto; }
-
-  .item { padding:12px; border-bottom:1px solid #333; display:flex; justify-content:space-between; cursor:pointer; transition:0.1s; }
-  .item.locked { opacity:0.3; cursor:not-allowed; }
-  .item:hover:not(.locked) { background:#2D2D2D; }
-
-  .float { position:fixed; font-size:22px; font-weight:bold; color:#FFD700; pointer-events:none; animation:rise 1s ease-out forwards; }
-  @keyframes rise { from{opacity:1; transform:translateY(0);} to{opacity:0; transform:translateY(-60px);} }
+  @media (max-width:900px) {
+    .game { height:100vh; border-radius:0; }
+    .main { flex-direction:column; }
+    .left { flex:0 0 45%; border-right:none; border-bottom:1px solid #e0d0b0; }
+    .right { flex:0 0 55%; }
+  }
 </style>
 </head>
-
 <body>
-<div class="container">
-  <div class="left">
-    <div class="stats">
-      <div class="stat-label">Cookies</div>
-      <div class="stat-value" id="cookies">0</div>
-      <div class="stat-label" style="margin-top:10px;">Per Second</div>
-      <div class="stat-value" id="cps">0/s</div>
-      <div class="stat-label" style="margin-top:10px;">Click Power</div>
-      <div class="stat-value" id="clickPower">1</div>
-    </div>
-
-    <button class="cookie" id="btn">🍪</button>
+<div class="game">
+  <div class="header">
+    <div class="title">Cookie Clicker+</div>
+    <div class="subtitle">Made by <span>Jai</span></div>
   </div>
-
-  <div class="right">
-    <div class="store-title">🏪 Store</div>
-    <div class="store-list" id="store"></div>
-
-    <div class="store-title">⭐ Upgrades</div>
-    <div class="store-list" id="upgrades"></div>
+  <div class="main">
+    <div class="left">
+      <div class="stats">
+        <div>
+          <div class="stat-label">Cookies</div>
+          <div class="stat-value" id="cookies">0</div>
+        </div>
+        <div>
+          <div class="stat-label">Per Second</div>
+          <div class="stat-value" id="cps">0/s</div>
+        </div>
+        <div>
+          <div class="stat-label">Click Power</div>
+          <div class="stat-value" id="clickPower">1</div>
+        </div>
+      </div>
+      <button class="cookie-btn" id="cookieBtn">🍪</button>
+    </div>
+    <div class="right">
+      <div class="tabs">
+        <div class="tab active" data-tab="buildings">Buildings</div>
+        <div class="tab" data-tab="upgrades">Upgrades</div>
+      </div>
+      <div class="panel" id="panel-buildings">
+        <div class="section-title">Production</div>
+        <div id="buildingsList"></div>
+      </div>
+      <div class="panel" id="panel-upgrades" style="display:none;">
+        <div class="section-title">Available Upgrades</div>
+        <div id="upgradesList"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
+/* --- core state --- */
 let cookies = 0;
 let clickPower = 1;
 
 const BUILDINGS = [
-  { name:'Cursor', icon:'👆', cost:15, cps:0.1 },
-  { name:'Grandma', icon:'👵', cost:100, cps:1 },
-  { name:'Farm', icon:'🚜', cost:1100, cps:8 },
-  { name:'Mine', icon:'⛏️', cost:12000, cps:47 },
-  { name:'Factory', icon:'🏭', cost:130000, cps:260 }
+  { id:0, name:'Cursor', icon:'👆', baseCost:15, baseCps:0.1 },
+  { id:1, name:'Grandma', icon:'👵', baseCost:100, baseCps:1 },
+  { id:2, name:'Farm', icon:'🚜', baseCost:1100, baseCps:8 },
+  { id:3, name:'Mine', icon:'⛏️', baseCost:12000, baseCps:47 },
+  { id:4, name:'Factory', icon:'🏭', baseCost:130000, baseCps:260 },
+  { id:5, name:'Bank', icon:'🏦', baseCost:1400000, baseCps:1400 },
+  { id:6, name:'Temple', icon:'🏛️', baseCost:20000000, baseCps:7800 },
+  { id:7, name:'Wizard Tower', icon:'🧙', baseCost:330000000, baseCps:44000 },
+  { id:8, name:'Shipment', icon:'🚢', baseCost:5100000000, baseCps:260000 },
+  { id:9, name:'Portal', icon:'🌀', baseCost:1000000000000, baseCps:10000000 }
 ];
 
-let owned = Array(BUILDINGS.length).fill(0);
+let owned = new Array(BUILDINGS.length).fill(0);
+let buildingCpsMult = new Array(BUILDINGS.length).fill(1);
 
-const UPGRADES = [
-  { id:0, name:"Reinforced Index Finger", desc:"+1 click power", cost:100, effect:()=>clickPower+=1 },
-  { id:1, name:"Carpal Tunnel Cream", desc:"+5 click power", cost:500, effect:()=>clickPower+=5 },
-  { id:2, name:"Grandma's Biscuits", desc:"Grandma CPS ×2", cost:1000, effect:()=>BUILDINGS[1].cps*=2 },
-  { id:3, name:"Steel Plow", desc:"Farm CPS ×2", cost:5000, effect:()=>BUILDINGS[2].cps*=2 }
+/* rarity system A */
+const RARITIES = [
+  { key:'common', label:'Common', colorClass:'rarity-common', weight:40 },
+  { key:'uncommon', label:'Uncommon', colorClass:'rarity-uncommon', weight:30 },
+  { key:'rare', label:'Rare', colorClass:'rarity-rare', weight:15 },
+  { key:'epic', label:'Epic', colorClass:'rarity-epic', weight:8 },
+  { key:'legendary', label:'Legendary', colorClass:'rarity-legendary', weight:5 },
+  { key:'mythic', label:'Mythic', colorClass:'rarity-mythic', weight:2 }
 ];
 
+function pickRarity() {
+  const total = RARITIES.reduce((t,r)=>t+r.weight,0);
+  let r = Math.random()*total;
+  for (const rar of RARITIES) {
+    if (r < rar.weight) return rar;
+    r -= rar.weight;
+  }
+  return RARITIES[0];
+}
+
+/* upgrades */
+let UPGRADES = [];
 let boughtUpgrades = [];
 
-function fmt(n){
-  if(n>=1e12) return (n/1e12).toFixed(1)+'T';
-  if(n>=1e9) return (n/1e9).toFixed(1)+'B';
-  if(n>=1e6) return (n/1e6).toFixed(1)+'M';
-  if(n>=1e3) return (n/1e3).toFixed(1)+'K';
-  return Math.floor(n);
+/* generate many upgrades procedurally */
+function generateUpgrades() {
+  let id = 0;
+
+  // click upgrades
+  const clickTiers = 40; // many tiers, gets hard/expensive
+  for (let i=1;i<=clickTiers;i++) {
+    const rarity = pickRarity();
+    const add = Math.max(1, Math.floor(i/2));
+    const cost = Math.floor(50 * Math.pow(1.35, i)); // steep
+    UPGRADES.push({
+      id:id++,
+      type:'click',
+      tier:i,
+      name:`Reinforced Finger ${i}`,
+      desc:`+${add} click power`,
+      cost,
+      rarity,
+      addClick:add
+    });
+  }
+
+  // building CPS upgrades
+  BUILDINGS.forEach((b,bi)=>{
+    for (let t=1;t<=30;t++) {
+      const rarity = pickRarity();
+      const mult = 1 + (0.15 * t); // up to big multipliers
+      const cost = Math.floor(b.baseCost * Math.pow(1.6, t) * 3);
+      UPGRADES.push({
+        id:id++,
+        type:'building',
+        buildingIndex:bi,
+        tier:t,
+        name:`${b.name} Booster ${t}`,
+        desc:`${b.name} CPS ×${mult.toFixed(2)}`,
+        cost,
+        rarity,
+        mult
+      });
+    }
+  });
+
+  // global CPS upgrades
+  for (let g=1; g<=20; g++) {
+    const rarity = pickRarity();
+    const mult = 1 + g*0.1;
+    const cost = Math.floor(50000 * Math.pow(2, g));
+    UPGRADES.push({
+      id:id++,
+      type:'global',
+      tier:g,
+      name:`Global Efficiency ${g}`,
+      desc:`All building CPS ×${mult.toFixed(2)}`,
+      cost,
+      rarity,
+      mult
+    });
+  }
+}
+generateUpgrades();
+
+/* helpers */
+function fmt(n) {
+  if (n >= 1e12) return (n/1e12).toFixed(2)+'T';
+  if (n >= 1e9) return (n/1e9).toFixed(2)+'B';
+  if (n >= 1e6) return (n/1e6).toFixed(2)+'M';
+  if (n >= 1e3) return (n/1e3).toFixed(2)+'K';
+  return Math.floor(n).toString();
 }
 
-function price(i){
-  return Math.round(BUILDINGS[i].cost * Math.pow(1.15, owned[i]));
+function buildingCost(i) {
+  const b = BUILDINGS[i];
+  return Math.round(b.baseCost * Math.pow(1.15, owned[i]));
 }
 
-function cps(){
-  return BUILDINGS.reduce((t,b,i)=>t + owned[i]*b.cps, 0);
+function totalCps() {
+  let t = 0;
+  for (let i=0;i<BUILDINGS.length;i++) {
+    const b = BUILDINGS[i];
+    t += owned[i] * b.baseCps * buildingCpsMult[i];
+  }
+  return t;
 }
 
-function render(){
-  document.getElementById("cookies").textContent = fmt(cookies);
-  document.getElementById("cps").textContent = fmt(cps()) + "/s";
-  document.getElementById("clickPower").textContent = clickPower;
+/* rendering */
+const cookiesEl = document.getElementById('cookies');
+const cpsEl = document.getElementById('cps');
+const clickPowerEl = document.getElementById('clickPower');
+const buildingsListEl = document.getElementById('buildingsList');
+const upgradesListEl = document.getElementById('upgradesList');
 
-  let html = "";
+function renderStats() {
+  cookiesEl.textContent = fmt(cookies);
+  cpsEl.textContent = fmt(totalCps()) + '/s';
+  clickPowerEl.textContent = clickPower;
+}
+
+function flashCard(el) {
+  el.classList.add('flash');
+  setTimeout(()=>el.classList.remove('flash'), 350);
+}
+
+function renderBuildings() {
+  buildingsListEl.innerHTML = '';
   BUILDINGS.forEach((b,i)=>{
-    const cost = price(i);
+    const cost = buildingCost(i);
     const can = cookies >= cost;
-    html += `
-      <div class="item ${can?'':'locked'}" onclick="${can?`buy(${i})`:''}">
-        <div>
-          <div style="color:#FFE68C;font-weight:bold;">${b.icon} ${b.name}</div>
-          <div style="color:#999;font-size:12px;">+${fmt(b.cps)}/s</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:#FFD700;font-weight:bold;">${fmt(cost)}</div>
-          <div style="color:#777;font-size:12px;">Owned: ${owned[i]}</div>
-        </div>
-      </div>`;
-  });
-  document.getElementById("store").innerHTML = html;
+    const card = document.createElement('div');
+    card.className = 'card' + (can ? '' : ' locked');
+    card.onclick = () => {
+      if (!can) return;
+      buyBuilding(i, card);
+    };
 
-  let upg = "";
-  UPGRADES.forEach(u=>{
-    if(boughtUpgrades.includes(u.id)) return;
+    const main = document.createElement('div');
+    main.className = 'card-main';
+
+    const icon = document.createElement('div');
+    icon.className = 'card-icon';
+    icon.textContent = b.icon;
+
+    const textWrap = document.createElement('div');
+    const title = document.createElement('div');
+    title.className = 'card-text-title';
+    title.textContent = b.name;
+    const sub = document.createElement('div');
+    sub.className = 'card-text-sub';
+    sub.textContent = `+${fmt(b.baseCps * buildingCpsMult[i])} cookies/sec each`;
+
+    textWrap.appendChild(title);
+    textWrap.appendChild(sub);
+
+    main.appendChild(icon);
+    main.appendChild(textWrap);
+
+    const right = document.createElement('div');
+    right.className = 'card-right';
+    const price = document.createElement('div');
+    price.className = 'price';
+    price.textContent = fmt(cost);
+    const ownedEl = document.createElement('div');
+    ownedEl.className = 'owned';
+    ownedEl.textContent = `Owned: ${owned[i]}`;
+
+    right.appendChild(price);
+    right.appendChild(ownedEl);
+
+    card.appendChild(main);
+    card.appendChild(right);
+    buildingsListEl.appendChild(card);
+  });
+}
+
+function renderUpgrades() {
+  upgradesListEl.innerHTML = '';
+  // show only upgrades not bought and roughly affordable-ish
+  const visible = UPGRADES.filter(u => !boughtUpgrades.includes(u.id))
+    .sort((a,b)=>a.cost-b.cost)
+    .slice(0, 80); // show first 80 cheapest at a time
+
+  visible.forEach(u=>{
     const can = cookies >= u.cost;
-    upg += `
-      <div class="item ${can?'':'locked'}" onclick="${can?`buyUpgrade(${u.id})`:''}">
-        <div>
-          <div style="color:#FFE68C;font-weight:bold;">⭐ ${u.name}</div>
-          <div style="color:#999;font-size:12px;">${u.desc}</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:#FFD700;font-weight:bold;">${fmt(u.cost)}</div>
-        </div>
-      </div>`;
+    const card = document.createElement('div');
+    card.className = 'card' + (can ? '' : ' locked');
+    card.onclick = () => {
+      if (!can) return;
+      buyUpgrade(u, card);
+    };
+
+    const main = document.createElement('div');
+    main.className = 'card-main';
+
+    const icon = document.createElement('div');
+    icon.className = 'card-icon';
+    icon.textContent = u.type === 'click' ? '🖱️' :
+                       u.type === 'building' ? BUILDINGS[u.buildingIndex].icon :
+                       '⚙️';
+
+    const textWrap = document.createElement('div');
+
+    const rarityTag = document.createElement('div');
+    rarityTag.className = 'rarity-tag ' + u.rarity.colorClass;
+    rarityTag.textContent = u.rarity.label;
+
+    const title = document.createElement('div');
+    title.className = 'card-text-title';
+    title.textContent = u.name;
+
+    const sub = document.createElement('div');
+    sub.className = 'card-text-sub';
+    sub.textContent = u.desc;
+
+    textWrap.appendChild(rarityTag);
+    textWrap.appendChild(title);
+    textWrap.appendChild(sub);
+
+    main.appendChild(icon);
+    main.appendChild(textWrap);
+
+    const right = document.createElement('div');
+    right.className = 'card-right';
+    const price = document.createElement('div');
+    price.className = 'price';
+    price.textContent = fmt(u.cost);
+
+    right.appendChild(price);
+
+    card.appendChild(main);
+    card.appendChild(right);
+    upgradesListEl.appendChild(card);
   });
-  document.getElementById("upgrades").innerHTML = upg;
 }
 
-function buy(i){
-  const cost = price(i);
-  if(cookies >= cost){
-    cookies -= cost;
-    owned[i]++;
-    if(i === 0) clickPower += 1; // Cursor buff
-    save();
-    render();
-  }
-}
-
-function buyUpgrade(id){
-  const u = UPGRADES.find(x=>x.id===id);
-  if(cookies >= u.cost){
-    cookies -= u.cost;
-    boughtUpgrades.push(id);
-    u.effect();
-    save();
-    render();
-  }
-}
-
-function pop(text,x,y){
-  const el = document.createElement("div");
-  el.className = "float";
-  el.textContent = text;
-  el.style.left = x+"px";
-  el.style.top = y+"px";
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),1000);
-}
-
-document.getElementById("btn").onclick = e=>{
-  cookies += clickPower;
-  pop("+"+clickPower, e.clientX, e.clientY);
+/* buying */
+function buyBuilding(i, cardEl) {
+  const cost = buildingCost(i);
+  if (cookies < cost) return;
+  cookies -= cost;
+  owned[i]++;
+  // make early game harder: cursor does NOT buff click power automatically
   save();
-  render();
-};
+  renderStats();
+  renderBuildings();
+  flashCard(cardEl);
+}
 
+function applyUpgradeEffect(u) {
+  if (u.type === 'click') {
+    clickPower += u.addClick;
+  } else if (u.type === 'building') {
+    buildingCpsMult[u.buildingIndex] *= u.mult;
+  } else if (u.type === 'global') {
+    for (let i=0;i<buildingCpsMult.length;i++) {
+      buildingCpsMult[i] *= u.mult;
+    }
+  }
+}
+
+function buyUpgrade(u, cardEl) {
+  if (cookies < u.cost) return;
+  cookies -= u.cost;
+  boughtUpgrades.push(u.id);
+  applyUpgradeEffect(u);
+  save();
+  renderStats();
+  renderUpgrades();
+  renderBuildings();
+  flashCard(cardEl);
+}
+
+/* click cookie */
+const cookieBtn = document.getElementById('cookieBtn');
+cookieBtn.addEventListener('click', e=>{
+  cookies += clickPower;
+  const rect = cookieBtn.getBoundingClientRect();
+  const x = rect.left + rect.width/2 + (Math.random()*40-20);
+  const y = rect.top + rect.height/2 + (Math.random()*40-20);
+  spawnFloat('+'+clickPower, x, y);
+  save();
+  renderStats();
+});
+
+function spawnFloat(text,x,y) {
+  const el = document.createElement('div');
+  el.className = 'float';
+  el.textContent = text;
+  el.style.left = x+'px';
+  el.style.top = y+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 900);
+}
+
+/* loop */
 setInterval(()=>{
-  cookies += cps()/10;
-  render();
-},100);
+  const cps = totalCps();
+  cookies += cps/10;
+  renderStats();
+}, 100);
 
-function save(){
-  localStorage.setItem("cookies", cookies);
-  localStorage.setItem("owned", JSON.stringify(owned));
-  localStorage.setItem("clickPower", clickPower);
-  localStorage.setItem("boughtUpgrades", JSON.stringify(boughtUpgrades));
+/* tabs */
+const tabs = document.querySelectorAll('.tab');
+const panelBuildings = document.getElementById('panel-buildings');
+const panelUpgrades = document.getElementById('panel-upgrades');
+
+tabs.forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const which = tab.dataset.tab;
+    if (which === 'buildings') {
+      panelBuildings.style.display = '';
+      panelUpgrades.style.display = 'none';
+    } else {
+      panelBuildings.style.display = 'none';
+      panelUpgrades.style.display = '';
+    }
+  });
+});
+
+/* save/load */
+const SAVE_KEY = 'cookie_clicker_plus_jai_v1';
+
+function save() {
+  const data = {
+    cookies,
+    clickPower,
+    owned,
+    buildingCpsMult,
+    boughtUpgrades
+  };
+  localStorage.setItem(SAVE_KEY, JSON.stringify(data));
 }
 
-function load(){
-  cookies = Number(localStorage.getItem("cookies")) || 0;
-  owned = JSON.parse(localStorage.getItem("owned")) || owned;
-  clickPower = Number(localStorage.getItem("clickPower")) || 1;
-  boughtUpgrades = JSON.parse(localStorage.getItem("boughtUpgrades")) || [];
+function load() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (typeof data.cookies === 'number') cookies = data.cookies;
+    if (typeof data.clickPower === 'number') clickPower = data.clickPower;
+    if (Array.isArray(data.owned) && data.owned.length === BUILDINGS.length) owned = data.owned;
+    if (Array.isArray(data.buildingCpsMult) && data.buildingCpsMult.length === BUILDINGS.length) buildingCpsMult = data.buildingCpsMult;
+    if (Array.isArray(data.boughtUpgrades)) boughtUpgrades = data.boughtUpgrades;
+  } catch(e) {
+    console.warn('Failed to load save', e);
+  }
 }
 
+/* init */
 load();
-render();
+renderStats();
+renderBuildings();
+renderUpgrades();
 </script>
 </body>
 </html>
