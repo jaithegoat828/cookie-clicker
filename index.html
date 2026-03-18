@@ -335,12 +335,12 @@ let boughtUpgrades = [];
 function generateUpgrades() {
   let id = 0;
 
-  // click upgrades
-  const clickTiers = 40; // many tiers, gets hard/expensive
+  // click upgrades (harder, expensive)
+  const clickTiers = 40;
   for (let i=1;i<=clickTiers;i++) {
     const rarity = pickRarity();
     const add = Math.max(1, Math.floor(i/2));
-    const cost = Math.floor(50 * Math.pow(1.35, i)); // steep
+    const cost = Math.floor(80 * Math.pow(1.4, i)); // steep curve
     UPGRADES.push({
       id:id++,
       type:'click',
@@ -355,10 +355,10 @@ function generateUpgrades() {
 
   // building CPS upgrades
   BUILDINGS.forEach((b,bi)=>{
-    for (let t=1;t<=30;t++) {
+    for (let t=1;t<=25;t++) {
       const rarity = pickRarity();
-      const mult = 1 + (0.15 * t); // up to big multipliers
-      const cost = Math.floor(b.baseCost * Math.pow(1.6, t) * 3);
+      const mult = 1 + (0.18 * t);
+      const cost = Math.floor(b.baseCost * Math.pow(1.7, t) * 3);
       UPGRADES.push({
         id:id++,
         type:'building',
@@ -376,8 +376,8 @@ function generateUpgrades() {
   // global CPS upgrades
   for (let g=1; g<=20; g++) {
     const rarity = pickRarity();
-    const mult = 1 + g*0.1;
-    const cost = Math.floor(50000 * Math.pow(2, g));
+    const mult = 1 + g*0.12;
+    const cost = Math.floor(100000 * Math.pow(2.1, g));
     UPGRADES.push({
       id:id++,
       type:'global',
@@ -429,6 +429,7 @@ function renderStats() {
 }
 
 function flashCard(el) {
+  if (!el) return;
   el.classList.add('flash');
   setTimeout(()=>el.classList.remove('flash'), 350);
 }
@@ -440,10 +441,10 @@ function renderBuildings() {
     const can = cookies >= cost;
     const card = document.createElement('div');
     card.className = 'card' + (can ? '' : ' locked');
-    card.onclick = () => {
+    card.addEventListener('click', () => {
       if (!can) return;
       buyBuilding(i, card);
-    };
+    });
 
     const main = document.createElement('div');
     main.className = 'card-main';
@@ -486,19 +487,18 @@ function renderBuildings() {
 
 function renderUpgrades() {
   upgradesListEl.innerHTML = '';
-  // show only upgrades not bought and roughly affordable-ish
   const visible = UPGRADES.filter(u => !boughtUpgrades.includes(u.id))
     .sort((a,b)=>a.cost-b.cost)
-    .slice(0, 80); // show first 80 cheapest at a time
+    .slice(0, 80);
 
   visible.forEach(u=>{
     const can = cookies >= u.cost;
     const card = document.createElement('div');
     card.className = 'card' + (can ? '' : ' locked');
-    card.onclick = () => {
+    card.addEventListener('click', () => {
       if (!can) return;
       buyUpgrade(u, card);
-    };
+    });
 
     const main = document.createElement('div');
     main.className = 'card-main';
@@ -550,7 +550,6 @@ function buyBuilding(i, cardEl) {
   if (cookies < cost) return;
   cookies -= cost;
   owned[i]++;
-  // make early game harder: cursor does NOT buff click power automatically
   save();
   renderStats();
   renderBuildings();
@@ -631,7 +630,7 @@ tabs.forEach(tab=>{
 });
 
 /* save/load */
-const SAVE_KEY = 'cookie_clicker_plus_jai_v1';
+const SAVE_KEY = 'cookie_clicker_plus_jai_v2'; // new stable key
 
 function save() {
   const data = {
