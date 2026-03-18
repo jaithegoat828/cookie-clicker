@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cookie Clicker</title>
+<title>Cookie Clicker+</title>
 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,6 +40,8 @@
       <div class="stat-value" id="cookies">0</div>
       <div class="stat-label" style="margin-top:10px;">Per Second</div>
       <div class="stat-value" id="cps">0/s</div>
+      <div class="stat-label" style="margin-top:10px;">Click Power</div>
+      <div class="stat-value" id="clickPower">1</div>
     </div>
 
     <button class="cookie" id="btn">🍪</button>
@@ -48,35 +50,34 @@
   <div class="right">
     <div class="store-title">🏪 Store</div>
     <div class="store-list" id="store"></div>
+
+    <div class="store-title">⭐ Upgrades</div>
+    <div class="store-list" id="upgrades"></div>
   </div>
 </div>
 
 <script>
+let cookies = 0;
+let clickPower = 1;
+
 const BUILDINGS = [
   { name:'Cursor', icon:'👆', cost:15, cps:0.1 },
   { name:'Grandma', icon:'👵', cost:100, cps:1 },
   { name:'Farm', icon:'🚜', cost:1100, cps:8 },
   { name:'Mine', icon:'⛏️', cost:12000, cps:47 },
-  { name:'Factory', icon:'🏭', cost:130000, cps:260 },
-  { name:'Bank', icon:'🏦', cost:1400000, cps:1400 },
-  { name:'Temple', icon:'🏛️', cost:20000000, cps:7800 },
-  { name:'Wizard Tower', icon:'🧙', cost:330000000, cps:44000 },
-  { name:'Shipment', icon:'🚢', cost:5100000000, cps:260000 },
-  { name:'Alchemy Lab', icon:'🧪', cost:75000000000, cps:1600000 },
-  { name:'Portal', icon:'🌀', cost:1000000000000, cps:10000000 },
-  { name:'Time Machine', icon:'⏰', cost:14000000000000, cps:65000000 },
-  { name:'Antimatter', icon:'⚛️', cost:170000000000000, cps:430000000 },
-  { name:'Prism', icon:'🔮', cost:2100000000000000, cps:2900000000 },
-  { name:'Chancemaker', icon:'🎲', cost:26000000000000000, cps:21000000000 },
-  { name:'Fractal Engine', icon:'❄️', cost:310000000000000000, cps:150000000000 },
-  { name:'Javascript', icon:'📟', cost:71000000000000000000, cps:1100000000000 },
-  { name:'Idleverse', icon:'🌌', cost:12000000000000000000000, cps:8300000000000 },
-  { name:'Cortex Baker', icon:'🧠', cost:1900000000000000000000000, cps:64000000000000 },
-  { name:'You', icon:'👤', cost:540000000000000000000000000, cps:510000000000000 }
+  { name:'Factory', icon:'🏭', cost:130000, cps:260 }
 ];
 
-let cookies = 0;
 let owned = Array(BUILDINGS.length).fill(0);
+
+const UPGRADES = [
+  { id:0, name:"Reinforced Index Finger", desc:"+1 click power", cost:100, effect:()=>clickPower+=1 },
+  { id:1, name:"Carpal Tunnel Cream", desc:"+5 click power", cost:500, effect:()=>clickPower+=5 },
+  { id:2, name:"Grandma's Biscuits", desc:"Grandma CPS ×2", cost:1000, effect:()=>BUILDINGS[1].cps*=2 },
+  { id:3, name:"Steel Plow", desc:"Farm CPS ×2", cost:5000, effect:()=>BUILDINGS[2].cps*=2 }
+];
+
+let boughtUpgrades = [];
 
 function fmt(n){
   if(n>=1e12) return (n/1e12).toFixed(1)+'T';
@@ -97,6 +98,7 @@ function cps(){
 function render(){
   document.getElementById("cookies").textContent = fmt(cookies);
   document.getElementById("cps").textContent = fmt(cps()) + "/s";
+  document.getElementById("clickPower").textContent = clickPower;
 
   let html = "";
   BUILDINGS.forEach((b,i)=>{
@@ -115,6 +117,23 @@ function render(){
       </div>`;
   });
   document.getElementById("store").innerHTML = html;
+
+  let upg = "";
+  UPGRADES.forEach(u=>{
+    if(boughtUpgrades.includes(u.id)) return;
+    const can = cookies >= u.cost;
+    upg += `
+      <div class="item ${can?'':'locked'}" onclick="${can?`buyUpgrade(${u.id})`:''}">
+        <div>
+          <div style="color:#FFE68C;font-weight:bold;">⭐ ${u.name}</div>
+          <div style="color:#999;font-size:12px;">${u.desc}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="color:#FFD700;font-weight:bold;">${fmt(u.cost)}</div>
+        </div>
+      </div>`;
+  });
+  document.getElementById("upgrades").innerHTML = upg;
 }
 
 function buy(i){
@@ -122,6 +141,18 @@ function buy(i){
   if(cookies >= cost){
     cookies -= cost;
     owned[i]++;
+    if(i === 0) clickPower += 1; // Cursor buff
+    save();
+    render();
+  }
+}
+
+function buyUpgrade(id){
+  const u = UPGRADES.find(x=>x.id===id);
+  if(cookies >= u.cost){
+    cookies -= u.cost;
+    boughtUpgrades.push(id);
+    u.effect();
     save();
     render();
   }
@@ -138,8 +169,8 @@ function pop(text,x,y){
 }
 
 document.getElementById("btn").onclick = e=>{
-  cookies++;
-  pop("+1", e.clientX, e.clientY);
+  cookies += clickPower;
+  pop("+"+clickPower, e.clientX, e.clientY);
   save();
   render();
 };
@@ -152,11 +183,15 @@ setInterval(()=>{
 function save(){
   localStorage.setItem("cookies", cookies);
   localStorage.setItem("owned", JSON.stringify(owned));
+  localStorage.setItem("clickPower", clickPower);
+  localStorage.setItem("boughtUpgrades", JSON.stringify(boughtUpgrades));
 }
 
 function load(){
   cookies = Number(localStorage.getItem("cookies")) || 0;
   owned = JSON.parse(localStorage.getItem("owned")) || owned;
+  clickPower = Number(localStorage.getItem("clickPower")) || 1;
+  boughtUpgrades = JSON.parse(localStorage.getItem("boughtUpgrades")) || [];
 }
 
 load();
