@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookie Clicker</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Comic Sans MS", cursive; background: linear-gradient(135deg,#8B6F47,#D4A574); height:100vh; display:flex; overflow:hidden; }
+
+  .container { flex:1; display:flex; }
+  .left { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+
+  .stats { background:#fff; padding:20px; border-radius:10px; box-shadow:0 8px 16px rgba(0,0,0,0.2); text-align:center; }
+  .stat-label { font-size:12px; color:#666; text-transform:uppercase; }
+  .stat-value { font-size:28px; font-weight:bold; color:#D4AF37; }
+
+  .cookie { width:260px; height:260px; border-radius:50%; background: radial-gradient(circle at 35% 35%, #FFE68C, #FFD700 40%, #DAA520 70%, #B8860B); border:none; cursor:pointer; font-size:120px; box-shadow: inset -8px -8px 16px rgba(0,0,0,0.2), inset 6px 6px 12px rgba(255,255,255,0.3), 0 10px 30px rgba(0,0,0,0.3); transition:0.05s; }
+  .cookie:active { transform:scale(0.92); }
+
+  .right { width:350px; background:#1A1A1A; border-left:3px solid #8B6F47; display:flex; flex-direction:column; }
+  .store-title { background:#2B2B2B; color:#FFE68C; padding:14px; font-size:18px; font-weight:bold; border-bottom:2px solid #8B6F47; }
+  .store-list { flex:1; overflow-y:auto; }
+
+  .item { padding:12px; border-bottom:1px solid #333; display:flex; justify-content:space-between; cursor:pointer; transition:0.1s; }
+  .item.locked { opacity:0.3; cursor:not-allowed; }
+  .item:hover:not(.locked) { background:#2D2D2D; }
+
+  .float { position:fixed; font-size:22px; font-weight:bold; color:#FFD700; pointer-events:none; animation:rise 1s ease-out forwards; }
+  @keyframes rise { from{opacity:1; transform:translateY(0);} to{opacity:0; transform:translateY(-60px);} }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="left">
+    <div class="stats">
+      <div class="stat-label">Cookies</div>
+      <div class="stat-value" id="cookies">0</div>
+      <div class="stat-label" style="margin-top:10px;">Per Second</div>
+      <div class="stat-value" id="cps">0/s</div>
+    </div>
+
+    <button class="cookie" id="btn">🍪</button>
+  </div>
+
+  <div class="right">
+    <div class="store-title">🏪 Store</div>
+    <div class="store-list" id="store"></div>
+  </div>
+</div>
+
+<script>
+const BUILDINGS = [
+  { name:'Cursor', icon:'👆', cost:15, cps:0.1 },
+  { name:'Grandma', icon:'👵', cost:100, cps:1 },
+  { name:'Farm', icon:'🚜', cost:1100, cps:8 },
+  { name:'Mine', icon:'⛏️', cost:12000, cps:47 },
+  { name:'Factory', icon:'🏭', cost:130000, cps:260 },
+  { name:'Bank', icon:'🏦', cost:1400000, cps:1400 },
+  { name:'Temple', icon:'🏛️', cost:20000000, cps:7800 },
+  { name:'Wizard Tower', icon:'🧙', cost:330000000, cps:44000 },
+  { name:'Shipment', icon:'🚢', cost:5100000000, cps:260000 },
+  { name:'Alchemy Lab', icon:'🧪', cost:75000000000, cps:1600000 },
+  { name:'Portal', icon:'🌀', cost:1000000000000, cps:10000000 },
+  { name:'Time Machine', icon:'⏰', cost:14000000000000, cps:65000000 },
+  { name:'Antimatter', icon:'⚛️', cost:170000000000000, cps:430000000 },
+  { name:'Prism', icon:'🔮', cost:2100000000000000, cps:2900000000 },
+  { name:'Chancemaker', icon:'🎲', cost:26000000000000000, cps:21000000000 },
+  { name:'Fractal Engine', icon:'❄️', cost:310000000000000000, cps:150000000000 },
+  { name:'Javascript', icon:'📟', cost:71000000000000000000, cps:1100000000000 },
+  { name:'Idleverse', icon:'🌌', cost:12000000000000000000000, cps:8300000000000 },
+  { name:'Cortex Baker', icon:'🧠', cost:1900000000000000000000000, cps:64000000000000 },
+  { name:'You', icon:'👤', cost:540000000000000000000000000, cps:510000000000000 }
+];
+
+let cookies = 0;
+let owned = Array(BUILDINGS.length).fill(0);
+
+function fmt(n){
+  if(n>=1e12) return (n/1e12).toFixed(1)+'T';
+  if(n>=1e9) return (n/1e9).toFixed(1)+'B';
+  if(n>=1e6) return (n/1e6).toFixed(1)+'M';
+  if(n>=1e3) return (n/1e3).toFixed(1)+'K';
+  return Math.floor(n);
+}
+
+function price(i){
+  return Math.round(BUILDINGS[i].cost * Math.pow(1.15, owned[i]));
+}
+
+function cps(){
+  return BUILDINGS.reduce((t,b,i)=>t + owned[i]*b.cps, 0);
+}
+
+function render(){
+  document.getElementById("cookies").textContent = fmt(cookies);
+  document.getElementById("cps").textContent = fmt(cps()) + "/s";
+
+  let html = "";
+  BUILDINGS.forEach((b,i)=>{
+    const cost = price(i);
+    const can = cookies >= cost;
+    html += `
+      <div class="item ${can?'':'locked'}" onclick="${can?`buy(${i})`:''}">
+        <div>
+          <div style="color:#FFE68C;font-weight:bold;">${b.icon} ${b.name}</div>
+          <div style="color:#999;font-size:12px;">+${fmt(b.cps)}/s</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="color:#FFD700;font-weight:bold;">${fmt(cost)}</div>
+          <div style="color:#777;font-size:12px;">Owned: ${owned[i]}</div>
+        </div>
+      </div>`;
+  });
+  document.getElementById("store").innerHTML = html;
+}
+
+function buy(i){
+  const cost = price(i);
+  if(cookies >= cost){
+    cookies -= cost;
+    owned[i]++;
+    save();
+    render();
+  }
+}
+
+function pop(text,x,y){
+  const el = document.createElement("div");
+  el.className = "float";
+  el.textContent = text;
+  el.style.left = x+"px";
+  el.style.top = y+"px";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+}
+
+document.getElementById("btn").onclick = e=>{
+  cookies++;
+  pop("+1", e.clientX, e.clientY);
+  save();
+  render();
+};
+
+setInterval(()=>{
+  cookies += cps()/10;
+  render();
+},100);
+
+function save(){
+  localStorage.setItem("cookies", cookies);
+  localStorage.setItem("owned", JSON.stringify(owned));
+}
+
+function load(){
+  cookies = Number(localStorage.getItem("cookies")) || 0;
+  owned = JSON.parse(localStorage.getItem("owned")) || owned;
+}
+
+load();
+render();
+</script>
+</body>
+</html>
