@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cookie Clicker+ by Jai</title>
-
+<title>Dream Cookie Clicker+ by Jai</title>
+<link rel="icon" href="data:,">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -34,28 +34,11 @@
     justify-content:space-between;
     align-items:center;
   }
-  .title-wrap {
-    display:flex;
-    flex-direction:column;
-  }
-  .title {
-    font-size:24px;
-    font-weight:700;
-    color:#b37a1f;
-  }
-  .subtitle {
-    font-size:12px;
-    color:#888;
-    margin-top:2px;
-  }
-  .subtitle span {
-    font-weight:600;
-    color:#c28a2a;
-  }
-  .controls {
-    display:flex;
-    gap:6px;
-  }
+  .title-wrap { display:flex; flex-direction:column; }
+  .title { font-size:24px; font-weight:700; color:#b37a1f; }
+  .subtitle { font-size:12px; color:#888; margin-top:2px; }
+  .subtitle span { font-weight:600; color:#c28a2a; }
+  .controls { display:flex; gap:6px; }
   .ctrl-btn {
     border:none;
     padding:4px 8px;
@@ -66,15 +49,9 @@
     color:#7a5a1f;
     transition:background 0.1s, transform 0.1s;
   }
-  .ctrl-btn:hover {
-    background:#f0d7a8;
-    transform:translateY(-1px);
-  }
+  .ctrl-btn:hover { background:#f0d7a8; transform:translateY(-1px); }
 
-  .main {
-    flex:1;
-    display:flex;
-  }
+  .main { flex:1; display:flex; }
   .left {
     flex:0 0 45%;
     border-right:1px solid #e0d0b0;
@@ -147,49 +124,21 @@
     animation:pulse 1s infinite alternate;
     z-index:5;
   }
-  @keyframes pulse {
-    from { transform:scale(1); }
-    to { transform:scale(1.1); }
-  }
+  @keyframes pulse { from{transform:scale(1);} to{transform:scale(1.1);} }
 
-  .right {
-    flex:0 0 55%;
-    display:flex;
-    flex-direction:column;
-    background:#faf6ee;
-  }
-  .tabs {
-    display:flex;
-    border-bottom:1px solid #e0d0b0;
-    background:#fffaf0;
-  }
+  .right { flex:0 0 55%; display:flex; flex-direction:column; background:#faf6ee; }
+  .tabs { display:flex; border-bottom:1px solid #e0d0b0; background:#fffaf0; }
   .tab {
-    flex:1;
-    text-align:center;
-    padding:10px 0;
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-    color:#a07a2a;
-    border-bottom:2px solid transparent;
+    flex:1; text-align:center; padding:10px 0;
+    font-size:13px; font-weight:600; cursor:pointer;
+    color:#a07a2a; border-bottom:2px solid transparent;
     transition:background 0.15s, border-color 0.15s, color 0.15s;
   }
-  .tab.active {
-    background:#fff;
-    border-bottom-color:#d49b2a;
-    color:#d49b2a;
-  }
-  .panel {
-    flex:1;
-    overflow-y:auto;
-    padding:10px 10px 14px;
-  }
+  .tab.active { background:#fff; border-bottom-color:#d49b2a; color:#d49b2a; }
+  .panel { flex:1; overflow-y:auto; padding:10px 10px 14px; }
   .section-title {
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:0.08em;
-    color:#999;
-    margin:4px 2px 6px;
+    font-size:12px; text-transform:uppercase;
+    letter-spacing:0.08em; color:#999; margin:4px 2px 6px;
   }
   .card {
     background:#fff;
@@ -206,52 +155,24 @@
     position:relative;
     overflow:hidden;
   }
-  .card.locked {
-    opacity:0.35;
-    cursor:not-allowed;
-  }
+  .card.locked { opacity:0.35; cursor:not-allowed; }
   .card:hover:not(.locked) {
     transform:translateY(-2px);
     box-shadow:0 8px 18px rgba(0,0,0,0.12);
   }
-  .card.flash {
-    animation:flash 0.35s ease-out;
-  }
+  .card.flash { animation:flash 0.35s ease-out; }
   @keyframes flash {
     0% { box-shadow:0 0 0 rgba(255,215,0,0.0); }
     40% { box-shadow:0 0 18px rgba(255,215,0,0.9); }
     100% { box-shadow:0 0 0 rgba(255,215,0,0.0); }
   }
-  .card-main {
-    display:flex;
-    gap:8px;
-  }
-  .card-icon {
-    font-size:20px;
-  }
-  .card-text-title {
-    font-size:14px;
-    font-weight:600;
-    color:#b37a1f;
-  }
-  .card-text-sub {
-    font-size:11px;
-    color:#777;
-    margin-top:2px;
-  }
-  .card-right {
-    text-align:right;
-    font-size:11px;
-  }
-  .price {
-    font-weight:700;
-    color:#c28a2a;
-    font-size:13px;
-  }
-  .owned {
-    color:#999;
-    margin-top:2px;
-  }
+  .card-main { display:flex; gap:8px; }
+  .card-icon { font-size:20px; }
+  .card-text-title { font-size:14px; font-weight:600; color:#b37a1f; }
+  .card-text-sub { font-size:11px; color:#777; margin-top:2px; }
+  .card-right { text-align:right; font-size:11px; }
+  .price { font-weight:700; color:#c28a2a; font-size:13px; }
+  .owned { color:#999; margin-top:2px; }
   .rarity-tag {
     display:inline-block;
     padding:2px 6px;
@@ -297,7 +218,7 @@
 <div class="game">
   <div class="header">
     <div class="title-wrap">
-      <div class="title">Cookie Clicker+</div>
+      <div class="title">Dream Cookie Clicker+</div>
       <div class="subtitle">Made by <span>Jai</span></div>
     </div>
     <div class="controls">
@@ -346,28 +267,26 @@ let cookies = 0;
 let clickPower = 1;
 
 const BUILDINGS = [
-  { id:0, name:'Cursor', icon:'👆', baseCost:15, baseCps:0.1 },
-  { id:1, name:'Grandma', icon:'👵', baseCost:100, baseCps:1 },
-  { id:2, name:'Farm', icon:'🚜', baseCost:1100, baseCps:8 },
-  { id:3, name:'Mine', icon:'⛏️', baseCost:12000, baseCps:47 },
-  { id:4, name:'Factory', icon:'🏭', baseCost:130000, baseCps:260 },
-  { id:5, name:'Bank', icon:'🏦', baseCost:1400000, baseCps:1400 },
-  { id:6, name:'Temple', icon:'🏛️', baseCost:20000000, baseCps:7800 },
-  { id:7, name:'Wizard Tower', icon:'🧙', baseCost:330000000, baseCps:44000 },
-  { id:8, name:'Shipment', icon:'🚢', baseCost:5100000000, baseCps:260000 },
-  { id:9, name:'Portal', icon:'🌀', baseCost:1000000000000, baseCps:10000000 }
+  { id:0, name:'Cursor',   icon:'👆', baseCost:15,        baseCps:0.1 },
+  { id:1, name:'Helper',   icon:'🧑', baseCost:120,       baseCps:1 },
+  { id:2, name:'Field',    icon:'🌾', baseCost:1500,      baseCps:8 },
+  { id:3, name:'Mine',     icon:'⛏️', baseCost:12000,     baseCps:47 },
+  { id:4, name:'Factory',  icon:'🏭', baseCost:130000,    baseCps:260 },
+  { id:5, name:'Lab',      icon:'⚗️', baseCost:1400000,   baseCps:1400 },
+  { id:6, name:'Portal',   icon:'🌀', baseCost:20000000,  baseCps:7800 },
+  { id:7, name:'Core',     icon:'💠', baseCost:330000000, baseCps:44000 }
 ];
 
 let owned = new Array(BUILDINGS.length).fill(0);
 let buildingCpsMult = new Array(BUILDINGS.length).fill(1);
 
 const RARITIES = [
-  { key:'common', label:'Common', colorClass:'rarity-common', weight:40 },
-  { key:'uncommon', label:'Uncommon', colorClass:'rarity-uncommon', weight:30 },
-  { key:'rare', label:'Rare', colorClass:'rarity-rare', weight:15 },
-  { key:'epic', label:'Epic', colorClass:'rarity-epic', weight:8 },
+  { key:'common',    label:'Common',    colorClass:'rarity-common',    weight:40 },
+  { key:'uncommon',  label:'Uncommon',  colorClass:'rarity-uncommon',  weight:30 },
+  { key:'rare',      label:'Rare',      colorClass:'rarity-rare',      weight:15 },
+  { key:'epic',      label:'Epic',      colorClass:'rarity-epic',      weight:8 },
   { key:'legendary', label:'Legendary', colorClass:'rarity-legendary', weight:5 },
-  { key:'mythic', label:'Mythic', colorClass:'rarity-mythic', weight:2 }
+  { key:'mythic',    label:'Mythic',    colorClass:'rarity-mythic',    weight:2 }
 ];
 
 function pickRarity() {
@@ -385,6 +304,7 @@ let boughtUpgrades = [];
 
 function generateUpgrades() {
   let id = 0;
+
   const clickTiers = 40;
   for (let i=1;i<=clickTiers;i++) {
     const rarity = pickRarity();
@@ -394,7 +314,7 @@ function generateUpgrades() {
       id:id++,
       type:'click',
       tier:i,
-      name:`Reinforced Finger ${i}`,
+      name:`Click Boost ${i}`,
       desc:`+${add} click power`,
       cost,
       rarity,
@@ -412,7 +332,7 @@ function generateUpgrades() {
         type:'building',
         buildingIndex:bi,
         tier:t,
-        name:`${b.name} Booster ${t}`,
+        name:`${b.name} Upgrade ${t}`,
         desc:`${b.name} CPS ×${mult.toFixed(2)}`,
         cost,
         rarity,
@@ -429,7 +349,7 @@ function generateUpgrades() {
       id:id++,
       type:'global',
       tier:g,
-      name:`Global Efficiency ${g}`,
+      name:`Global Boost ${g}`,
       desc:`All building CPS ×${mult.toFixed(2)}`,
       cost,
       rarity,
@@ -441,9 +361,9 @@ generateUpgrades();
 
 function fmt(n) {
   if (n >= 1e12) return (n/1e12).toFixed(2)+'T';
-  if (n >= 1e9) return (n/1e9).toFixed(2)+'B';
-  if (n >= 1e6) return (n/1e6).toFixed(2)+'M';
-  if (n >= 1e3) return (n/1e3).toFixed(2)+'K';
+  if (n >= 1e9)  return (n/1e9).toFixed(2)+'B';
+  if (n >= 1e6)  return (n/1e6).toFixed(2)+'M';
+  if (n >= 1e3)  return (n/1e3).toFixed(2)+'K';
   return Math.floor(n).toString();
 }
 
@@ -487,7 +407,8 @@ function renderBuildings() {
     const card = document.createElement('div');
     card.className = 'card' + (can ? '' : ' locked');
     card.addEventListener('click', () => {
-      if (!can) return;
+      const currentCost = buildingCost(i);
+      if (cookies < currentCost) return;
       buyBuilding(i, card);
     });
 
@@ -541,7 +462,7 @@ function renderUpgrades() {
     const card = document.createElement('div');
     card.className = 'card' + (can ? '' : ' locked');
     card.addEventListener('click', () => {
-      if (!can) return;
+      if (cookies < u.cost) return;
       buyUpgrade(u, card);
     });
 
@@ -550,9 +471,10 @@ function renderUpgrades() {
 
     const icon = document.createElement('div');
     icon.className = 'card-icon';
-    icon.textContent = u.type === 'click' ? '🖱️' :
-                       u.type === 'building' ? BUILDINGS[u.buildingIndex].icon :
-                       '⚙️';
+    icon.textContent =
+      u.type === 'click'    ? '🖱️' :
+      u.type === 'building' ? BUILDINGS[u.buildingIndex].icon :
+                              '⚙️';
 
     const textWrap = document.createElement('div');
 
@@ -656,7 +578,7 @@ let goldenTimeout = null;
 const leftPanel = document.querySelector('.left');
 
 function scheduleGoldenCookie() {
-  const delay = 60000 + Math.random()*60000; // 60–120s
+  const delay = 60000 + Math.random()*60000;
   goldenTimeout = setTimeout(spawnGoldenCookie, delay);
 }
 
@@ -718,7 +640,7 @@ tabs.forEach(tab=>{
 });
 
 /* save/load/import/export/reset */
-const SAVE_KEY = 'cookie_clicker_plus_jai_v3';
+const SAVE_KEY = 'dream_cookie_clicker_jai_v1';
 
 function save() {
   const data = {
