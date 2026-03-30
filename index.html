@@ -263,30 +263,34 @@
 </div>
 
 <script>
+const GAME_VERSION = "1.0.0";
+const SAVE_KEY = "dream_cookie_clicker_jai_h3_v1";
+
 let cookies = 0;
 let clickPower = 1;
+let turboUnlocked = false;
 
 const BUILDINGS = [
-  { id:0, name:'Cursor',   icon:'👆', baseCost:15,        baseCps:0.1 },
-  { id:1, name:'Helper',   icon:'🧑', baseCost:120,       baseCps:1 },
-  { id:2, name:'Field',    icon:'🌾', baseCost:1500,      baseCps:8 },
-  { id:3, name:'Mine',     icon:'⛏️', baseCost:12000,     baseCps:47 },
-  { id:4, name:'Factory',  icon:'🏭', baseCost:130000,    baseCps:260 },
-  { id:5, name:'Lab',      icon:'⚗️', baseCost:1400000,   baseCps:1400 },
-  { id:6, name:'Portal',   icon:'🌀', baseCost:20000000,  baseCps:7800 },
-  { id:7, name:'Core',     icon:'💠', baseCost:330000000, baseCps:44000 }
+  { id:0, name:"Cursor",   icon:"👆", baseCost:50,        baseCps:0.1 },
+  { id:1, name:"Helper",   icon:"🧑", baseCost:400,       baseCps:1 },
+  { id:2, name:"Field",    icon:"🌾", baseCost:4000,      baseCps:8 },
+  { id:3, name:"Mine",     icon:"⛏️", baseCost:45000,     baseCps:40 },
+  { id:4, name:"Factory",  icon:"🏭", baseCost:500000,    baseCps:220 },
+  { id:5, name:"Lab",      icon:"⚗️", baseCost:6000000,   baseCps:1200 },
+  { id:6, name:"Portal",   icon:"🌀", baseCost:90000000,  baseCps:7000 },
+  { id:7, name:"Core",     icon:"💠", baseCost:1500000000,baseCps:40000 }
 ];
 
 let owned = new Array(BUILDINGS.length).fill(0);
 let buildingCpsMult = new Array(BUILDINGS.length).fill(1);
 
 const RARITIES = [
-  { key:'common',    label:'Common',    colorClass:'rarity-common',    weight:40 },
-  { key:'uncommon',  label:'Uncommon',  colorClass:'rarity-uncommon',  weight:30 },
-  { key:'rare',      label:'Rare',      colorClass:'rarity-rare',      weight:15 },
-  { key:'epic',      label:'Epic',      colorClass:'rarity-epic',      weight:8 },
-  { key:'legendary', label:'Legendary', colorClass:'rarity-legendary', weight:5 },
-  { key:'mythic',    label:'Mythic',    colorClass:'rarity-mythic',    weight:2 }
+  { key:"common",    label:"Common",    colorClass:"rarity-common",    weight:40 },
+  { key:"uncommon",  label:"Uncommon",  colorClass:"rarity-uncommon",  weight:30 },
+  { key:"rare",      label:"Rare",      colorClass:"rarity-rare",      weight:15 },
+  { key:"epic",      label:"Epic",      colorClass:"rarity-epic",      weight:8 },
+  { key:"legendary", label:"Legendary", colorClass:"rarity-legendary", weight:5 },
+  { key:"mythic",    label:"Mythic",    colorClass:"rarity-mythic",    weight:2 }
 ];
 
 function pickRarity() {
@@ -309,10 +313,10 @@ function generateUpgrades() {
   for (let i=1;i<=clickTiers;i++) {
     const rarity = pickRarity();
     const add = Math.max(1, Math.floor(i/2));
-    const cost = Math.floor(80 * Math.pow(1.4, i));
+    const cost = Math.floor(120 * Math.pow(1.5, i)); // harder
     UPGRADES.push({
       id:id++,
-      type:'click',
+      type:"click",
       tier:i,
       name:`Click Boost ${i}`,
       desc:`+${add} click power`,
@@ -325,11 +329,11 @@ function generateUpgrades() {
   BUILDINGS.forEach((b,bi)=>{
     for (let t=1;t<=25;t++) {
       const rarity = pickRarity();
-      const mult = 1 + (0.18 * t);
-      const cost = Math.floor(b.baseCost * Math.pow(1.7, t) * 3);
+      const mult = 1 + (0.16 * t);
+      const cost = Math.floor(b.baseCost * Math.pow(1.8, t) * 2.5); // upgrades cheaper than buildings but still hard
       UPGRADES.push({
         id:id++,
-        type:'building',
+        type:"building",
         buildingIndex:bi,
         tier:t,
         name:`${b.name} Upgrade ${t}`,
@@ -343,11 +347,11 @@ function generateUpgrades() {
 
   for (let g=1; g<=20; g++) {
     const rarity = pickRarity();
-    const mult = 1 + g*0.12;
-    const cost = Math.floor(100000 * Math.pow(2.1, g));
+    const mult = 1 + g*0.10;
+    const cost = Math.floor(200000 * Math.pow(2.0, g));
     UPGRADES.push({
       id:id++,
-      type:'global',
+      type:"global",
       tier:g,
       name:`Global Boost ${g}`,
       desc:`All building CPS ×${mult.toFixed(2)}`,
@@ -360,19 +364,22 @@ function generateUpgrades() {
 generateUpgrades();
 
 function fmt(n) {
-  if (n >= 1e12) return (n/1e12).toFixed(2)+'T';
-  if (n >= 1e9)  return (n/1e9).toFixed(2)+'B';
-  if (n >= 1e6)  return (n/1e6).toFixed(2)+'M';
-  if (n >= 1e3)  return (n/1e3).toFixed(2)+'K';
+  if (n >= 1e12) return (n/1e12).toFixed(2)+"T";
+  if (n >= 1e9)  return (n/1e9).toFixed(2)+"B";
+  if (n >= 1e6)  return (n/1e6).toFixed(2)+"M";
+  if (n >= 1e3)  return (n/1e3).toFixed(2)+"K";
   return Math.floor(n).toString();
 }
 
 function buildingCost(i) {
   const b = BUILDINGS[i];
-  return Math.round(b.baseCost * Math.pow(1.15, owned[i]));
+  return Math.round(b.baseCost * Math.pow(1.18, owned[i])); // aggressive scaling
 }
 
-function totalCps() {
+let goldenMultiplier = 1;
+let goldenTimeoutId = null;
+
+function totalBaseCps() {
   let t = 0;
   for (let i=0;i<BUILDINGS.length;i++) {
     const b = BUILDINGS[i];
@@ -381,50 +388,54 @@ function totalCps() {
   return t;
 }
 
-const cookiesEl = document.getElementById('cookies');
-const cpsEl = document.getElementById('cps');
-const clickPowerEl = document.getElementById('clickPower');
-const buildingsListEl = document.getElementById('buildingsList');
-const upgradesListEl = document.getElementById('upgradesList');
+function totalCps() {
+  return totalBaseCps() * goldenMultiplier;
+}
+
+const cookiesEl = document.getElementById("cookies");
+const cpsEl = document.getElementById("cps");
+const clickPowerEl = document.getElementById("clickPower");
+const buildingsListEl = document.getElementById("buildingsList");
+const upgradesListEl = document.getElementById("upgradesList");
 
 function renderStats() {
   cookiesEl.textContent = fmt(cookies);
-  cpsEl.textContent = fmt(totalCps()) + '/s';
+  cpsEl.textContent = fmt(totalCps()) + "/s";
   clickPowerEl.textContent = clickPower;
 }
 
 function flashCard(el) {
   if (!el) return;
-  el.classList.add('flash');
-  setTimeout(()=>el.classList.remove('flash'), 350);
+  el.classList.add("flash");
+  setTimeout(()=>el.classList.remove("flash"), 350);
 }
 
 function renderBuildings() {
-  buildingsListEl.innerHTML = '';
+  buildingsListEl.innerHTML = "";
   BUILDINGS.forEach((b,i)=>{
     const cost = buildingCost(i);
     const can = cookies >= cost;
-    const card = document.createElement('div');
-    card.className = 'card' + (can ? '' : ' locked');
-    card.addEventListener('click', () => {
+    const card = document.createElement("div");
+    card.className = "card" + (can ? "" : " locked");
+    card.addEventListener("click", () => {
       const currentCost = buildingCost(i);
       if (cookies < currentCost) return;
       buyBuilding(i, card);
     });
 
-    const main = document.createElement('div');
-    main.className = 'card-main';
+    const main = document.createElement("div");
+    main.className = "card-main";
 
-    const icon = document.createElement('div');
-    icon.className = 'card-icon';
+    const icon = document.createElement("div");
+    icon.className = "card-icon";
     icon.textContent = b.icon;
 
-    const textWrap = document.createElement('div');
-    const title = document.createElement('div');
-    title.className = 'card-text-title';
+    const textWrap = document.createElement("div");
+    const title = document.createElement("div");
+    title.className = "card-text-title";
     title.textContent = b.name;
-    const sub = document.createElement('div');
-    sub.className = 'card-text-sub';
+    const sub = document.createElement("div");
+    sub.className = "card-text-sub";
     sub.textContent = `+${fmt(b.baseCps * buildingCpsMult[i])} cookies/sec each`;
 
     textWrap.appendChild(title);
@@ -433,13 +444,13 @@ function renderBuildings() {
     main.appendChild(icon);
     main.appendChild(textWrap);
 
-    const right = document.createElement('div');
-    right.className = 'card-right';
-    const price = document.createElement('div');
-    price.className = 'price';
+    const right = document.createElement("div");
+    right.className = "card-right";
+    const price = document.createElement("div");
+    price.className = "price";
     price.textContent = fmt(cost);
-    const ownedEl = document.createElement('div');
-    ownedEl.className = 'owned';
+    const ownedEl = document.createElement("div");
+    ownedEl.className = "owned";
     ownedEl.textContent = `Owned: ${owned[i]}`;
 
     right.appendChild(price);
@@ -452,42 +463,42 @@ function renderBuildings() {
 }
 
 function renderUpgrades() {
-  upgradesListEl.innerHTML = '';
+  upgradesListEl.innerHTML = "";
   const visible = UPGRADES.filter(u => !boughtUpgrades.includes(u.id))
     .sort((a,b)=>a.cost-b.cost)
     .slice(0, 80);
 
   visible.forEach(u=>{
     const can = cookies >= u.cost;
-    const card = document.createElement('div');
-    card.className = 'card' + (can ? '' : ' locked');
-    card.addEventListener('click', () => {
+    const card = document.createElement("div");
+    card.className = "card" + (can ? "" : " locked");
+    card.addEventListener("click", () => {
       if (cookies < u.cost) return;
       buyUpgrade(u, card);
     });
 
-    const main = document.createElement('div');
-    main.className = 'card-main';
+    const main = document.createElement("div");
+    main.className = "card-main";
 
-    const icon = document.createElement('div');
-    icon.className = 'card-icon';
+    const icon = document.createElement("div");
+    icon.className = "card-icon";
     icon.textContent =
-      u.type === 'click'    ? '🖱️' :
-      u.type === 'building' ? BUILDINGS[u.buildingIndex].icon :
-                              '⚙️';
+      u.type === "click"    ? "🖱️" :
+      u.type === "building" ? BUILDINGS[u.buildingIndex].icon :
+                              "⚙️";
 
-    const textWrap = document.createElement('div');
+    const textWrap = document.createElement("div");
 
-    const rarityTag = document.createElement('div');
-    rarityTag.className = 'rarity-tag ' + u.rarity.colorClass;
+    const rarityTag = document.createElement("div");
+    rarityTag.className = "rarity-tag " + u.rarity.colorClass;
     rarityTag.textContent = u.rarity.label;
 
-    const title = document.createElement('div');
-    title.className = 'card-text-title';
+    const title = document.createElement("div");
+    title.className = "card-text-title";
     title.textContent = u.name;
 
-    const sub = document.createElement('div');
-    sub.className = 'card-text-sub';
+    const sub = document.createElement("div");
+    sub.className = "card-text-sub";
     sub.textContent = u.desc;
 
     textWrap.appendChild(rarityTag);
@@ -497,10 +508,10 @@ function renderUpgrades() {
     main.appendChild(icon);
     main.appendChild(textWrap);
 
-    const right = document.createElement('div');
-    right.className = 'card-right';
-    const price = document.createElement('div');
-    price.className = 'price';
+    const right = document.createElement("div");
+    right.className = "card-right";
+    const price = document.createElement("div");
+    price.className = "price";
     price.textContent = fmt(u.cost);
 
     right.appendChild(price);
@@ -523,11 +534,11 @@ function buyBuilding(i, cardEl) {
 }
 
 function applyUpgradeEffect(u) {
-  if (u.type === 'click') {
+  if (u.type === "click") {
     clickPower += u.addClick;
-  } else if (u.type === 'building') {
+  } else if (u.type === "building") {
     buildingCpsMult[u.buildingIndex] *= u.mult;
-  } else if (u.type === 'global') {
+  } else if (u.type === "global") {
     for (let i=0;i<buildingCpsMult.length;i++) {
       buildingCpsMult[i] *= u.mult;
     }
@@ -546,67 +557,117 @@ function buyUpgrade(u, cardEl) {
   flashCard(cardEl);
 }
 
-const cookieBtn = document.getElementById('cookieBtn');
-cookieBtn.addEventListener('click', e=>{
+const cookieBtn = document.getElementById("cookieBtn");
+cookieBtn.addEventListener("click", e=>{
   cookies += clickPower;
   const rect = cookieBtn.getBoundingClientRect();
   const x = rect.left + rect.width/2 + (Math.random()*40-20);
   const y = rect.top + rect.height/2 + (Math.random()*40-20);
-  spawnFloat('+'+clickPower, x, y);
+  spawnFloat("+"+clickPower, x, y);
   save();
   renderStats();
 });
 
+/* Turbo Enter with code 9736, x2 click power */
+document.addEventListener("keydown", async (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+
+    if (!turboUnlocked) {
+      const code = prompt("Enter Turbo Code:");
+      if (code === "9736") {
+        turboUnlocked = true;
+        spawnFloat("Turbo Unlocked!", window.innerWidth/2, window.innerHeight/2);
+      } else if (code !== null) {
+        alert("Wrong code.");
+      }
+      return;
+    }
+
+    if (turboUnlocked) {
+      const gain = clickPower * 2;
+      cookies += gain;
+      spawnFloat("+"+gain, window.innerWidth/2, window.innerHeight/2);
+      await save();
+      renderStats();
+    }
+  }
+});
+
 function spawnFloat(text,x,y) {
-  const el = document.createElement('div');
-  el.className = 'float';
+  const el = document.createElement("div");
+  el.className = "float";
   el.textContent = text;
-  el.style.left = x+'px';
-  el.style.top = y+'px';
+  el.style.left = x+"px";
+  el.style.top = y+"px";
   document.body.appendChild(el);
   setTimeout(()=>el.remove(), 900);
 }
 
+/* main loop */
 setInterval(()=>{
   const cps = totalCps();
   cookies += cps/10;
   renderStats();
 }, 100);
 
-/* golden cookie */
-let goldenTimeout = null;
-const leftPanel = document.querySelector('.left');
+/* GC2 hybrid golden cookies */
+let goldenTimer = null;
+const leftPanel = document.querySelector(".left");
 
 function scheduleGoldenCookie() {
-  const delay = 60000 + Math.random()*60000;
-  goldenTimeout = setTimeout(spawnGoldenCookie, delay);
+  const delay = 70000 + Math.random()*50000; // 70–120s
+  goldenTimer = setTimeout(spawnGoldenCookie, delay);
+}
+
+function clearGoldenEffect() {
+  goldenMultiplier = 1;
+  if (goldenTimeoutId) {
+    clearTimeout(goldenTimeoutId);
+    goldenTimeoutId = null;
+  }
 }
 
 function spawnGoldenCookie() {
-  const gc = document.createElement('div');
-  gc.className = 'golden-cookie';
+  const gc = document.createElement("div");
+  gc.className = "golden-cookie";
   const rect = leftPanel.getBoundingClientRect();
   const x = Math.random()*(rect.width-80)+10;
   const y = Math.random()*(rect.height-80)+10;
-  gc.style.left = x+'px';
-  gc.style.top = y+'px';
-  gc.textContent = '⭐';
+  gc.style.left = x+"px";
+  gc.style.top = y+"px";
+  gc.textContent = "⭐";
   leftPanel.appendChild(gc);
 
-  const rewardType = Math.random();
-  gc.addEventListener('click', ()=>{
+  const mode = Math.random(); // GC2 hybrid
+
+  gc.addEventListener("click", async ()=>{
     gc.remove();
-    if (rewardType < 0.5) {
-      const bonus = Math.max(50, Math.floor(cookies*0.15));
+
+    if (mode < 0.33) {
+      // small cookie drop
+      const bonus = Math.max(200, Math.floor(totalBaseCps()*20));
       cookies += bonus;
-      spawnFloat('+'+fmt(bonus), rect.left + x + 30, rect.top + y + 30);
+      spawnFloat("+"+fmt(bonus), rect.left + x + 30, rect.top + y + 30);
+    } else if (mode < 0.66) {
+      // x2 CPS for 15s
+      clearGoldenEffect();
+      goldenMultiplier = 2;
+      spawnFloat("CPS x2", rect.left + x + 30, rect.top + y + 30);
+      goldenTimeoutId = setTimeout(()=>{
+        clearGoldenEffect();
+      }, 15000);
     } else {
-      const cps = totalCps();
-      const bonus = Math.max(100, Math.floor(cps*60));
-      cookies += bonus;
-      spawnFloat('+'+fmt(bonus), rect.left + x + 30, rect.top + y + 30);
+      // x3 CPS for 10s
+      clearGoldenEffect();
+      goldenMultiplier = 3;
+      spawnFloat("CPS x3", rect.left + x + 30, rect.top + y + 30);
+      goldenTimeoutId = setTimeout(()=>{
+        clearGoldenEffect();
+      }, 10000);
     }
-    save();
+
+    await save();
     renderStats();
     scheduleGoldenCookie();
   });
@@ -620,37 +681,44 @@ function spawnGoldenCookie() {
 }
 
 /* tabs */
-const tabs = document.querySelectorAll('.tab');
-const panelBuildings = document.getElementById('panel-buildings');
-const panelUpgrades = document.getElementById('panel-upgrades');
+const tabs = document.querySelectorAll(".tab");
+const panelBuildings = document.getElementById("panel-buildings");
+const panelUpgrades = document.getElementById("panel-upgrades");
 
 tabs.forEach(tab=>{
-  tab.addEventListener('click', ()=>{
-    tabs.forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
+  tab.addEventListener("click", ()=>{
+    tabs.forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
     const which = tab.dataset.tab;
-    if (which === 'buildings') {
-      panelBuildings.style.display = '';
-      panelUpgrades.style.display = 'none';
+    if (which === "buildings") {
+      panelBuildings.style.display = "";
+      panelUpgrades.style.display = "none";
     } else {
-      panelBuildings.style.display = 'none';
-      panelUpgrades.style.display = '';
+      panelBuildings.style.display = "none";
+      panelUpgrades.style.display = "";
     }
   });
 });
 
-/* save/load/import/export/reset */
-const SAVE_KEY = 'dream_cookie_clicker_jai_v1';
-
-function save() {
+/* save/load + clipboard + watchdog */
+async function save() {
   const data = {
+    version: GAME_VERSION,
     cookies,
     clickPower,
     owned,
     buildingCpsMult,
     boughtUpgrades
   };
-  localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  const raw = JSON.stringify(data);
+  localStorage.setItem(SAVE_KEY, raw);
+
+  try {
+    await navigator.clipboard.writeText(btoa(raw));
+    console.log("Saved to clipboard");
+  } catch (e) {
+    console.warn("Clipboard save failed", e);
+  }
 }
 
 function load() {
@@ -658,23 +726,63 @@ function load() {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return;
     const data = JSON.parse(raw);
-    if (typeof data.cookies === 'number') cookies = data.cookies;
-    if (typeof data.clickPower === 'number') clickPower = data.clickPower;
+
+    if (data.version && data.version !== GAME_VERSION) {
+      // different version; keep data but watchdog will handle reload
+    }
+
+    cookies = typeof data.cookies === "number" ? data.cookies : 0;
+    clickPower = typeof data.clickPower === "number" ? data.clickPower : 1;
     if (Array.isArray(data.owned) && data.owned.length === BUILDINGS.length) owned = data.owned;
     if (Array.isArray(data.buildingCpsMult) && data.buildingCpsMult.length === BUILDINGS.length) buildingCpsMult = data.buildingCpsMult;
     if (Array.isArray(data.boughtUpgrades)) boughtUpgrades = data.boughtUpgrades;
   } catch(e) {
-    console.warn('Failed to load save', e);
+    console.warn("Failed to load save", e);
   }
 }
 
+async function autoClipboardSave() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    const encoded = btoa(raw);
+    await navigator.clipboard.writeText(encoded);
+    console.log("Auto-saved to clipboard");
+  } catch (e) {
+    console.warn("Auto clipboard save failed", e);
+  }
+}
+setInterval(autoClipboardSave, 10000);
+
+async function checkVersion() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    if (data.version && data.version !== GAME_VERSION) {
+      try {
+        await navigator.clipboard.writeText(btoa(raw));
+        alert("Game updated! Your save was backed up. Refreshing...");
+      } catch (e) {
+        alert("Game updated! Copy your save manually before refreshing.");
+      }
+      location.reload();
+    }
+  } catch (e) {
+    console.warn("Version check failed", e);
+  }
+}
+setInterval(checkVersion, 3000);
+
+/* reset / export / import */
 function hardReset() {
-  if (!confirm('Reset all progress?')) return;
+  if (!confirm("Reset all progress?")) return;
   cookies = 0;
   clickPower = 1;
   owned = new Array(BUILDINGS.length).fill(0);
   buildingCpsMult = new Array(BUILDINGS.length).fill(1);
   boughtUpgrades = [];
+  clearGoldenEffect();
   save();
   renderStats();
   renderBuildings();
@@ -684,19 +792,19 @@ function hardReset() {
 function exportSave() {
   const raw = localStorage.getItem(SAVE_KEY);
   if (!raw) {
-    alert('No save found.');
+    alert("No save found.");
     return;
   }
   const encoded = btoa(raw);
   navigator.clipboard.writeText(encoded).then(()=>{
-    alert('Save copied to clipboard.');
+    alert("Save copied to clipboard.");
   }).catch(()=>{
-    prompt('Copy this save code:', encoded);
+    prompt("Copy this save code:", encoded);
   });
 }
 
 function importSave() {
-  const code = prompt('Paste your save code:');
+  const code = prompt("Paste your save code:");
   if (!code) return;
   try {
     const json = atob(code.trim());
@@ -705,15 +813,15 @@ function importSave() {
     renderStats();
     renderBuildings();
     renderUpgrades();
-    alert('Save imported.');
+    alert("Save imported.");
   } catch(e) {
-    alert('Invalid save code.');
+    alert("Invalid save code.");
   }
 }
 
-document.getElementById('resetBtn').addEventListener('click', hardReset);
-document.getElementById('exportBtn').addEventListener('click', exportSave);
-document.getElementById('importBtn').addEventListener('click', importSave);
+document.getElementById("resetBtn").addEventListener("click", hardReset);
+document.getElementById("exportBtn").addEventListener("click", exportSave);
+document.getElementById("importBtn").addEventListener("click", importSave);
 
 /* init */
 load();
