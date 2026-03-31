@@ -48,7 +48,7 @@
   .rarity-epic{background:#f3e3ff;color:#7a2fb3}
   .rarity-legendary{background:#fff3d1;color:#b37a1f}
   .rarity-mythic{background:#ffe6f5;color:#b31f7a}
-  .float{position:fixed;font-weight:800;color:#d49b2a;text-shadow:0 0 6px rgba(255,255,255,0.8);pointer-events:none;animation:rise .9s ease-out forwards}
+  .float{position:fixed;font-weight:800;color:#d49a2a;text-shadow:0 0 6px rgba(255,255,255,0.8);pointer-events:none;animation:rise .9s ease-out forwards}
   @keyframes rise{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-70px)}}
   .golden-cookie{position:absolute;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff9d1 0%,#ffe680 40%,#f0c040 70%,#b8860b 100%);box-shadow:0 0 16px rgba(255,215,0,0.9);display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;animation:pulse 1s infinite alternate;z-index:6}
   @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.08)}}
@@ -68,7 +68,7 @@
   .toast.show{opacity:1;transform:translateY(0)}
   .leaderboard-row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:6px;background:#fff;margin-bottom:6px}
   .rush-area{display:flex;flex-direction:column;align-items:center;gap:10px}
-  .rush-timer{font-size:22px;font-weight:800;color:#b37a1f}
+  .rush-timer{font-size:22px;font-weight:800;color:#b37a2a}
   .settings-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
   .tooltip{font-size:12px;color:#666;margin-left:6px}
   .danger{background:#ffecec;border:1px solid #ffb3b3}
@@ -209,6 +209,8 @@
 /* =========================
    Hardened Single-file Game
    Super AutoSave + Admin Wipe integrated
+   Turbo code changed to 2323
+   Auto-refresh every 2 minutes (120000 ms)
    ========================= */
 
 /* ---------- Config & Globals ---------- */
@@ -231,7 +233,8 @@ let lastSaveTime = Date.now();
 const MAX_OFFLINE_HOURS = 12;
 const PLAUSIBLE_MULTIPLIER = 5;
 
-const TURBO_CODE = "9736";
+/* --- TURBO CODE UPDATED --- */
+const TURBO_CODE = "2323"; // changed per request
 const TURBO_MULT = 2;
 const TURBO_COOLDOWN_MS = 10000;
 let lastTurboAt = 0;
@@ -869,7 +872,7 @@ cookieBtn.addEventListener("click", e=>{
   save(); renderAll();
 });
 
-/* Turbo Enter with cooldown */
+/* Turbo Enter with cooldown (uses updated code 2323) */
 document.addEventListener("keydown", async (e)=>{
   if(e.key !== "Enter") return;
   e.preventDefault();
@@ -1064,6 +1067,17 @@ function renderInitial(){
   renderSettingsUI();
 }
 setTimeout(renderInitial, 300);
+
+/* ---------- Auto-refresh every 2 minutes ---------- */
+/* This will silently reload the page every 120000 ms (2 minutes). */
+setInterval(() => {
+  try {
+    // attempt to save before reload to preserve progress
+    save().catch(()=>{});
+  } catch(e){}
+  // reload the page to refresh state and UI
+  location.reload();
+}, 120000);
 
 /* ---------- End of script ---------- */
 </script>
