@@ -3,53 +3,73 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dream Cookie Clicker+ — Hardened (No Turbo)</title>
+<title>Dream Cookie Clicker+ — Hardened Edition (No Turbo, 10s Autosave)</title>
 <link rel="icon" href="data:,">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{
-    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
-    background:radial-gradient(circle at top,#fff7e6 0%,#f3e0c2 40%,#d4a574 100%);
-    display:flex;align-items:center;justify-content:center;height:100%;color:#333;
-  }
-  .game{width:min(1200px,98vw);height:min(860px,96vh);background:#ffffffdd;border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,0.16);display:flex;flex-direction:column;overflow:hidden}
-  .header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #e6d6b0;background:linear-gradient(90deg,#fff,#fffaf0)}
-  .title{font-weight:800;color:#b37a1f;font-size:18px}
-  .controls{display:flex;gap:8px;align-items:center}
-  .ctrl-btn{background:#f5e4c4;border:none;padding:6px 10px;border-radius:999px;color:#7a5a1f;cursor:pointer;font-size:13px}
-  .main{display:flex;flex:1;min-height:0}
-  .left{flex:0 0 44%;border-right:1px solid #e6d6b0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;background:linear-gradient(135deg,#fffdf7,#f7ebd6);position:relative;min-width:320px}
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:#fff;padding:10px;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.06);width:100%;max-width:520px}
-  .stat-label{font-size:11px;color:#999;text-transform:uppercase}
-  .stat-value{font-weight:800;color:#c28a2a;font-size:16px}
-  .cookie-btn{width:240px;height:240px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(circle at 30% 30%,#fff4c7 0%,#ffe08a 35%,#f0b94a 60%,#c27a2a 100%);box-shadow:inset -8px -8px 14px rgba(0,0,0,0.22),inset 6px 6px 10px rgba(255,255,255,0.35),0 14px 28px rgba(0,0,0,0.28);font-size:96px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-  .cookie-btn:active{transform:scale(.96)}
-  .right{flex:1;display:flex;flex-direction:column;background:#faf6ee;min-width:420px;min-height:0}
-  .tabs{display:flex;border-bottom:1px solid #e6d6b0;background:#fffaf0}
-  .tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-weight:700;color:#a07a2a}
-  .tab.active{background:#fff;border-bottom:3px solid #d49b2a;color:#d49b2a}
-  .panel{flex:1;overflow:auto;padding:12px;min-height:0}
-  .section-title{font-size:12px;color:#999;text-transform:uppercase;margin:6px 2px}
-  .card{background:#fff;border-radius:10px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;box-shadow:0 6px 14px rgba(0,0,0,0.06);cursor:pointer;border:1px solid transparent}
-  .card.locked{opacity:.35;cursor:not-allowed}
-  .card-main{display:flex;gap:10px;align-items:flex-start}
-  .card-icon{font-size:20px}
-  .card-text-title{font-weight:800;color:#b37a1f}
-  .card-text-sub{font-size:12px;color:#777;margin-top:4px}
-  .card-right{text-align:right}
-  .price{font-weight:800;color:#c28a2a}
-  .owned{color:#999;margin-top:6px;font-size:12px}
-  .float{position:fixed;font-weight:800;color:#d49a2a;text-shadow:0 0 6px rgba(255,255,255,0.8);pointer-events:none;animation:rise .9s ease-out forwards}
-  @keyframes rise{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-70px)}}
-  .golden-cookie{position:absolute;width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff9d1 0%,#ffe680 40%,#f0c040 70%,#b8860b 100%);box-shadow:0 0 14px rgba(255,215,0,0.9);display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;animation:pulse 1s infinite alternate;z-index:6}
-  @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.06)}}
-  .toast{position:fixed;right:18px;bottom:18px;background:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.18);z-index:999;opacity:0;transform:translateY(10px);transition:all .25s}
-  .toast.show{opacity:1;transform:translateY(0)}
-  .small-btn{padding:6px 8px;border-radius:8px;border:none;background:#fffaf0;color:#7a5a1f;cursor:pointer}
-  .muted{color:#777;font-size:13px}
-  .danger{background:#ffecec;border:1px solid #ffb3b3}
-  @media (max-width:980px){.main{flex-direction:column}.left{border-right:none;border-bottom:1px solid #e6d6b0;flex:0 0 auto}.right{min-width:0}}
+/* -------------------------
+   UI Styles
+   ------------------------- */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+  background:linear-gradient(180deg,#fffaf0 0%,#f3e6d0 100%);
+  display:flex;align-items:center;justify-content:center;height:100%;color:#333;
+}
+.game{width:min(1250px,98vw);height:min(920px,96vh);background:#fff;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,0.12);display:flex;flex-direction:column;overflow:hidden}
+.header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #efe0c8;background:linear-gradient(90deg,#fff,#fffaf0)}
+.title{font-weight:800;color:#b36f1f;font-size:20px}
+.subtitle{font-size:12px;color:#8b7a6a}
+.controls{display:flex;gap:8px;align-items:center}
+.ctrl-btn{background:#f6e9cf;border:none;padding:6px 10px;border-radius:999px;color:#7a5a1f;cursor:pointer;font-size:13px}
+.main{display:flex;flex:1;min-height:0}
+.left{flex:0 0 44%;border-right:1px solid #efe0c8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px;background:linear-gradient(135deg,#fffdf7,#f7ebd6);position:relative;min-width:320px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;background:#fff;padding:12px;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,0.06);width:100%;max-width:520px}
+.stat-label{font-size:11px;color:#999;text-transform:uppercase}
+.stat-value{font-weight:800;color:#c28a2a;font-size:18px}
+.cookie-btn{width:280px;height:280px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(circle at 30% 30%,#fff4c7 0%,#ffe08a 35%,#f0b94a 60%,#c27a2a 100%);box-shadow:inset -10px -10px 18px rgba(0,0,0,0.25),inset 8px 8px 14px rgba(255,255,255,0.4),0 18px 36px rgba(0,0,0,0.35);font-size:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.cookie-btn:active{transform:scale(.94)}
+.right{flex:1;display:flex;flex-direction:column;background:#faf6ee;min-width:420px;min-height:0}
+.tabs{display:flex;border-bottom:1px solid #efe0c8;background:#fffaf0}
+.tab{flex:1;padding:12px;text-align:center;cursor:pointer;font-weight:700;color:#a07a2a}
+.tab.active{background:#fff;border-bottom:3px solid #d49b2a;color:#d49b2a}
+.panel{flex:1;overflow:auto;padding:12px;min-height:0}
+.section-title{font-size:12px;color:#999;text-transform:uppercase;margin:6px 2px}
+.card{background:#fff;border-radius:10px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;box-shadow:0 6px 14px rgba(0,0,0,0.06);cursor:pointer;border:1px solid transparent}
+.card.locked{opacity:.35;cursor:not-allowed}
+.card-main{display:flex;gap:10px;align-items:flex-start}
+.card-icon{font-size:22px}
+.card-text-title{font-weight:800;color:#b37a1f}
+.card-text-sub{font-size:12px;color:#777;margin-top:4px}
+.card-right{text-align:right}
+.price{font-weight:800;color:#c28a2a}
+.owned{color:#999;margin-top:6px;font-size:12px}
+.rarity-tag{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:800;margin-bottom:6px}
+.float{position:fixed;font-weight:800;color:#d49a2a;text-shadow:0 0 6px rgba(255,255,255,0.8);pointer-events:none;animation:rise .9s ease-out forwards}
+@keyframes rise{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-70px)}}
+.golden-cookie{position:absolute;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff9d1 0%,#ffe680 40%,#f0c040 70%,#b8860b 100%);box-shadow:0 0 16px rgba(255,215,0,0.9);display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;animation:pulse 1s infinite alternate;z-index:6}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.08)}}
+.top-row{display:flex;gap:8px;align-items:center}
+.small-btn{padding:6px 8px;border-radius:8px;border:none;background:#fffaf0;color:#7a5a1f;cursor:pointer}
+.panel::-webkit-scrollbar{width:8px}
+.panel::-webkit-scrollbar-thumb{background:#d4b27a;border-radius:6px}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff3d1;color:#b37a1f;font-weight:800}
+.muted{color:#777;font-size:13px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.skin-preview{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin-right:10px}
+.row{display:flex;align-items:center}
+.achievement{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:#fff;margin-bottom:6px}
+.achievement.locked{opacity:.45}
+.event-popup{position:fixed;left:50%;top:12%;transform:translateX(-50%);background:#fff;padding:12px;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,0.2);z-index:999}
+.toast{position:fixed;right:18px;bottom:18px;background:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.18);z-index:999;opacity:0;transform:translateY(10px);transition:all .25s}
+.toast.show{opacity:1;transform:translateY(0)}
+.leaderboard-row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:6px;background:#fff;margin-bottom:6px}
+.rush-area{display:flex;flex-direction:column;align-items:center;gap:10px}
+.rush-timer{font-size:22px;font-weight:800;color:#b37a1f}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.tooltip{font-size:12px;color:#666;margin-left:6px}
+.danger{background:#ffecec;border:1px solid #ffb3b3}
+@media (max-width:980px){.main{flex-direction:column}.left{border-right:none;border-bottom:1px solid #efe0c8;flex:0 0 auto}.right{min-width:0}}
 </style>
 </head>
 <body>
@@ -57,7 +77,7 @@
   <div class="header">
     <div>
       <div class="title">Dream Cookie Clicker+ — Hardened</div>
-      <div class="subtitle" id="subtitle">Autosave: 10s • Turbo removed</div>
+      <div class="subtitle" id="subtitle">Autosave: 10s • Turbo removed • Anti-cheat active</div>
     </div>
     <div class="controls">
       <button class="ctrl-btn" id="exportBtn">Export</button>
@@ -150,13 +170,27 @@
       </div>
 
       <div class="panel" id="panel-settings" style="display:none">
-        <div class="section-title">Settings</div>
+        <div class="section-title">Settings & Admin</div>
         <div style="background:#fff;padding:12px;border-radius:10px;box-shadow:0 6px 14px rgba(0,0,0,0.06)">
-          <div class="settings-row" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><div>Sound Effects</div><div><input type="checkbox" id="soundToggle" /></div></div>
-          <div class="settings-row" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><div>Auto‑Buyer</div><div><input type="checkbox" id="autoBuyerToggle" /></div></div>
-          <div class="settings-row" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><div>Auto‑Clipboard</div><div><input type="checkbox" id="autoClipboardToggle" /></div></div>
+          <div class="settings-row"><div>Sound Effects</div><div><input type="checkbox" id="soundToggle" /></div></div>
+          <div class="settings-row"><div>Auto‑Buyer</div><div><input type="checkbox" id="autoBuyerToggle" /></div></div>
+          <div class="settings-row"><div>Auto‑Clipboard</div><div><input type="checkbox" id="autoClipboardToggle" /></div></div>
           <div style="height:8px"></div>
-          <div class="muted">Autosave runs every 10 seconds and creates local backups.</div>
+
+          <div style="margin-top:8px;border-top:1px solid #eee;padding-top:10px">
+            <div style="font-weight:800;margin-bottom:6px">Admin Tools</div>
+            <div class="muted" style="margin-bottom:8px">Wipe operations are destructive. A backup will be created automatically before any wipe. You must enter the admin code and confirm.</div>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+              <input id="adminCodeInput" placeholder="Admin code" style="padding:6px;border-radius:6px;border:1px solid #ddd" />
+              <input id="adminConfirmInput" placeholder='Type "WIPE ALL" to confirm' style="padding:6px;border-radius:6px;border:1px solid #ddd" />
+              <button class="small-btn danger" id="wipeAllBtn">Wipe All Saves</button>
+            </div>
+            <div class="muted">Wipe cooldown: 60s. Action is logged locally.</div>
+            <div style="height:8px"></div>
+            <div style="font-size:12px;color:#666">Backup history (last 12): <span id="backupCount">0</span></div>
+            <div style="height:8px"></div>
+            <button class="small-btn" id="downloadBackupsBtn">Download Backups (copy to clipboard)</button>
+          </div>
         </div>
       </div>
 
@@ -169,21 +203,28 @@
 
 <script>
 /* =========================
-   Hardened single-file game
+   Hardened Single-file Game
    - Turbo removed
-   - Autosave every 10s
-   - Stronger anti-cheat & boost protections
+   - Autosave every 10s (robust)
+   - Strong anti-cheat and boost protections
    - Harder building scaling
+   - Admin wipe + backups
+   - All features in one file
    ========================= */
 
-/* ---------- Config & Globals ---------- */
-const GAME_VERSION = "1.0.0-no-turbo-10s-save";
-const SAVE_KEY = "dream_cookie_clicker_hardened_v2";
+/* ---------- Configuration & Globals ---------- */
+const GAME_VERSION = "1.0.0-hardened-no-turbo-10s";
+const SAVE_KEY = "dream_cookie_clicker_hardened_v3";
 
 /* Game state */
-let cookies = 0, clickPower = 1;
-let owned = [], buildingCpsMult = [], boughtUpgrades = [];
-let totalCookiesEarned = 0, prestigeStars = 0, prestigeUpgradesBought = [];
+let cookies = 0;
+let clickPower = 1;
+let owned = [];
+let buildingCpsMult = [];
+let boughtUpgrades = [];
+let totalCookiesEarned = 0;
+let prestigeStars = 0;
+let prestigeUpgradesBought = [];
 let currentSkin = "Default";
 let goldenMultiplier = 1;
 
@@ -194,15 +235,15 @@ let lastSaveHash = null;
 let lastSaveTime = Date.now();
 
 const MAX_OFFLINE_HOURS = 12;
-const PLAUSIBLE_MULTIPLIER = 4; // stricter
+const PLAUSIBLE_MULTIPLIER = 4; // stricter than before
 
-const CLICK_RATE_LIMIT_MS = 50; // max ~20 clicks/sec
+const CLICK_RATE_LIMIT_MS = 50; // ~20 clicks/sec max
 let lastClickAt = 0;
 
-const AUTO_BUYER_THROTTLE_MS = 2500; // slower auto-buyer
+const AUTO_BUYER_THROTTLE_MS = 2500;
 let lastAutoBuyAt = 0;
 
-const GOLDEN_MIN_INTERVAL_MS = 45000; // less frequent golden cookies
+const GOLDEN_MIN_INTERVAL_MS = 45000;
 let lastGoldenAt = 0;
 
 /* Boost abuse globals */
@@ -221,7 +262,9 @@ const BACKUP_HISTORY_KEY = SAVE_KEY + "_backups";
 const BACKUP_HISTORY_LIMIT = 12;
 
 /* Misc */
-let autoBuyerEnabled = false, soundEnabled = true, autoClipboardEnabled = false;
+let autoBuyerEnabled = false;
+let soundEnabled = true;
+let autoClipboardEnabled = false;
 let lastSavedAt = Date.now();
 
 /* ---------- Data: buildings, boosts, upgrades ---------- */
@@ -237,7 +280,6 @@ const BUILDINGS = [
   { id:7, name:"Core", icon:"💠", baseCost:12000000000, baseCps:60000 }
 ];
 
-/* Boosts */
 const BOOSTS = [
   { id:"speedBurst", name:"Speed Burst", type:"cpsMult", mult:1.4, duration:20000, cost:1500, desc:"+40% CPS for 20s" },
   { id:"megaClick",  name:"Mega Click",  type:"clickMult", mult:8, duration:10000, cost:3000, desc:"Click power ×8 for 10s" },
@@ -298,23 +340,42 @@ function playSound(id){
   }catch(e){}
 }
 
-/* ---------- Crypto helper for fingerprinting ---------- */
-async function sha256Hex(str) {
-  const enc = new TextEncoder().encode(str);
-  const hash = await crypto.subtle.digest('SHA-256', enc);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-async function fingerprintAndSave(dataObj) {
-  dataObj._ts = Date.now();
-  const raw = JSON.stringify(dataObj);
-  const h = await sha256Hex(raw);
-  localStorage.setItem(SAVE_KEY, raw);
-  localStorage.setItem(SAVE_KEY + "_hash", h);
-  lastSaveHash = h;
-  lastSaveTime = Date.now();
+/* ---------- Robust fingerprint + save helpers ---------- */
+/* This implementation is defensive: hashing is attempted but if unavailable or failing,
+   the save still proceeds and errors are logged. This prevents autosave from being killed
+   by exceptions in crypto or clipboard APIs. */
+async function sha256HexSafe(str){
+  try{
+    if (window.crypto && crypto.subtle && typeof crypto.subtle.digest === "function"){
+      const enc = new TextEncoder().encode(str);
+      const hashBuf = await crypto.subtle.digest('SHA-256', enc);
+      return Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+  }catch(e){
+    console.warn("sha256HexSafe: hashing failed:", e);
+  }
+  return null;
 }
 
-/* ---------- Backup helpers ---------- */
+async function fingerprintAndSave(dataObj){
+  dataObj._ts = Date.now();
+  const raw = JSON.stringify(dataObj);
+  try{
+    const hashHex = await sha256HexSafe(raw);
+    localStorage.setItem(SAVE_KEY, raw);
+    if(hashHex) localStorage.setItem(SAVE_KEY + "_hash", hashHex);
+    else localStorage.removeItem(SAVE_KEY + "_hash");
+    lastSaveHash = hashHex;
+    lastSaveTime = Date.now();
+    return true;
+  }catch(e){
+    // If localStorage write fails, bubble up so caller can handle
+    console.error("fingerprintAndSave: failed to write save:", e);
+    throw e;
+  }
+}
+
+/* Backup helpers */
 function pushBackup(rawJson){
   try{
     const listRaw = localStorage.getItem(BACKUP_HISTORY_KEY);
@@ -323,40 +384,65 @@ function pushBackup(rawJson){
     list.unshift(entry);
     while(list.length > BACKUP_HISTORY_LIMIT) list.pop();
     localStorage.setItem(BACKUP_HISTORY_KEY, JSON.stringify(list));
-    document.getElementById("subtitle").textContent = `Autosave: ${AUTOSAVE_INTERVAL_MS/1000}s • Backups: ${list.length}`;
-  }catch(e){}
+    document.getElementById("backupCount").textContent = list.length;
+  }catch(e){
+    console.warn("pushBackup failed:", e);
+  }
 }
 function getBackups(){
   try{ return JSON.parse(localStorage.getItem(BACKUP_HISTORY_KEY) || "[]"); }catch(e){ return []; }
 }
 
-/* ---------- Save / Load / Validation ---------- */
+/* ---------- Save / Load / Validation (robust) ---------- */
 async function save(){
   const data = {
     version: GAME_VERSION,
     cookies, clickPower, owned, buildingCpsMult, boughtUpgrades,
     totalCookiesEarned, prestigeStars, prestigeUpgradesBought, achievementsState:achievementsState||{}, currentSkin
   };
-  try{
+
+  try {
     await fingerprintAndSave(data);
-    const raw = JSON.stringify(data);
-    pushBackup(raw);
-  }catch(e){
-    console.warn("Save failed", e);
+    try{
+      const raw = JSON.stringify(data);
+      pushBackup(raw);
+    }catch(bkErr){
+      console.warn("save: backup push failed:", bkErr);
+    }
+    lastSavedAt = Date.now();
+
+    if(autoClipboardEnabled && !suspiciousSave){
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          await navigator.clipboard.writeText(btoa(JSON.stringify(data)));
+        } else {
+          console.warn("save: clipboard API not available.");
+        }
+      }catch(clipErr){
+        console.warn("save: clipboard write failed:", clipErr);
+      }
+    }
+
+    try{
+      localStorage.setItem(SAVE_KEY + "_audit", localStorage.getItem(SAVE_KEY + "_audit") || "[]");
+    }catch(auditErr){
+      console.warn("save: audit write failed:", auditErr);
+    }
+
+    console.debug("Autosave OK @", new Date(lastSavedAt).toISOString());
+    return true;
+  } catch (err) {
+    console.error("save: fatal error during save:", err);
+    return false;
   }
-  lastSavedAt = Date.now();
-  if(autoClipboardEnabled && !suspiciousSave){
-    try{ await navigator.clipboard.writeText(btoa(JSON.stringify(data))); }catch(e){}
-  }
-  localStorage.setItem(SAVE_KEY + "_audit", localStorage.getItem(SAVE_KEY + "_audit") || "[]");
 }
 
 async function validateLoadedSave(rawJson){
   try{
     const data = JSON.parse(rawJson);
     const storedHash = localStorage.getItem(SAVE_KEY + "_hash");
-    const recomputed = await sha256Hex(rawJson);
-    if(storedHash && storedHash !== recomputed){
+    const recomputed = await sha256HexSafe(rawJson);
+    if(storedHash && recomputed && storedHash !== recomputed){
       suspiciousSave = true;
       toast("Warning: save integrity check failed. Some features disabled.");
       disableHighValueFeatures();
@@ -413,11 +499,10 @@ let autoClickerInterval = null;   // interval id for auto clicker
 let priceDiscountActive = false;  // market crash flag
 
 /* ---------- Building & CPS ---------- */
-/* Harder cost growth: exponent 1.22 - 1.35 depending on building tier */
+/* Harder cost growth: exponent 1.18 + tier factor */
 function buildingCost(i){
   const b = BUILDINGS[i];
   const ownedCount = owned[i] || 0;
-  // tiered growth: later buildings grow faster
   const growth = 1.18 + (i * 0.02); // 1.18 .. 1.32
   let cost = Math.round(b.baseCost * Math.pow(growth, ownedCount));
   if(priceDiscountActive) cost = Math.floor(cost * 0.8);
@@ -692,8 +777,8 @@ function spawnGoldenCookie(){
   lastGoldenAt = n;
   const gc = document.createElement("div"); gc.className="golden-cookie";
   const rect = document.getElementById("leftPanel").getBoundingClientRect();
-  const x = Math.random()*(rect.width-70)+10;
-  const y = Math.random()*(rect.height-70)+10;
+  const x = Math.random()*(rect.width-80)+10;
+  const y = Math.random()*(rect.height-80)+10;
   gc.style.left = x + "px"; gc.style.top = y + "px"; gc.textContent = "⭐";
   document.getElementById("leftPanel").appendChild(gc);
   const mode = Math.random();
@@ -771,7 +856,7 @@ function buyUpgrade(u){
   save(); renderAll(); playSound("event");
 }
 
-/* ---------- UI rendering helpers ---------- */
+/* ---------- UI helpers ---------- */
 function renderAll(){
   renderStats(); renderBuildings(); renderUpgrades(); renderBoosts(); renderQuests(); renderLeaderboard(); renderSettingsUI();
 }
@@ -779,6 +864,7 @@ function renderSettingsUI(){
   document.getElementById("soundToggle").checked = soundEnabled;
   document.getElementById("autoBuyerToggle").checked = autoBuyerEnabled;
   document.getElementById("autoClipboardToggle").checked = autoClipboardEnabled;
+  document.getElementById("backupCount").textContent = getBackups().length;
 }
 
 /* ---------- Event wiring ---------- */
@@ -829,10 +915,55 @@ document.getElementById("autoBuyerToggle").addEventListener("change", (e)=>{ aut
 document.getElementById("autoClipboardToggle").addEventListener("change", (e)=>{ autoClipboardEnabled = e.target.checked; save(); });
 
 /* Download backups (copy to clipboard) */
-document.getElementById("subtitle").addEventListener("click", async ()=>{
+document.getElementById("downloadBackupsBtn").addEventListener("click", async ()=>{
   const list = getBackups();
   if(list.length===0){ toast("No backups available"); return; }
-  try{ await navigator.clipboard.writeText(btoa(JSON.stringify(list))); toast("Backups copied to clipboard"); }catch(e){ prompt("Backups (base64):", btoa(JSON.stringify(list))); }
+  try{
+    await navigator.clipboard.writeText(btoa(JSON.stringify(list)));
+    toast("Backups copied to clipboard");
+  }catch(e){
+    prompt("Backups (base64):", btoa(JSON.stringify(list)));
+  }
+});
+
+/* Admin wipe button */
+const WIPE_COOLDOWN_MS = 60000;
+let lastWipeAt = 0;
+const ADMIN_WIPE_CODE = "WIPE-ALL-2026"; // change if needed
+document.getElementById("wipeAllBtn").addEventListener("click", async ()=>{
+  const code = document.getElementById("adminCodeInput").value.trim();
+  const confirmText = document.getElementById("adminConfirmInput").value.trim();
+  const nowTs = Date.now();
+  if(nowTs - lastWipeAt < WIPE_COOLDOWN_MS){ alert("Wipe is on cooldown. Wait a moment."); return; }
+  if(code !== ADMIN_WIPE_CODE){ alert("Invalid admin code."); return; }
+  if(confirmText !== "WIPE ALL"){ alert('Type "WIPE ALL" in the confirmation field to proceed.'); return; }
+  if(!confirm("This will BACKUP your current save and then WIPE all local saves, leaderboards, backups, and related data. This cannot be undone locally. Proceed?")) return;
+
+  // create backup
+  await backupCurrentSave();
+
+  // audit log entry
+  const audit = JSON.parse(localStorage.getItem(SAVE_KEY + "_audit") || "[]");
+  audit.push({ action: "wipe_all", ts: Date.now(), by: "admin" });
+  localStorage.setItem(SAVE_KEY + "_audit", JSON.stringify(audit.slice(-200)));
+
+  // keys to remove (local-only)
+  const keys = Object.keys(localStorage).filter(k => k.startsWith(SAVE_KEY) || k === SAVE_KEY + "_leader" || k === SAVE_KEY + "_quests" || k === SAVE_KEY + "_quests_date" || k === BACKUP_HISTORY_KEY || k === SAVE_KEY + "_audit");
+  keys.forEach(k => localStorage.removeItem(k));
+
+  // also remove generic keys used by the game
+  localStorage.removeItem(SAVE_KEY);
+  localStorage.removeItem(SAVE_KEY + "_hash");
+  localStorage.removeItem(SAVE_KEY + "_ts");
+
+  // reset in-memory state
+  cookies = 0; clickPower = 1; owned = new Array(BUILDINGS.length).fill(0); buildingCpsMult = new Array(BUILDINGS.length).fill(1);
+  boughtUpgrades = []; totalCookiesEarned = 0; prestigeStars = 0; prestigeUpgradesBought = []; achievementsState = {};
+  boostLastBoughtAt = {}; boostSessionCount = {}; globalBoostTimestamps = [];
+  suspiciousSave = false; suspiciousBoosting = false;
+
+  lastWipeAt = Date.now();
+  await save(); renderAll(); renderQuests(); toast("All local saves wiped. Backup created.");
 });
 
 /* ---------- Load on start ---------- */
@@ -854,6 +985,15 @@ async function load(){
     achievementsState = typeof data.achievementsState === "object" ? data.achievementsState : {};
     currentSkin = data.currentSkin || currentSkin;
   }catch(e){ console.warn("Load failed", e); }
+}
+
+/* Backup current save helper */
+async function backupCurrentSave(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY) || JSON.stringify({version:GAME_VERSION});
+    pushBackup(raw);
+    try{ await navigator.clipboard.writeText(btoa(raw)); toast("Backup copied to clipboard"); }catch(e){ toast("Backup saved locally"); }
+  }catch(e){}
 }
 
 /* ---------- Autosave loop (10s) ---------- */
@@ -918,6 +1058,7 @@ load().then(()=>{
 /* ---------- Final render ---------- */
 setTimeout(()=>{ renderAll(); }, 300);
 
+/* ---------- End of script ---------- */
 </script>
 </body>
 </html>
