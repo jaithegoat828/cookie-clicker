@@ -3,12 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dream Cookie Clicker+ — Hardened Edition (No Turbo, 10s Autosave)</title>
+<title>Cookie Clicker+ by Jai</title>
 <link rel="icon" href="data:,">
 <style>
-/* -------------------------
-   UI Styles
-   ------------------------- */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
@@ -27,7 +24,7 @@ body{
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;background:#fff;padding:12px;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,0.06);width:100%;max-width:520px}
 .stat-label{font-size:11px;color:#999;text-transform:uppercase}
 .stat-value{font-weight:800;color:#c28a2a;font-size:18px}
-.cookie-btn{width:280px;height:280px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(circle at 30% 30%,#fff4c7 0%,#ffe08a 35%,#f0b94a 60%,#c27a2a 100%);box-shadow:inset -10px -10px 18px rgba(0,0,0,0.25),inset 8px 8px 14px rgba(255,255,255,0.4),0 18px 36px rgba(0,0,0,0.35);font-size:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.cookie-btn{width:280px;height:280px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(circle at 30% 30%,#fff4c7 0%,#ffe08a 35%,#f0b94a 60%,#c27a2a 100%);box-shadow:inset -10px -10px 18px rgba(0,0,0,0.25),inset 8px 8px 14px rgba(255,255,255,0.4),0 18px 36px rgba(0,0,0,0.35);font-size:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:transform .08s}
 .cookie-btn:active{transform:scale(.94)}
 .right{flex:1;display:flex;flex-direction:column;background:#faf6ee;min-width:420px;min-height:0}
 .tabs{display:flex;border-bottom:1px solid #efe0c8;background:#fffaf0}
@@ -44,30 +41,18 @@ body{
 .card-right{text-align:right}
 .price{font-weight:800;color:#c28a2a}
 .owned{color:#999;margin-top:6px;font-size:12px}
-.rarity-tag{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:800;margin-bottom:6px}
 .float{position:fixed;font-weight:800;color:#d49a2a;text-shadow:0 0 6px rgba(255,255,255,0.8);pointer-events:none;animation:rise .9s ease-out forwards}
 @keyframes rise{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-70px)}}
 .golden-cookie{position:absolute;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff9d1 0%,#ffe680 40%,#f0c040 70%,#b8860b 100%);box-shadow:0 0 16px rgba(255,215,0,0.9);display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;animation:pulse 1s infinite alternate;z-index:6}
 @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.08)}}
-.top-row{display:flex;gap:8px;align-items:center}
-.small-btn{padding:6px 8px;border-radius:8px;border:none;background:#fffaf0;color:#7a5a1f;cursor:pointer}
-.panel::-webkit-scrollbar{width:8px}
-.panel::-webkit-scrollbar-thumb{background:#d4b27a;border-radius:6px}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff3d1;color:#b37a1f;font-weight:800}
 .muted{color:#777;font-size:13px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.skin-preview{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin-right:10px}
-.row{display:flex;align-items:center}
-.achievement{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:#fff;margin-bottom:6px}
-.achievement.locked{opacity:.45}
+.small-btn{padding:6px 8px;border-radius:8px;border:none;background:#fffaf0;color:#7a5a1f;cursor:pointer;font-size:12px}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff3d1;color:#b37a1f;font-weight:800}
+.leaderboard-row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:6px;background:#fff;margin-bottom:6px}
 .event-popup{position:fixed;left:50%;top:12%;transform:translateX(-50%);background:#fff;padding:12px;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,0.2);z-index:999}
 .toast{position:fixed;right:18px;bottom:18px;background:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.18);z-index:999;opacity:0;transform:translateY(10px);transition:all .25s}
 .toast.show{opacity:1;transform:translateY(0)}
-.leaderboard-row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:6px;background:#fff;margin-bottom:6px}
-.rush-area{display:flex;flex-direction:column;align-items:center;gap:10px}
-.rush-timer{font-size:22px;font-weight:800;color:#b37a1f}
 .settings-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
-.tooltip{font-size:12px;color:#666;margin-left:6px}
 .danger{background:#ffecec;border:1px solid #ffb3b3}
 @media (max-width:980px){.main{flex-direction:column}.left{border-right:none;border-bottom:1px solid #efe0c8;flex:0 0 auto}.right{min-width:0}}
 </style>
@@ -76,8 +61,8 @@ body{
 <div class="game" id="gameRoot">
   <div class="header">
     <div>
-      <div class="title">Dream Cookie Clicker+ — Hardened</div>
-      <div class="subtitle" id="subtitle">Autosave: 10s • Turbo removed • Anti-cheat active</div>
+      <div class="title">Cookie Clicker+ by Jai</div>
+      <div class="subtitle" id="subtitle">Big run • Autosave every 10s • No cheats</div>
     </div>
     <div class="controls">
       <button class="ctrl-btn" id="exportBtn">Export</button>
@@ -131,27 +116,27 @@ body{
       </div>
 
       <div class="panel" id="panel-upgrades" style="display:none">
-        <div class="section-title">Available Upgrades</div>
+        <div class="section-title">Upgrades</div>
         <div id="upgradesList"></div>
       </div>
 
       <div class="panel" id="panel-boosts" style="display:none">
-        <div class="section-title">Boost Items</div>
+        <div class="section-title">Boosts</div>
         <div id="boostsList"></div>
       </div>
 
       <div class="panel" id="panel-quests" style="display:none">
-        <div class="section-title">Daily Quests</div>
+        <div class="section-title">Quests</div>
         <div id="questsList"></div>
         <div style="height:10px"></div>
-        <div class="muted">Quests reset every 24 hours.</div>
+        <div class="muted">Quests reset daily (per browser).</div>
       </div>
 
       <div class="panel" id="panel-rush" style="display:none">
-        <div class="section-title">Clicker Rush</div>
-        <div class="rush-area">
-          <div class="muted">Enter Rush to click as fast as you can for a short timed reward.</div>
-          <div class="rush-timer" id="rushTimer">Ready</div>
+        <div class="section-title">Rush Mode</div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <div class="muted">Click as fast as you can for 10 seconds. Reward scales with click power.</div>
+          <div id="rushTimer" style="font-weight:800;color:#b37a1f;font-size:20px">Ready</div>
           <button class="small-btn" id="startRushBtn">Start Rush (10s)</button>
           <div id="rushScore" class="muted">Rush score: 0</div>
           <div style="height:8px"></div>
@@ -166,31 +151,21 @@ body{
         <div class="section-title">Local Leaderboard</div>
         <div id="leaderboardList"></div>
         <div style="height:8px"></div>
-        <div class="muted">Leaderboard is stored locally on this browser.</div>
+        <div class="muted">Stored locally in this browser only.</div>
       </div>
 
       <div class="panel" id="panel-settings" style="display:none">
-        <div class="section-title">Settings & Admin</div>
+        <div class="section-title">Settings</div>
         <div style="background:#fff;padding:12px;border-radius:10px;box-shadow:0 6px 14px rgba(0,0,0,0.06)">
-          <div class="settings-row"><div>Sound Effects</div><div><input type="checkbox" id="soundToggle" /></div></div>
+          <div class="settings-row"><div>Sound Effects</div><div><input type="checkbox" id="soundToggle" checked /></div></div>
           <div class="settings-row"><div>Auto‑Buyer</div><div><input type="checkbox" id="autoBuyerToggle" /></div></div>
-          <div class="settings-row"><div>Auto‑Clipboard</div><div><input type="checkbox" id="autoClipboardToggle" /></div></div>
-          <div style="height:8px"></div>
-
-          <div style="margin-top:8px;border-top:1px solid #eee;padding-top:10px">
-            <div style="font-weight:800;margin-bottom:6px">Admin Tools</div>
-            <div class="muted" style="margin-bottom:8px">Wipe operations are destructive. A backup will be created automatically before any wipe. You must enter the admin code and confirm.</div>
-            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <input id="adminCodeInput" placeholder="Admin code" style="padding:6px;border-radius:6px;border:1px solid #ddd" />
-              <input id="adminConfirmInput" placeholder='Type "WIPE ALL" to confirm' style="padding:6px;border-radius:6px;border:1px solid #ddd" />
-              <button class="small-btn danger" id="wipeAllBtn">Wipe All Saves</button>
-            </div>
-            <div class="muted">Wipe cooldown: 60s. Action is logged locally.</div>
-            <div style="height:8px"></div>
-            <div style="font-size:12px;color:#666">Backup history (last 12): <span id="backupCount">0</span></div>
-            <div style="height:8px"></div>
-            <button class="small-btn" id="downloadBackupsBtn">Download Backups (copy to clipboard)</button>
-          </div>
+          <div class="settings-row"><div>Auto‑Clipboard Export</div><div><input type="checkbox" id="autoClipboardToggle" /></div></div>
+          <div style="height:8px;border-top:1px solid #eee;margin-top:8px"></div>
+          <div style="font-weight:800;margin-top:8px">Admin</div>
+          <div class="muted" style="margin-bottom:6px">Wipe is local only and creates a backup first.</div>
+          <button class="small-btn danger" id="wipeAllBtn">Wipe All Local Data</button>
+          <div style="height:6px"></div>
+          <div class="muted">Backups stored: <span id="backupCount">0</span></div>
         </div>
       </div>
 
@@ -203,862 +178,838 @@ body{
 
 <script>
 /* =========================
-   Hardened Single-file Game
-   - Turbo removed
-   - Autosave every 10s (robust)
-   - Strong anti-cheat and boost protections
-   - Harder building scaling
-   - Admin wipe + backups
-   - All features in one file
+   Cookie Clicker+ by Jai
+   - Bigger game
+   - Simple, reliable autosave
+   - Repo-safe storage for GitHub Pages
+   - No turbo / no cheats
    ========================= */
 
-/* ---------- Configuration & Globals ---------- */
-const GAME_VERSION = "1.0.0-hardened-no-turbo-10s";
-const SAVE_KEY = "dream_cookie_clicker_hardened_v3";
+const GAME_VERSION = "cc-plus-jai-v1";
+const REPO = (window.location.pathname.split("/")[1] || "default").toLowerCase();
+const SAVE_KEY = REPO + "_cookie_clicker_plus_save";
+const BACKUP_HISTORY_KEY = SAVE_KEY + "_backups";
 
-/* Game state */
 let cookies = 0;
 let clickPower = 1;
 let owned = [];
-let buildingCpsMult = [];
+let buildingMult = [];
 let boughtUpgrades = [];
 let totalCookiesEarned = 0;
 let prestigeStars = 0;
-let prestigeUpgradesBought = [];
-let currentSkin = "Default";
-let goldenMultiplier = 1;
-
-/* Anti-cheat & abuse globals */
-let suspiciousSave = false;
-let suspiciousBoosting = false;
-let lastSaveHash = null;
-let lastSaveTime = Date.now();
-
-const MAX_OFFLINE_HOURS = 12;
-const PLAUSIBLE_MULTIPLIER = 4; // stricter than before
-
-const CLICK_RATE_LIMIT_MS = 50; // ~20 clicks/sec max
-let lastClickAt = 0;
-
-const AUTO_BUYER_THROTTLE_MS = 2500;
-let lastAutoBuyAt = 0;
-
-const GOLDEN_MIN_INTERVAL_MS = 45000;
-let lastGoldenAt = 0;
-
-/* Boost abuse globals */
-const BOOST_COOLDOWN_MS = 30000;
-const GLOBAL_BOOST_WINDOW_MS = 60000;
-const GLOBAL_BOOST_MAX_IN_WINDOW = 2;
-const BOOST_SESSION_CAP = 4;
-const BOOST_EFFECT_HARD_CAP = 4;
-let boostLastBoughtAt = {};
-let boostSessionCount = {};
-let globalBoostTimestamps = [];
-
-/* Autosave & backups */
-const AUTOSAVE_INTERVAL_MS = 10_000; // 10 seconds
-const BACKUP_HISTORY_KEY = SAVE_KEY + "_backups";
-const BACKUP_HISTORY_LIMIT = 12;
-
-/* Misc */
-let autoBuyerEnabled = false;
+let prestigeUpgrades = [];
+let achievementsState = {};
+let quests = [];
 let soundEnabled = true;
+let autoBuyerEnabled = false;
 let autoClipboardEnabled = false;
+let rushActive = false;
+let rushScore = 0;
+let rushTimerId = null;
+let rushTimeLeft = 0;
+let goldenMultiplier = 1;
+let activeBoosts = [];
+let lastClickAt = 0;
 let lastSavedAt = Date.now();
 
-/* ---------- Data: buildings, boosts, upgrades ---------- */
-/* Harder scaling: higher base costs and steeper growth; CPS tuned */
+const CLICK_RATE_LIMIT_MS = 50;
+const AUTOSAVE_INTERVAL_MS = 10000;
+const MAX_OFFLINE_HOURS = 12;
+
+/* ---------- Data ---------- */
+
 const BUILDINGS = [
-  { id:0, name:"Cursor", icon:"👆", baseCost:75, baseCps:0.12 },
-  { id:1, name:"Helper", icon:"🧑", baseCost:600, baseCps:1.2 },
-  { id:2, name:"Field", icon:"🌾", baseCost:6000, baseCps:9 },
-  { id:3, name:"Mine", icon:"⛏️", baseCost:90000, baseCps:48 },
-  { id:4, name:"Factory", icon:"🏭", baseCost:1200000, baseCps:300 },
-  { id:5, name:"Lab", icon:"⚗️", baseCost:20000000, baseCps:1600 },
-  { id:6, name:"Portal", icon:"🌀", baseCost:400000000, baseCps:10000 },
-  { id:7, name:"Core", icon:"💠", baseCost:12000000000, baseCps:60000 }
+  { id:0, name:"Cursor", icon:"👆", baseCost:50, baseCps:0.1 },
+  { id:1, name:"Grandma", icon:"👵", baseCost:400, baseCps:1 },
+  { id:2, name:"Farm", icon:"🌾", baseCost:3000, baseCps:8 },
+  { id:3, name:"Mine", icon:"⛏️", baseCost:40000, baseCps:45 },
+  { id:4, name:"Factory", icon:"🏭", baseCost:500000, baseCps:260 },
+  { id:5, name:"Bank", icon:"🏦", baseCost:7000000, baseCps:1400 },
+  { id:6, name:"Temple", icon:"⛪", baseCost:90000000, baseCps:7800 },
+  { id:7, name:"Wizard Tower", icon:"🧙", baseCost:1200000000, baseCps:44000 },
+  { id:8, name:"Portal", icon:"🌀", baseCost:15000000000, baseCps:260000 },
+  { id:9, name:"Time Bakery", icon:"⏳", baseCost:300000000000, baseCps:1500000 }
 ];
 
 const BOOSTS = [
-  { id:"speedBurst", name:"Speed Burst", type:"cpsMult", mult:1.4, duration:20000, cost:1500, desc:"+40% CPS for 20s" },
-  { id:"megaClick",  name:"Mega Click",  type:"clickMult", mult:8, duration:10000, cost:3000, desc:"Click power ×8 for 10s" },
-  { id:"timeWarp",   name:"Time Warp",   type:"instant", seconds:20, cap:150000, cost:2200, desc:"Gain 20s worth of CPS instantly" },
-  { id:"autoClicker",name:"Auto Clicker",type:"auto", duration:15000, cost:2500, desc:"Auto-click for 15s" }
+  { id:"cpsSmall", name:"+30% CPS (20s)", type:"cpsMult", mult:1.3, duration:20000, cost:2000 },
+  { id:"cpsBig", name:"+80% CPS (15s)", type:"cpsMult", mult:1.8, duration:15000, cost:8000 },
+  { id:"clickBurst", name:"Click x6 (10s)", type:"clickMult", mult:6, duration:10000, cost:5000 },
+  { id:"instant", name:"Instant 30s CPS", type:"instant", seconds:30, cost:6000 },
+  { id:"autoClick", name:"Auto Click (15s)", type:"auto", duration:15000, cost:4500 }
 ];
 
-/* Upgrades (generated) */
 let UPGRADES = [];
 function generateUpgrades(){
   UPGRADES = [];
   let id = 0;
-  for(let i=1;i<=18;i++){
-    UPGRADES.push({ id:id++, type:"click", name:`Click Boost ${i}`, desc:`+${Math.max(1,Math.floor(i/2))} click power`, cost: Math.floor(150*Math.pow(1.6,i)) });
+  for(let i=1;i<=15;i++){
+    UPGRADES.push({
+      id:id++,
+      type:"click",
+      name:`Click Boost ${i}`,
+      desc:`Increase click power`,
+      cost:Math.floor(100*Math.pow(1.7,i)),
+      value:1+Math.floor(i/2)
+    });
   }
   BUILDINGS.forEach((b,bi)=>{
-    for(let t=1;t<=7;t++){
-      UPGRADES.push({ id:id++, type:"building", buildingIndex:bi, name:`${b.name} Upgrade ${t}`, desc:`${b.name} CPS ×${(1+0.15*t).toFixed(2)}`, cost: Math.floor(b.baseCost*Math.pow(2.0,t)) , mult:1+0.15*t});
+    for(let t=1;t<=8;t++){
+      UPGRADES.push({
+        id:id++,
+        type:"building",
+        buildingIndex:bi,
+        name:`${b.name} Upgrade ${t}`,
+        desc:`${b.name} CPS x${(1+0.2*t).toFixed(2)}`,
+        cost:Math.floor(b.baseCost*Math.pow(2.1,t)),
+        mult:1+0.2*t
+      });
     }
   });
 }
 generateUpgrades();
 
-/* Achievements (sample) */
-const ACHIEVEMENTS = [
-  { id:"a1", name:"First Cookie", desc:"Click the cookie once", check:()=>totalCookiesEarned>=1, reward:{type:"click",value:1} },
-  { id:"a2", name:"Builder I", desc:"Own 10 buildings total", check:()=>owned.reduce((s,n)=>s+n,0)>=10, reward:{type:"cps",value:0.02} }
-];
+/* ---------- Utils ---------- */
 
-/* ---------- Utilities ---------- */
 function fmt(n){
-  if (n >= 1e12) return (n/1e12).toFixed(2)+"T";
-  if (n >= 1e9) return (n/1e9).toFixed(2)+"B";
-  if (n >= 1e6) return (n/1e6).toFixed(2)+"M";
-  if (n >= 1e3) return (n/1e3).toFixed(2)+"K";
+  if(n>=1e12) return (n/1e12).toFixed(2)+"T";
+  if(n>=1e9) return (n/1e9).toFixed(2)+"B";
+  if(n>=1e6) return (n/1e6).toFixed(2)+"M";
+  if(n>=1e3) return (n/1e3).toFixed(2)+"K";
   return Math.floor(n).toString();
 }
+
 function spawnFloat(text,x,y){
-  const el = document.createElement("div"); el.className="float"; el.textContent=text; el.style.left=(x-20)+"px"; el.style.top=(y-10)+"px"; document.body.appendChild(el); setTimeout(()=>el.remove(),900);
+  const el=document.createElement("div");
+  el.className="float";
+  el.textContent=text;
+  el.style.left=(x-20)+"px";
+  el.style.top=(y-10)+"px";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),900);
 }
-function toast(msg,timeout=3000){
-  const root = document.getElementById("toastRoot");
-  const el = document.createElement("div"); el.className="toast"; el.textContent=msg; root.appendChild(el);
-  setTimeout(()=>el.classList.add("show"),20);
-  setTimeout(()=>{ el.classList.remove("show"); setTimeout(()=>el.remove(),300); }, timeout);
+
+function toast(msg,ms=2500){
+  const root=document.getElementById("toastRoot");
+  const el=document.createElement("div");
+  el.className="toast";
+  el.textContent=msg;
+  root.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add("show"));
+  setTimeout(()=>{
+    el.classList.remove("show");
+    setTimeout(()=>el.remove(),250);
+  },ms);
 }
+
 function playSound(id){
   if(!soundEnabled) return;
   try{
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = "sine";
-    if(id==="click"){ o.frequency.value = 880; g.gain.value = 0.02; }
-    else if(id==="gold"){ o.frequency.value = 660; g.gain.value = 0.03; }
-    else if(id==="event"){ o.frequency.value = 440; g.gain.value = 0.02; }
-    o.connect(g); g.connect(ctx.destination); o.start(); setTimeout(()=>{ o.stop(); ctx.close(); }, 120);
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.type="square";
+    if(id==="click"){o.frequency.value=880;g.gain.value=0.02;}
+    else if(id==="gold"){o.frequency.value=660;g.gain.value=0.03;}
+    else{o.frequency.value=440;g.gain.value=0.02;}
+    o.connect(g);g.connect(ctx.destination);
+    o.start();
+    setTimeout(()=>{o.stop();ctx.close();},120);
   }catch(e){}
 }
 
-/* ---------- Robust fingerprint + save helpers ---------- */
-/* This implementation is defensive: hashing is attempted but if unavailable or failing,
-   the save still proceeds and errors are logged. This prevents autosave from being killed
-   by exceptions in crypto or clipboard APIs. */
-async function sha256HexSafe(str){
-  try{
-    if (window.crypto && crypto.subtle && typeof crypto.subtle.digest === "function"){
-      const enc = new TextEncoder().encode(str);
-      const hashBuf = await crypto.subtle.digest('SHA-256', enc);
-      return Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2,'0')).join('');
-    }
-  }catch(e){
-    console.warn("sha256HexSafe: hashing failed:", e);
-  }
-  return null;
-}
+/* ---------- CPS & buildings ---------- */
 
-async function fingerprintAndSave(dataObj){
-  dataObj._ts = Date.now();
-  const raw = JSON.stringify(dataObj);
-  try{
-    const hashHex = await sha256HexSafe(raw);
-    localStorage.setItem(SAVE_KEY, raw);
-    if(hashHex) localStorage.setItem(SAVE_KEY + "_hash", hashHex);
-    else localStorage.removeItem(SAVE_KEY + "_hash");
-    lastSaveHash = hashHex;
-    lastSaveTime = Date.now();
-    return true;
-  }catch(e){
-    // If localStorage write fails, bubble up so caller can handle
-    console.error("fingerprintAndSave: failed to write save:", e);
-    throw e;
-  }
-}
-
-/* Backup helpers */
-function pushBackup(rawJson){
-  try{
-    const listRaw = localStorage.getItem(BACKUP_HISTORY_KEY);
-    const list = listRaw ? JSON.parse(listRaw) : [];
-    const entry = { ts: Date.now(), data: rawJson };
-    list.unshift(entry);
-    while(list.length > BACKUP_HISTORY_LIMIT) list.pop();
-    localStorage.setItem(BACKUP_HISTORY_KEY, JSON.stringify(list));
-    document.getElementById("backupCount").textContent = list.length;
-  }catch(e){
-    console.warn("pushBackup failed:", e);
-  }
-}
-function getBackups(){
-  try{ return JSON.parse(localStorage.getItem(BACKUP_HISTORY_KEY) || "[]"); }catch(e){ return []; }
-}
-
-/* ---------- Save / Load / Validation (robust) ---------- */
-async function save(){
-  const data = {
-    version: GAME_VERSION,
-    cookies, clickPower, owned, buildingCpsMult, boughtUpgrades,
-    totalCookiesEarned, prestigeStars, prestigeUpgradesBought, achievementsState:achievementsState||{}, currentSkin
-  };
-
-  try {
-    await fingerprintAndSave(data);
-    try{
-      const raw = JSON.stringify(data);
-      pushBackup(raw);
-    }catch(bkErr){
-      console.warn("save: backup push failed:", bkErr);
-    }
-    lastSavedAt = Date.now();
-
-    if(autoClipboardEnabled && !suspiciousSave){
-      try{
-        if(navigator.clipboard && navigator.clipboard.writeText){
-          await navigator.clipboard.writeText(btoa(JSON.stringify(data)));
-        } else {
-          console.warn("save: clipboard API not available.");
-        }
-      }catch(clipErr){
-        console.warn("save: clipboard write failed:", clipErr);
-      }
-    }
-
-    try{
-      localStorage.setItem(SAVE_KEY + "_audit", localStorage.getItem(SAVE_KEY + "_audit") || "[]");
-    }catch(auditErr){
-      console.warn("save: audit write failed:", auditErr);
-    }
-
-    console.debug("Autosave OK @", new Date(lastSavedAt).toISOString());
-    return true;
-  } catch (err) {
-    console.error("save: fatal error during save:", err);
-    return false;
-  }
-}
-
-async function validateLoadedSave(rawJson){
-  try{
-    const data = JSON.parse(rawJson);
-    const storedHash = localStorage.getItem(SAVE_KEY + "_hash");
-    const recomputed = await sha256HexSafe(rawJson);
-    if(storedHash && recomputed && storedHash !== recomputed){
-      suspiciousSave = true;
-      toast("Warning: save integrity check failed. Some features disabled.");
-      disableHighValueFeatures();
-      return data;
-    }
-    const prevTs = data._ts || lastSaveTime || Date.now();
-    const elapsedMs = Math.max(0, Date.now() - prevTs);
-    const maxPlausibleGain = totalCps() * (Math.min(elapsedMs, MAX_OFFLINE_HOURS*3600*1000)/1000) * PLAUSIBLE_MULTIPLIER;
-    if (typeof data.cookies === "number") {
-      const delta = data.cookies - (cookies || 0);
-      if (delta > maxPlausibleGain + 500) {
-        suspiciousSave = true;
-        toast("Suspicious save detected. Prestige and leaderboard disabled.");
-        disableHighValueFeatures();
-      }
-    }
-    return data;
-  }catch(e){
-    console.warn("validateLoadedSave failed", e);
-    return null;
-  }
-}
-
-function disableHighValueFeatures(){
-  suspiciousSave = true;
-  suspiciousBoosting = true;
-  document.getElementById("submitRushBtn")?.setAttribute("disabled","true");
-  document.getElementById("exportBtn")?.setAttribute("disabled","true");
-  autoClipboardEnabled = false;
-  toast("High-value features disabled due to suspicious activity.");
-}
-
-/* ---------- Offline reward ---------- */
-function saveTimestamp(){ lastSavedAt = Date.now(); localStorage.setItem(SAVE_KEY + "_ts", String(lastSavedAt)); }
-function computeOfflineGain(){
-  try{
-    const raw = localStorage.getItem(SAVE_KEY + "_ts");
-    if(!raw) return {gain:0,elapsed:0};
-    const prev = parseInt(raw,10);
-    if(isNaN(prev)) return {gain:0,elapsed:0};
-    const now = Date.now();
-    const elapsed = Math.max(0, now - prev);
-    const cap = 1000 * 60 * 60 * MAX_OFFLINE_HOURS;
-    const used = Math.min(elapsed, cap);
-    const cps = totalCps();
-    const gain = Math.floor(cps * (used/1000) * 0.5);
-    return {gain,elapsed:used};
-  }catch(e){ return {gain:0,elapsed:0}; }
-}
-
-/* ---------- Active boosts & intervals ---------- */
-let activeBoosts = [];            // array of {id,type,mult,expiresAt?}
-let autoClickerInterval = null;   // interval id for auto clicker
-let priceDiscountActive = false;  // market crash flag
-
-/* ---------- Building & CPS ---------- */
-/* Harder cost growth: exponent 1.18 + tier factor */
 function buildingCost(i){
-  const b = BUILDINGS[i];
-  const ownedCount = owned[i] || 0;
-  const growth = 1.18 + (i * 0.02); // 1.18 .. 1.32
-  let cost = Math.round(b.baseCost * Math.pow(growth, ownedCount));
-  if(priceDiscountActive) cost = Math.floor(cost * 0.8);
-  return cost;
+  const b=BUILDINGS[i];
+  const n=owned[i]||0;
+  const growth=1.15+0.02*i;
+  return Math.round(b.baseCost*Math.pow(growth,n));
 }
+
 function totalBaseCps(){
-  let t = 0;
+  let t=0;
   for(let i=0;i<BUILDINGS.length;i++){
-    t += (owned[i]||0) * BUILDINGS[i].baseCps * (buildingCpsMult[i]||1);
+    t+=(owned[i]||0)*BUILDINGS[i].baseCps*(buildingMult[i]||1);
   }
-  if(prestigeUpgradesBought.includes("p1")) t *= (1 + prestigeStars * 0.05);
   return t;
 }
+
 function totalCps(){
-  let base = totalBaseCps();
-  activeBoosts.forEach(b=>{ if(b.type==="cpsMult") base *= b.mult; });
-  base *= goldenMultiplier;
+  let base=totalBaseCps();
+  activeBoosts.forEach(b=>{if(b.type==="cpsMult") base*=b.mult;});
+  base*=goldenMultiplier;
   return base;
 }
 
 /* ---------- Rendering ---------- */
-const cookiesEl = document.getElementById("cookies");
-const cpsEl = document.getElementById("cps");
-const clickPowerEl = document.getElementById("clickPower");
+
+const cookiesEl=document.getElementById("cookies");
+const cpsEl=document.getElementById("cps");
+const clickPowerEl=document.getElementById("clickPower");
 
 function renderStats(){
-  cookiesEl.textContent = fmt(cookies);
-  cpsEl.textContent = fmt(totalCps()) + "/s";
-  let cp = clickPower + (prestigeUpgradesBought.includes("p2") ? prestigeStars : 0);
-  clickPowerEl.textContent = cp;
-  document.getElementById("starsBadge").textContent = "Stars: " + prestigeStars;
-  const offline = computeOfflineGain();
-  if(offline && offline.gain>0) document.getElementById("offlineHint").textContent = "Offline: +" + fmt(offline.gain);
-  else document.getElementById("offlineHint").textContent = "Offline: none";
+  cookiesEl.textContent=fmt(cookies);
+  cpsEl.textContent=fmt(totalCps())+"/s";
+  clickPowerEl.textContent=clickPower;
+  document.getElementById("starsBadge").textContent="Stars: "+prestigeStars;
+  const offline=computeOfflineGain();
+  if(offline.gain>0) document.getElementById("offlineHint").textContent="Offline: +"+fmt(offline.gain);
+  else document.getElementById("offlineHint").textContent="Offline: none";
 }
 
-/* Buildings */
 function renderBuildings(){
-  const root = document.getElementById("buildingsList"); root.innerHTML = "";
+  const root=document.getElementById("buildingsList");
+  root.innerHTML="";
   BUILDINGS.forEach((b,i)=>{
-    const cost = buildingCost(i);
-    const can = cookies >= cost;
-    const card = document.createElement("div"); card.className = "card" + (can ? "" : " locked");
-    card.addEventListener("click", ()=>{ if(cookies < cost) return; buyBuilding(i); });
-    const main = document.createElement("div"); main.className = "card-main";
-    const icon = document.createElement("div"); icon.className = "card-icon"; icon.textContent = b.icon;
-    const textWrap = document.createElement("div");
-    const title = document.createElement("div"); title.className = "card-text-title"; title.textContent = b.name;
-    const sub = document.createElement("div"); sub.className = "card-text-sub"; sub.textContent = `+${fmt(b.baseCps * (buildingCpsMult[i]||1))} cookies/sec each`;
-    textWrap.appendChild(title); textWrap.appendChild(sub);
-    main.appendChild(icon); main.appendChild(textWrap);
-    const right = document.createElement("div"); right.className = "card-right";
-    const price = document.createElement("div"); price.className = "price"; price.textContent = fmt(cost);
-    const ownedEl = document.createElement("div"); ownedEl.className = "owned"; ownedEl.textContent = `Owned: ${owned[i]||0}`;
-    right.appendChild(price); right.appendChild(ownedEl);
-    card.appendChild(main); card.appendChild(right);
+    const cost=buildingCost(i);
+    const can=cookies>=cost;
+    const card=document.createElement("div");
+    card.className="card"+(can?"":" locked");
+    card.addEventListener("click",()=>{if(cookies<cost)return;buyBuilding(i);});
+    const main=document.createElement("div");
+    main.className="card-main";
+    const icon=document.createElement("div");
+    icon.className="card-icon";
+    icon.textContent=b.icon;
+    const textWrap=document.createElement("div");
+    const title=document.createElement("div");
+    title.className="card-text-title";
+    title.textContent=b.name;
+    const sub=document.createElement("div");
+    sub.className="card-text-sub";
+    sub.textContent=`+${fmt(b.baseCps*(buildingMult[i]||1))} cps each`;
+    textWrap.appendChild(title);textWrap.appendChild(sub);
+    main.appendChild(icon);main.appendChild(textWrap);
+    const right=document.createElement("div");
+    right.className="card-right";
+    const price=document.createElement("div");
+    price.className="price";
+    price.textContent=fmt(cost);
+    const ownedEl=document.createElement("div");
+    ownedEl.className="owned";
+    ownedEl.textContent="Owned: "+(owned[i]||0);
+    right.appendChild(price);right.appendChild(ownedEl);
+    card.appendChild(main);card.appendChild(right);
     root.appendChild(card);
   });
 }
 
-/* Upgrades */
 function renderUpgrades(){
-  const root = document.getElementById("upgradesList"); root.innerHTML = "";
-  const visible = UPGRADES.filter(u => !boughtUpgrades.includes(u.id)).sort((a,b)=>a.cost-b.cost).slice(0,120);
+  const root=document.getElementById("upgradesList");
+  root.innerHTML="";
+  const visible=UPGRADES.filter(u=>!boughtUpgrades.includes(u.id)).sort((a,b)=>a.cost-b.cost).slice(0,80);
   visible.forEach(u=>{
-    const can = cookies >= u.cost;
-    const card = document.createElement("div"); card.className = "card" + (can ? "" : " locked");
-    card.addEventListener("click", ()=>{ buyUpgrade(u); });
-    const main = document.createElement("div"); main.className = "card-main";
-    const icon = document.createElement("div"); icon.className = "card-icon"; icon.textContent = u.type==="click" ? "🖱️" : (u.type==="building" ? BUILDINGS[u.buildingIndex].icon : "⚙️");
-    const textWrap = document.createElement("div");
-    const title = document.createElement("div"); title.className = "card-text-title"; title.textContent = u.name;
-    const sub = document.createElement("div"); sub.className = "card-text-sub"; sub.textContent = u.desc;
-    textWrap.appendChild(title); textWrap.appendChild(sub);
-    main.appendChild(icon); main.appendChild(textWrap);
-    const right = document.createElement("div"); right.className = "card-right";
-    const price = document.createElement("div"); price.className = "price"; price.textContent = fmt(u.cost);
+    const can=cookies>=u.cost;
+    const card=document.createElement("div");
+    card.className="card"+(can?"":" locked");
+    card.addEventListener("click",()=>buyUpgrade(u));
+    const main=document.createElement("div");
+    main.className="card-main";
+    const icon=document.createElement("div");
+    icon.className="card-icon";
+    icon.textContent=u.type==="click"?"🖱️":"⚙️";
+    const textWrap=document.createElement("div");
+    const title=document.createElement("div");
+    title.className="card-text-title";
+    title.textContent=u.name;
+    const sub=document.createElement("div");
+    sub.className="card-text-sub";
+    sub.textContent=u.desc;
+    textWrap.appendChild(title);textWrap.appendChild(sub);
+    main.appendChild(icon);main.appendChild(textWrap);
+    const right=document.createElement("div");
+    right.className="card-right";
+    const price=document.createElement("div");
+    price.className="price";
+    price.textContent=fmt(u.cost);
     right.appendChild(price);
-    card.appendChild(main); card.appendChild(right);
+    card.appendChild(main);card.appendChild(right);
     root.appendChild(card);
   });
 }
 
-/* Boosts */
 function renderBoosts(){
-  const root = document.getElementById("boostsList"); root.innerHTML = "";
+  const root=document.getElementById("boostsList");
+  root.innerHTML="";
   BOOSTS.forEach(b=>{
-    const can = cookies >= b.cost && !suspiciousBoosting && !suspiciousSave;
-    const card = document.createElement("div"); card.className = "card" + (can ? "" : " locked");
-    card.addEventListener("click", ()=>{ buyBoostSafely(b); });
-    const main = document.createElement("div"); main.className = "card-main";
-    const icon = document.createElement("div"); icon.className = "card-icon"; icon.textContent = "⚡";
-    const textWrap = document.createElement("div");
-    const title = document.createElement("div"); title.className = "card-text-title"; title.textContent = b.name;
-    const last = boostLastBoughtAt[b.id] || 0;
-    const remaining = Math.max(0, BOOST_COOLDOWN_MS - (Date.now() - last));
-    const sessionCount = boostSessionCount[b.id] || 0;
-    const sub = document.createElement("div"); sub.className = "card-text-sub";
-    sub.textContent = `${b.desc || ""} • Cooldown: ${Math.ceil(remaining/1000)}s • Used: ${sessionCount}/${BOOST_SESSION_CAP}`;
-    textWrap.appendChild(title); textWrap.appendChild(sub);
-    main.appendChild(icon); main.appendChild(textWrap);
-    const right = document.createElement("div"); right.className = "card-right";
-    const price = document.createElement("div"); price.className = "price"; price.textContent = fmt(b.cost);
+    const can=cookies>=b.cost;
+    const card=document.createElement("div");
+    card.className="card"+(can?"":" locked");
+    card.addEventListener("click",()=>buyBoost(b));
+    const main=document.createElement("div");
+    main.className="card-main";
+    const icon=document.createElement("div");
+    icon.className="card-icon";
+    icon.textContent="⚡";
+    const textWrap=document.createElement("div");
+    const title=document.createElement("div");
+    title.className="card-text-title";
+    title.textContent=b.name;
+    const sub=document.createElement("div");
+    sub.className="card-text-sub";
+    sub.textContent=`Cost: ${fmt(b.cost)}`;
+    textWrap.appendChild(title);textWrap.appendChild(sub);
+    main.appendChild(icon);main.appendChild(textWrap);
+    const right=document.createElement("div");
+    right.className="card-right";
+    const price=document.createElement("div");
+    price.className="price";
+    price.textContent=fmt(b.cost);
     right.appendChild(price);
-    card.appendChild(main); card.appendChild(right);
+    card.appendChild(main);card.appendChild(right);
     root.appendChild(card);
   });
 }
 
-/* Quests */
-let quests = [];
-function generateDailyQuests(){
-  const key = new Date().toISOString().slice(0,10);
-  const storedKey = localStorage.getItem(SAVE_KEY + "_quests_date");
-  if(storedKey === key){
-    const raw = localStorage.getItem(SAVE_KEY + "_quests");
-    if(raw){ quests = JSON.parse(raw); return; }
-  }
-  quests = [
-    { id:"q1", title:"Click Novice", desc:"Click the cookie 300 times", progress:0, target:300, reward:{cookies:3000} },
-    { id:"q2", title:"Builder", desc:"Buy 3 buildings", progress:0, target:3, reward:{cookies:8000} },
-    { id:"q3", title:"Golden Seeker", desc:"Click 1 golden cookie", progress:0, target:1, reward:{stars:1} }
-  ];
-  localStorage.setItem(SAVE_KEY + "_quests_date", key);
-  localStorage.setItem(SAVE_KEY + "_quests", JSON.stringify(quests));
-}
 function renderQuests(){
-  const root = document.getElementById("questsList"); root.innerHTML = "";
+  const root=document.getElementById("questsList");
+  root.innerHTML="";
   quests.forEach(q=>{
-    const el = document.createElement("div"); el.className = "card";
-    const main = document.createElement("div"); main.className = "card-main";
-    const text = document.createElement("div");
-    const title = document.createElement("div"); title.className = "card-text-title"; title.textContent = q.title;
-    const sub = document.createElement("div"); sub.className = "card-text-sub"; sub.textContent = q.desc + " ("+q.progress+"/"+q.target+")";
-    text.appendChild(title); text.appendChild(sub);
+    const card=document.createElement("div");
+    card.className="card";
+    const main=document.createElement("div");
+    main.className="card-main";
+    const text=document.createElement("div");
+    const title=document.createElement("div");
+    title.className="card-text-title";
+    title.textContent=q.title;
+    const sub=document.createElement("div");
+    sub.className="card-text-sub";
+    sub.textContent=`${q.desc} (${q.progress}/${q.target})`;
+    text.appendChild(title);text.appendChild(sub);
     main.appendChild(text);
-    const right = document.createElement("div"); right.className = "card-right";
-    const btn = document.createElement("button"); btn.className = "small-btn";
-    btn.textContent = q.done && !q.claimed ? "Claim" : (q.claimed ? "Claimed" : "Incomplete");
-    btn.disabled = !(q.done && !q.claimed);
-    btn.addEventListener("click", ()=>{ claimQuest(q.id); });
+    const right=document.createElement("div");
+    right.className="card-right";
+    const btn=document.createElement("button");
+    btn.className="small-btn";
+    if(q.claimed) {btn.textContent="Claimed";btn.disabled=true;}
+    else if(q.progress>=q.target){btn.textContent="Claim";btn.disabled=false;}
+    else {btn.textContent="Incomplete";btn.disabled=true;}
+    btn.addEventListener("click",()=>claimQuest(q.id));
     right.appendChild(btn);
-    el.appendChild(main); el.appendChild(right);
+    card.appendChild(main);card.appendChild(right);
+    root.appendChild(card);
+  });
+}
+
+function renderLeaderboard(){
+  const root=document.getElementById("leaderboardList");
+  root.innerHTML="";
+  const list=getLeaderboard();
+  if(list.length===0){root.textContent="No scores yet.";return;}
+  list.slice(0,20).forEach((r,i)=>{
+    const el=document.createElement("div");
+    el.className="leaderboard-row";
+    el.innerHTML=`<div>#${i+1} ${r.name}</div><div>${fmt(r.score)}</div>`;
     root.appendChild(el);
   });
 }
+
+function renderSettings(){
+  document.getElementById("soundToggle").checked=soundEnabled;
+  document.getElementById("autoBuyerToggle").checked=autoBuyerEnabled;
+  document.getElementById("autoClipboardToggle").checked=autoClipboardEnabled;
+  document.getElementById("backupCount").textContent=getBackups().length;
+}
+
+function renderAll(){
+  renderStats();
+  renderBuildings();
+  renderUpgrades();
+  renderBoosts();
+  renderQuests();
+  renderLeaderboard();
+  renderSettings();
+}
+
+/* ---------- Quests ---------- */
+
+function generateDailyQuests(){
+  const today=new Date().toISOString().slice(0,10);
+  const key=SAVE_KEY+"_quests_date";
+  const storedDate=localStorage.getItem(key);
+  if(storedDate===today){
+    const raw=localStorage.getItem(SAVE_KEY+"_quests");
+    if(raw){quests=JSON.parse(raw);return;}
+  }
+  quests=[
+    {id:"q1",title:"Click Starter",desc:"Click 200 times",progress:0,target:200,reward:{cookies:2000}},
+    {id:"q2",title:"Builder I",desc:"Buy 10 buildings",progress:0,target:10,reward:{cookies:8000}},
+    {id:"q3",title:"Rush Rookie",desc:"Finish 1 rush",progress:0,target:1,reward:{stars:1}}
+  ];
+  localStorage.setItem(key,today);
+  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+}
+
 function updateQuestProgress(type,amount=1){
   let changed=false;
   quests.forEach(q=>{
-    if(q.id==="q1" && type==="click"){ q.progress = Math.min(q.target, q.progress + amount); changed=true; }
-    if(q.id==="q2" && type==="buy"){ q.progress = Math.min(q.target, q.progress + amount); changed=true; }
-    if(q.id==="q3" && type==="gold"){ q.progress = Math.min(q.target, q.progress + amount); changed=true; }
-    if(q.progress >= q.target && !q.done){ q.done = true; toast("Quest complete: " + q.title); changed=true; }
+    if(q.id==="q1" && type==="click"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
+    if(q.id==="q2" && type==="buy"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
+    if(q.id==="q3" && type==="rush"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
   });
-  if(changed) localStorage.setItem(SAVE_KEY + "_quests", JSON.stringify(quests));
-}
-function claimQuest(id){
-  const q = quests.find(x=>x.id===id);
-  if(!q || !q.done || q.claimed) return;
-  if(q.reward.cookies){ cookies += q.reward.cookies; totalCookiesEarned += q.reward.cookies; }
-  if(q.reward.stars){ prestigeStars += q.reward.stars; }
-  q.claimed = true;
-  localStorage.setItem(SAVE_KEY + "_quests", JSON.stringify(quests));
-  save(); renderAll(); toast("Quest reward claimed!");
+  if(changed){
+    localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+    renderQuests();
+  }
 }
 
-/* Leaderboard (local) */
-function getLeaderboard(){ const raw = localStorage.getItem(SAVE_KEY + "_leader"); if(!raw) return []; try{return JSON.parse(raw);}catch(e){return [];} }
+function claimQuest(id){
+  const q=quests.find(x=>x.id===id);
+  if(!q||q.claimed||q.progress<q.target)return;
+  if(q.reward.cookies){cookies+=q.reward.cookies;totalCookiesEarned+=q.reward.cookies;}
+  if(q.reward.stars){prestigeStars+=q.reward.stars;}
+  q.claimed=true;
+  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+  toast("Quest reward claimed!");
+  save();
+  renderAll();
+}
+
+/* ---------- Leaderboard ---------- */
+
+function getLeaderboard(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY+"_leader");
+    return raw?JSON.parse(raw):[];
+  }catch(e){return[];}
+}
+
 function submitLeaderboard(name,score){
-  if(suspiciousSave){ alert("Leaderboard disabled for suspicious saves."); return; }
-  const list = getLeaderboard();
+  const list=getLeaderboard();
   list.push({name,score,date:Date.now()});
   list.sort((a,b)=>b.score-a.score);
-  localStorage.setItem(SAVE_KEY + "_leader", JSON.stringify(list.slice(0,50)));
+  localStorage.setItem(SAVE_KEY+"_leader",JSON.stringify(list.slice(0,50)));
   renderLeaderboard();
 }
-function renderLeaderboard(){
-  const root = document.getElementById("leaderboardList"); root.innerHTML = "";
-  const list = getLeaderboard();
-  if(list.length===0){ root.textContent = "No scores yet."; return; }
-  list.slice(0,20).forEach((r,i)=>{ const el=document.createElement("div"); el.className="leaderboard-row"; el.innerHTML = `<div>#${i+1} ${r.name}</div><div>${fmt(r.score)}</div>`; root.appendChild(el); });
-}
 
-/* Rush mini-game */
-let rushActive=false, rushScore=0, rushInterval=null, rushTimeLeft=0;
+/* ---------- Rush ---------- */
+
 function startRush(){
-  if(rushActive) return;
-  rushActive=true; rushScore=0; rushTimeLeft=10;
-  document.getElementById("rushTimer").textContent = "10.0s";
+  if(rushActive)return;
+  rushActive=true;
+  rushScore=0;
+  rushTimeLeft=10;
+  document.getElementById("rushTimer").textContent="10.0s";
   playSound("event");
-  rushInterval = setInterval(()=>{
-    rushTimeLeft -= 0.1;
-    if(rushTimeLeft <= 0) endRush();
-    else document.getElementById("rushTimer").textContent = rushTimeLeft.toFixed(1) + "s";
+  rushTimerId=setInterval(()=>{
+    rushTimeLeft-=0.1;
+    if(rushTimeLeft<=0) endRush();
+    else document.getElementById("rushTimer").textContent=rushTimeLeft.toFixed(1)+"s";
   },100);
-  toast("Rush started! Click fast!");
+  toast("Rush started!");
 }
+
 function endRush(){
-  if(!rushActive) return;
-  rushActive=false; clearInterval(rushInterval); rushInterval=null;
-  document.getElementById("rushTimer").textContent = "Ready";
-  const reward = Math.floor(rushScore * (clickPower + (prestigeUpgradesBought.includes("p2") ? prestigeStars : 0)) * 5);
-  cookies += reward; totalCookiesEarned += reward;
-  document.getElementById("rushScore").textContent = "Rush score: " + rushScore + " → Reward: " + fmt(reward);
-  save(); renderAll(); toast("Rush ended! Reward: " + fmt(reward));
+  if(!rushActive)return;
+  rushActive=false;
+  clearInterval(rushTimerId);
+  rushTimerId=null;
+  document.getElementById("rushTimer").textContent="Ready";
+  const reward=Math.floor(rushScore*clickPower*5);
+  cookies+=reward;
+  totalCookiesEarned+=reward;
+  document.getElementById("rushScore").textContent="Rush score: "+rushScore+" → Reward: "+fmt(reward);
+  updateQuestProgress("rush",1);
+  save();
+  renderAll();
+  toast("Rush ended! Reward: "+fmt(reward));
 }
 
-/* ---------- Boost purchase flow (abuse protections) ---------- */
-function now(){ return Date.now(); }
+/* ---------- Boosts ---------- */
 
-async function canBuyBoost(boost){
-  if(suspiciousSave || suspiciousBoosting){ toast("Boosts disabled due to suspicious activity."); return false; }
-  const n = now();
-  const last = boostLastBoughtAt[boost.id] || 0;
-  if(n - last < BOOST_COOLDOWN_MS){ toast(`${boost.name} cooling down.`); return false; }
-  globalBoostTimestamps = globalBoostTimestamps.filter(t => n - t <= GLOBAL_BOOST_WINDOW_MS);
-  if(globalBoostTimestamps.length >= GLOBAL_BOOST_MAX_IN_WINDOW){ toast("Too many boosts recently. Wait a moment."); return false; }
-  boostSessionCount[boost.id] = boostSessionCount[boost.id] || 0;
-  if(boostSessionCount[boost.id] >= BOOST_SESSION_CAP){ toast(`${boost.name} purchase limit reached for this session.`); return false; }
-  if(cookies < boost.cost){ toast("Not enough cookies."); return false; }
-  return true;
-}
+let autoClickerInterval=null;
 
-async function buyBoostSafely(boost){
-  if(!await canBuyBoost(boost)) return false;
-  const n = now();
-  boostLastBoughtAt[boost.id] = n;
-  globalBoostTimestamps.push(n);
-  boostSessionCount[boost.id] = (boostSessionCount[boost.id]||0) + 1;
-  cookies -= boost.cost; totalCookiesEarned += boost.cost;
-
-  if(boost.type === "cpsMult"){
-    const existing = activeBoosts.find(b => b.id === boost.id);
-    const currentMult = existing ? existing.mult : 1;
-    const newMult = Math.min(currentMult * boost.mult, BOOST_EFFECT_HARD_CAP);
-    activeBoosts = activeBoosts.filter(b => b.id !== boost.id);
-    activeBoosts.push({ id: boost.id, type: "cpsMult", mult: newMult });
-    if(boost.duration) setTimeout(()=>{ activeBoosts = activeBoosts.filter(b => b.id !== boost.id); }, boost.duration);
-  } else if(boost.type === "clickMult"){
-    const capMult = Math.min(boost.mult, BOOST_EFFECT_HARD_CAP);
-    clickPower *= capMult;
-    setTimeout(()=>{ clickPower = Math.max(1, Math.floor(clickPower / capMult)); }, boost.duration || 0);
-  } else if(boost.type === "instant"){
-    const cap = boost.cap || 150000;
-    const gain = Math.min(Math.floor(totalBaseCps() * (boost.seconds || 20)), cap);
-    cookies += gain; totalCookiesEarned += gain;
-    spawnFloat("+"+fmt(gain), window.innerWidth/2, window.innerHeight/2);
-    if(gain > 5e6){ suspiciousBoosting = true; disableHighValueFeatures(); }
-  } else if(boost.type === "auto"){
-    if(autoClickerInterval) clearInterval(autoClickerInterval);
-    autoClickerInterval = setInterval(()=>{ cookies += clickPower; totalCookiesEarned += clickPower; renderStats(); }, 200);
-    setTimeout(()=>{ clearInterval(autoClickerInterval); autoClickerInterval = null; }, boost.duration || 0);
+function buyBoost(b){
+  if(cookies<b.cost)return;
+  cookies-=b.cost;
+  totalCookiesEarned+=b.cost;
+  if(b.type==="cpsMult"){
+    activeBoosts.push({type:"cpsMult",mult:b.mult,expires:Date.now()+b.duration});
+    setTimeout(()=>{activeBoosts=activeBoosts.filter(x=>x.expires>Date.now());},b.duration+100);
+  }else if(b.type==="clickMult"){
+    clickPower*=b.mult;
+    setTimeout(()=>{clickPower=Math.max(1,Math.floor(clickPower/b.mult));renderStats();},b.duration);
+  }else if(b.type==="instant"){
+    const gain=Math.floor(totalBaseCps()*b.seconds);
+    cookies+=gain;
+    totalCookiesEarned+=gain;
+    spawnFloat("+"+fmt(gain),window.innerWidth/2,window.innerHeight/2);
+  }else if(b.type==="auto"){
+    if(autoClickerInterval)clearInterval(autoClickerInterval);
+    autoClickerInterval=setInterval(()=>{
+      cookies+=clickPower;
+      totalCookiesEarned+=clickPower;
+      renderStats();
+    },200);
+    setTimeout(()=>{clearInterval(autoClickerInterval);autoClickerInterval=null;},b.duration);
   }
-
-  const audit = JSON.parse(localStorage.getItem(SAVE_KEY + "_audit") || "[]");
-  audit.push({ id: boost.id, time: Date.now(), cost: boost.cost });
-  localStorage.setItem(SAVE_KEY + "_audit", JSON.stringify(audit.slice(-200)));
-
-  save(); renderAll(); playSound("event");
-  return true;
+  playSound("event");
+  save();
+  renderAll();
 }
 
-/* ---------- Golden cookie spawn ---------- */
-let goldenTimer = null;
+/* ---------- Golden cookie ---------- */
+
+let goldenTimer=null;
 function scheduleGoldenCookie(){
-  const delay = 90000 + Math.random()*60000;
-  goldenTimer = setTimeout(spawnGoldenCookie, delay);
+  const delay=60000+Math.random()*60000;
+  goldenTimer=setTimeout(spawnGoldenCookie,delay);
 }
 function spawnGoldenCookie(){
-  const n = now();
-  if(n - lastGoldenAt < GOLDEN_MIN_INTERVAL_MS) { scheduleGoldenCookie(); return; }
-  lastGoldenAt = n;
-  const gc = document.createElement("div"); gc.className="golden-cookie";
-  const rect = document.getElementById("leftPanel").getBoundingClientRect();
-  const x = Math.random()*(rect.width-80)+10;
-  const y = Math.random()*(rect.height-80)+10;
-  gc.style.left = x + "px"; gc.style.top = y + "px"; gc.textContent = "⭐";
-  document.getElementById("leftPanel").appendChild(gc);
-  const mode = Math.random();
-  gc.addEventListener("click", async ()=>{
+  const panel=document.getElementById("leftPanel");
+  const rect=panel.getBoundingClientRect();
+  const x=Math.random()*(rect.width-80)+10;
+  const y=Math.random()*(rect.height-80)+10;
+  const gc=document.createElement("div");
+  gc.className="golden-cookie";
+  gc.style.left=x+"px";
+  gc.style.top=y+"px";
+  gc.textContent="⭐";
+  panel.appendChild(gc);
+  gc.addEventListener("click",()=>{
     gc.remove();
-    if(mode < 0.33){
-      const bonus = Math.min(Math.max(300, Math.floor(totalBaseCps()*25)), 300000);
-      cookies += bonus; totalCookiesEarned += bonus;
-      spawnFloat("+"+fmt(bonus), rect.left + x + 30, rect.top + y + 30);
-    } else if(mode < 0.66){
-      goldenMultiplier = 2; spawnFloat("CPS x2", rect.left + x + 30, rect.top + y + 30);
-      setTimeout(()=>{ goldenMultiplier = 1; renderStats(); }, 15000);
-    } else {
-      goldenMultiplier = 3; spawnFloat("CPS x3", rect.left + x + 30, rect.top + y + 30);
-      setTimeout(()=>{ goldenMultiplier = 1; renderStats(); }, 10000);
+    const mode=Math.random();
+    if(mode<0.33){
+      const bonus=Math.max(200,Math.floor(totalBaseCps()*20));
+      cookies+=bonus;totalCookiesEarned+=bonus;
+      spawnFloat("+"+fmt(bonus),rect.left+x+30,rect.top+y+30);
+    }else if(mode<0.66){
+      goldenMultiplier=2;
+      spawnFloat("CPS x2",rect.left+x+30,rect.top+y+30);
+      setTimeout(()=>{goldenMultiplier=1;renderStats();},15000);
+    }else{
+      goldenMultiplier=3;
+      spawnFloat("CPS x3",rect.left+x+30,rect.top+y+30);
+      setTimeout(()=>{goldenMultiplier=1;renderStats();},10000);
     }
-    updateQuestProgress("gold",1);
     playSound("gold");
-    save(); renderAll(); scheduleGoldenCookie();
+    save();
+    renderAll();
+    scheduleGoldenCookie();
   });
-  setTimeout(()=>{ if(gc.parentNode){ gc.remove(); scheduleGoldenCookie(); } }, 10000);
+  setTimeout(()=>{if(gc.parentNode){gc.remove();scheduleGoldenCookie();}},10000);
 }
 
-/* ---------- Achievements ---------- */
-let achievementsState = {};
-function checkAchievements(){
-  ACHIEVEMENTS.forEach(a=>{
-    if(achievementsState[a.id]) return;
-    try{
-      if(a.check()){
-        achievementsState[a.id] = true;
-        if(a.reward){
-          if(a.reward.type === "cps"){ for(let i=0;i<buildingCpsMult.length;i++) buildingCpsMult[i] *= (1 + a.reward.value); }
-          else if(a.reward.type === "click"){ clickPower += a.reward.value; }
-        }
-        spawnFloat("Achievement!", window.innerWidth/2, window.innerHeight/2);
-        save(); renderAll();
-      }
-    }catch(e){}
-  });
+/* ---------- Offline ---------- */
+
+function saveTimestamp(){
+  lastSavedAt=Date.now();
+  localStorage.setItem(SAVE_KEY+"_ts",String(lastSavedAt));
 }
 
-/* ---------- Auto-buyer ---------- */
-function autoBuyerTick(){
-  if(!autoBuyerEnabled || suspiciousSave) return;
-  const n = now();
-  if(n - lastAutoBuyAt < AUTO_BUYER_THROTTLE_MS) return;
-  lastAutoBuyAt = n;
-  let cheapestIndex = -1, cheapestCost = Infinity;
-  for(let i=0;i<BUILDINGS.length;i++){
-    const c = buildingCost(i);
-    if(c < cheapestCost){ cheapestCost = c; cheapestIndex = i; }
-  }
-  if(cheapestIndex >= 0 && cookies >= cheapestCost) buyBuilding(cheapestIndex);
-}
-
-/* ---------- Actions: buy building / upgrade ---------- */
-function buyBuilding(i){
-  const cost = buildingCost(i);
-  if(cookies < cost) return false;
-  cookies -= cost; owned[i] = (owned[i]||0) + 1; totalCookiesEarned += cost;
-  updateQuestProgress("buy",1);
-  save(); renderAll(); playSound("click");
-  return true;
-}
-function applyUpgradeEffect(u){
-  if(u.type === "click"){ clickPower += Math.max(1, Math.floor(u.cost/1000)); }
-  else if(u.type === "building"){ buildingCpsMult[u.buildingIndex] = (buildingCpsMult[u.buildingIndex]||1) * (u.mult || 1.2); }
-  else if(u.type === "global"){ for(let i=0;i<buildingCpsMult.length;i++) buildingCpsMult[i] = (buildingCpsMult[i]||1) * (u.mult || 1.1); }
-}
-function buyUpgrade(u){
-  if(cookies < u.cost) return;
-  cookies -= u.cost; boughtUpgrades.push(u.id); applyUpgradeEffect(u);
-  totalCookiesEarned += u.cost;
-  save(); renderAll(); playSound("event");
-}
-
-/* ---------- UI helpers ---------- */
-function renderAll(){
-  renderStats(); renderBuildings(); renderUpgrades(); renderBoosts(); renderQuests(); renderLeaderboard(); renderSettingsUI();
-}
-function renderSettingsUI(){
-  document.getElementById("soundToggle").checked = soundEnabled;
-  document.getElementById("autoBuyerToggle").checked = autoBuyerEnabled;
-  document.getElementById("autoClipboardToggle").checked = autoClipboardEnabled;
-  document.getElementById("backupCount").textContent = getBackups().length;
-}
-
-/* ---------- Event wiring ---------- */
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click", ()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
-    const which = tab.dataset.tab;
-    document.getElementById("panel-buildings").style.display = which==="buildings" ? "" : "none";
-    document.getElementById("panel-upgrades").style.display = which==="upgrades" ? "" : "none";
-    document.getElementById("panel-boosts").style.display = which==="boosts" ? "" : "none";
-    document.getElementById("panel-quests").style.display = which==="quests" ? "" : "none";
-    document.getElementById("panel-rush").style.display = which==="rush" ? "" : "none";
-    document.getElementById("panel-leaderboard").style.display = which==="leaderboard" ? "" : "none";
-    document.getElementById("panel-settings").style.display = which==="settings" ? "" : "none";
-  });
-});
-
-/* Export / Import / Reset */
-document.getElementById("exportBtn").addEventListener("click", ()=>{ const raw = localStorage.getItem(SAVE_KEY); if(!raw){ alert("No save found."); return; } const encoded = btoa(raw); navigator.clipboard.writeText(encoded).then(()=>{ alert("Save copied to clipboard."); }).catch(()=>{ prompt("Copy this save code:", encoded); }); });
-document.getElementById("importBtn").addEventListener("click", ()=>{ const code = prompt("Paste your save code:"); if(!code) return; try{ const json = atob(code.trim()); (async ()=>{ const validated = await validateLoadedSave(json); if(validated) { localStorage.setItem(SAVE_KEY, json); await load(); renderAll(); alert("Save imported."); } })(); }catch(e){ alert("Invalid save code."); } });
-document.getElementById("resetBtn").addEventListener("click", ()=>{ if(!confirm("Reset all progress? This will clear your current run but keep Stars.")) return; cookies = 0; clickPower = 1; owned = new Array(BUILDINGS.length).fill(0); buildingCpsMult = new Array(BUILDINGS.length).fill(1); boughtUpgrades = []; totalCookiesEarned = 0; boostLastBoughtAt = {}; boostSessionCount = {}; globalBoostTimestamps = []; save(); renderAll(); });
-
-/* Cookie click with rate limit */
-const cookieBtn = document.getElementById("cookieBtn");
-cookieBtn.addEventListener("click", e=>{
-  const nowTs = Date.now();
-  if(nowTs - lastClickAt < CLICK_RATE_LIMIT_MS) return;
-  lastClickAt = nowTs;
-  const cp = clickPower + (prestigeUpgradesBought.includes("p2") ? prestigeStars : 0);
-  cookies += cp; totalCookiesEarned += cp;
-  updateQuestProgress("click",1);
-  const rect = cookieBtn.getBoundingClientRect();
-  spawnFloat("+"+cp, rect.left + rect.width/2, rect.top + rect.height/2);
-  playSound("click");
-  save(); renderAll();
-});
-
-/* Rush wiring */
-document.getElementById("rushBtn").addEventListener("click", ()=>{ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); document.querySelector('.tab[data-tab="rush"]').classList.add('active'); document.getElementById("panel-buildings").style.display="none"; document.getElementById("panel-rush").style.display=""; });
-document.getElementById("startRushBtn").addEventListener("click", ()=>{ startRush(); });
-document.getElementById("submitRushBtn").addEventListener("click", ()=>{ const name = document.getElementById("leaderName").value.trim() || "Anon"; submitLeaderboard(name, rushScore); toast("Score submitted"); renderLeaderboard(); });
-cookieBtn.addEventListener("click", ()=>{ if(rushActive){ rushScore++; document.getElementById("rushScore").textContent = "Rush score: " + rushScore; } });
-
-/* Settings toggles */
-document.getElementById("soundToggle").addEventListener("change", (e)=>{ soundEnabled = e.target.checked; save(); });
-document.getElementById("autoBuyerToggle").addEventListener("change", (e)=>{ autoBuyerEnabled = e.target.checked; save(); });
-document.getElementById("autoClipboardToggle").addEventListener("change", (e)=>{ autoClipboardEnabled = e.target.checked; save(); });
-
-/* Download backups (copy to clipboard) */
-document.getElementById("downloadBackupsBtn").addEventListener("click", async ()=>{
-  const list = getBackups();
-  if(list.length===0){ toast("No backups available"); return; }
+function computeOfflineGain(){
   try{
-    await navigator.clipboard.writeText(btoa(JSON.stringify(list)));
-    toast("Backups copied to clipboard");
-  }catch(e){
-    prompt("Backups (base64):", btoa(JSON.stringify(list)));
-  }
-});
-
-/* Admin wipe button */
-const WIPE_COOLDOWN_MS = 60000;
-let lastWipeAt = 0;
-const ADMIN_WIPE_CODE = "WIPE-ALL-2026"; // change if needed
-document.getElementById("wipeAllBtn").addEventListener("click", async ()=>{
-  const code = document.getElementById("adminCodeInput").value.trim();
-  const confirmText = document.getElementById("adminConfirmInput").value.trim();
-  const nowTs = Date.now();
-  if(nowTs - lastWipeAt < WIPE_COOLDOWN_MS){ alert("Wipe is on cooldown. Wait a moment."); return; }
-  if(code !== ADMIN_WIPE_CODE){ alert("Invalid admin code."); return; }
-  if(confirmText !== "WIPE ALL"){ alert('Type "WIPE ALL" in the confirmation field to proceed.'); return; }
-  if(!confirm("This will BACKUP your current save and then WIPE all local saves, leaderboards, backups, and related data. This cannot be undone locally. Proceed?")) return;
-
-  // create backup
-  await backupCurrentSave();
-
-  // audit log entry
-  const audit = JSON.parse(localStorage.getItem(SAVE_KEY + "_audit") || "[]");
-  audit.push({ action: "wipe_all", ts: Date.now(), by: "admin" });
-  localStorage.setItem(SAVE_KEY + "_audit", JSON.stringify(audit.slice(-200)));
-
-  // keys to remove (local-only)
-  const keys = Object.keys(localStorage).filter(k => k.startsWith(SAVE_KEY) || k === SAVE_KEY + "_leader" || k === SAVE_KEY + "_quests" || k === SAVE_KEY + "_quests_date" || k === BACKUP_HISTORY_KEY || k === SAVE_KEY + "_audit");
-  keys.forEach(k => localStorage.removeItem(k));
-
-  // also remove generic keys used by the game
-  localStorage.removeItem(SAVE_KEY);
-  localStorage.removeItem(SAVE_KEY + "_hash");
-  localStorage.removeItem(SAVE_KEY + "_ts");
-
-  // reset in-memory state
-  cookies = 0; clickPower = 1; owned = new Array(BUILDINGS.length).fill(0); buildingCpsMult = new Array(BUILDINGS.length).fill(1);
-  boughtUpgrades = []; totalCookiesEarned = 0; prestigeStars = 0; prestigeUpgradesBought = []; achievementsState = {};
-  boostLastBoughtAt = {}; boostSessionCount = {}; globalBoostTimestamps = [];
-  suspiciousSave = false; suspiciousBoosting = false;
-
-  lastWipeAt = Date.now();
-  await save(); renderAll(); renderQuests(); toast("All local saves wiped. Backup created.");
-});
-
-/* ---------- Load on start ---------- */
-async function load(){
-  try{
-    const raw = localStorage.getItem(SAVE_KEY);
-    if(!raw) return;
-    const validated = await validateLoadedSave(raw);
-    if(!validated) return;
-    const data = JSON.parse(raw);
-    cookies = typeof data.cookies === "number" ? data.cookies : cookies;
-    clickPower = typeof data.clickPower === "number" ? data.clickPower : clickPower;
-    owned = Array.isArray(data.owned) && data.owned.length===BUILDINGS.length ? data.owned : new Array(BUILDINGS.length).fill(0);
-    buildingCpsMult = Array.isArray(data.buildingCpsMult) && data.buildingCpsMult.length===BUILDINGS.length ? data.buildingCpsMult : new Array(BUILDINGS.length).fill(1);
-    boughtUpgrades = Array.isArray(data.boughtUpgrades) ? data.boughtUpgrades : [];
-    totalCookiesEarned = typeof data.totalCookiesEarned === "number" ? data.totalCookiesEarned : totalCookiesEarned;
-    prestigeStars = typeof data.prestigeStars === "number" ? data.prestigeStars : prestigeStars;
-    prestigeUpgradesBought = Array.isArray(data.prestigeUpgradesBought) ? data.prestigeUpgradesBought : [];
-    achievementsState = typeof data.achievementsState === "object" ? data.achievementsState : {};
-    currentSkin = data.currentSkin || currentSkin;
-  }catch(e){ console.warn("Load failed", e); }
+    const raw=localStorage.getItem(SAVE_KEY+"_ts");
+    if(!raw)return{gain:0,elapsed:0};
+    const prev=parseInt(raw,10);
+    if(isNaN(prev))return{gain:0,elapsed:0};
+    const now=Date.now();
+    const elapsed=Math.max(0,now-prev);
+    const cap=MAX_OFFLINE_HOURS*3600*1000;
+    const used=Math.min(elapsed,cap);
+    const cps=totalCps();
+    const gain=Math.floor(cps*(used/1000)*0.5);
+    return{gain,elapsed:used};
+  }catch(e){return{gain:0,elapsed:0};}
 }
 
-/* Backup current save helper */
-async function backupCurrentSave(){
+/* ---------- Backups ---------- */
+
+function getBackups(){
   try{
-    const raw = localStorage.getItem(SAVE_KEY) || JSON.stringify({version:GAME_VERSION});
-    pushBackup(raw);
-    try{ await navigator.clipboard.writeText(btoa(raw)); toast("Backup copied to clipboard"); }catch(e){ toast("Backup saved locally"); }
+    const raw=localStorage.getItem(BACKUP_HISTORY_KEY);
+    return raw?JSON.parse(raw):[];
+  }catch(e){return[];}
+}
+
+function pushBackup(rawJson){
+  try{
+    const list=getBackups();
+    list.unshift({ts:Date.now(),data:rawJson});
+    while(list.length>10)list.pop();
+    localStorage.setItem(BACKUP_HISTORY_KEY,JSON.stringify(list));
   }catch(e){}
 }
 
-/* ---------- Autosave loop (10s) ---------- */
-setInterval(()=>{ save(); }, AUTOSAVE_INTERVAL_MS);
+/* ---------- Save / Load (simple, robust) ---------- */
+
+function save(){
+  const data={
+    version:GAME_VERSION,
+    cookies,clickPower,owned,buildingMult,boughtUpgrades,
+    totalCookiesEarned,prestigeStars,prestigeUpgrades,
+    achievementsState,quests,
+    soundEnabled,autoBuyerEnabled,autoClipboardEnabled
+  };
+  try{
+    const raw=JSON.stringify(data);
+    localStorage.setItem(SAVE_KEY,raw);
+    pushBackup(raw);
+    saveTimestamp();
+    return true;
+  }catch(e){
+    console.warn("Save failed",e);
+    return false;
+  }
+}
+
+function load(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw)return;
+    const data=JSON.parse(raw);
+    cookies=data.cookies||0;
+    clickPower=data.clickPower||1;
+    owned=Array.isArray(data.owned)&&data.owned.length===BUILDINGS.length?data.owned:new Array(BUILDINGS.length).fill(0);
+    buildingMult=Array.isArray(data.buildingMult)&&data.buildingMult.length===BUILDINGS.length?data.buildingMult:new Array(BUILDINGS.length).fill(1);
+    boughtUpgrades=Array.isArray(data.boughtUpgrades)?data.boughtUpgrades:[];
+    totalCookiesEarned=data.totalCookiesEarned||0;
+    prestigeStars=data.prestigeStars||0;
+    prestigeUpgrades=Array.isArray(data.prestigeUpgrades)?data.prestigeUpgrades:[];
+    achievementsState=data.achievementsState||{};
+    quests=Array.isArray(data.quests)?data.quests:quests;
+    soundEnabled=!!data.soundEnabled;
+    autoBuyerEnabled=!!data.autoBuyerEnabled;
+    autoClipboardEnabled=!!data.autoClipboardEnabled;
+  }catch(e){
+    console.warn("Load failed",e);
+  }
+}
+
+/* ---------- Auto-buyer ---------- */
+
+function autoBuyerTick(){
+  if(!autoBuyerEnabled)return;
+  let bestIndex=-1;
+  let bestScore=0;
+  for(let i=0;i<BUILDINGS.length;i++){
+    const cost=buildingCost(i);
+    if(cookies<cost)continue;
+    const gain=BUILDINGS[i].baseCps*(buildingMult[i]||1);
+    const score=gain/cost;
+    if(score>bestScore){bestScore=score;bestIndex=i;}
+  }
+  if(bestIndex>=0)buyBuilding(bestIndex);
+}
+
+/* ---------- Actions ---------- */
+
+function buyBuilding(i){
+  const cost=buildingCost(i);
+  if(cookies<cost)return;
+  cookies-=cost;
+  owned[i]=(owned[i]||0)+1;
+  totalCookiesEarned+=cost;
+  updateQuestProgress("buy",1);
+  playSound("click");
+  save();
+  renderAll();
+}
+
+function applyUpgradeEffect(u){
+  if(u.type==="click"){
+    clickPower+=u.value||1;
+  }else if(u.type==="building"){
+    buildingMult[u.buildingIndex]=(buildingMult[u.buildingIndex]||1)*(u.mult||1.2);
+  }
+}
+
+function buyUpgrade(u){
+  if(cookies<u.cost)return;
+  cookies-=u.cost;
+  boughtUpgrades.push(u.id);
+  totalCookiesEarned+=u.cost;
+  applyUpgradeEffect(u);
+  playSound("event");
+  save();
+  renderAll();
+}
+
+/* ---------- Events ---------- */
+
+const EVENTS=[
+  {id:"meteor",name:"Meteor Shower",apply:()=>{activeBoosts.push({type:"cpsMult",mult:1.1,expires:Date.now()+60000});showEventPopup("Meteor Shower: +10% CPS for 60s");}},
+  {id:"storm",name:"Lucky Storm",apply:()=>{for(let i=0;i<3;i++)setTimeout(spawnGoldenCookie,800*i);showEventPopup("Lucky Storm: golden cookies incoming!");}},
+  {id:"sale",name:"Flash Sale",apply:()=>{BUILDINGS.forEach(b=>b.baseCost=Math.floor(b.baseCost*0.9));showEventPopup("Flash Sale: buildings slightly cheaper this run.");}}
+];
+
+function scheduleRandomEvent(){
+  const delay=180000+Math.random()*240000;
+  setTimeout(()=>{
+    const ev=EVENTS[Math.floor(Math.random()*EVENTS.length)];
+    ev.apply();
+    playSound("event");
+    scheduleRandomEvent();
+  },delay);
+}
+
+function showEventPopup(text){
+  const root=document.getElementById("eventPopupRoot");
+  root.innerHTML="";
+  const el=document.createElement("div");
+  el.className="event-popup";
+  el.textContent=text;
+  root.appendChild(el);
+  setTimeout(()=>{root.innerHTML="";},6000);
+}
+
+/* ---------- Clipboard helpers ---------- */
+
+function exportSave(){
+  const raw=localStorage.getItem(SAVE_KEY);
+  if(!raw){alert("No save found.");return;}
+  const encoded=btoa(raw);
+  navigator.clipboard.writeText(encoded).then(()=>{
+    alert("Save copied to clipboard.");
+  }).catch(()=>{
+    prompt("Copy this save code:",encoded);
+  });
+}
+
+function importSave(){
+  const code=prompt("Paste your save code:");
+  if(!code)return;
+  try{
+    const json=atob(code.trim());
+    localStorage.setItem(SAVE_KEY,json);
+    load();
+    renderAll();
+    alert("Save imported.");
+  }catch(e){
+    alert("Invalid save code.");
+  }
+}
+
+/* ---------- Wipe ---------- */
+
+function wipeAll(){
+  if(!confirm("Wipe ALL local data for this game? This cannot be undone."))return;
+  const raw=localStorage.getItem(SAVE_KEY);
+  if(raw)pushBackup(raw);
+  localStorage.removeItem(SAVE_KEY);
+  localStorage.removeItem(SAVE_KEY+"_ts");
+  localStorage.removeItem(SAVE_KEY+"_leader");
+  localStorage.removeItem(SAVE_KEY+"_quests");
+  localStorage.removeItem(SAVE_KEY+"_quests_date");
+  cookies=0;clickPower=1;owned=new Array(BUILDINGS.length).fill(0);buildingMult=new Array(BUILDINGS.length).fill(1);
+  boughtUpgrades=[];totalCookiesEarned=0;prestigeStars=0;prestigeUpgrades=[];achievementsState={};
+  generateDailyQuests();
+  toast("All local data wiped (backup kept).");
+  save();
+  renderAll();
+}
+
+/* ---------- Autosave ---------- */
+
+setInterval(()=>{save();},AUTOSAVE_INTERVAL_MS);
 
 /* ---------- CPS tick ---------- */
-setInterval(()=>{ const cps = totalCps(); cookies += cps/10; totalCookiesEarned += cps/10; renderStats(); }, 100);
 
-/* ---------- Other intervals ---------- */
-setInterval(()=>{ if(autoClipboardEnabled) autoClipboardSave(); }, 15000);
-setInterval(()=>{ autoBuyerTick(); }, 1000);
-setInterval(()=>{ checkAchievements(); }, 2000);
+setInterval(()=>{
+  const cps=totalCps();
+  cookies+=cps/10;
+  totalCookiesEarned+=cps/10;
+  renderStats();
+},100);
 
-/* ---------- Random events ---------- */
-let eventTimer = null;
-const EVENTS = [
-  { id:"meteor", name:"Meteor Shower", apply:()=>{ activeBoosts.push({id:"meteor",type:"cpsMult",mult:1.05}); setTimeout(()=>{ activeBoosts = activeBoosts.filter(x=>x.id!=="meteor"); },60000); showEventPopup("Meteor Shower: +5% CPS for 60s"); } },
-  { id:"lucky", name:"Lucky Storm", apply:()=>{ for(let i=0;i<2;i++) setTimeout(spawnGoldenCookie, i*800); showEventPopup("Lucky Storm: golden cookies!"); } },
-  { id:"market", name:"Market Crash", apply:()=>{ priceDiscountActive = true; setTimeout(()=>{ priceDiscountActive = false; renderBuildings(); },30000); showEventPopup("Market Crash: buildings 20% cheaper for 30s"); } }
-];
-function scheduleRandomEvent(){ const delay = 300000 + Math.random()*600000; eventTimer = setTimeout(()=>{ const ev = EVENTS[Math.floor(Math.random()*EVENTS.length)]; ev.apply(); scheduleRandomEvent(); }, delay); }
-function showEventPopup(text){ const root = document.getElementById("eventPopupRoot"); root.innerHTML = ""; const el = document.createElement("div"); el.className = "event-popup"; el.textContent = text; root.appendChild(el); setTimeout(()=>{ root.innerHTML = ""; }, 6000); playSound("event"); }
+/* ---------- Auto-buyer tick ---------- */
 
-/* ---------- Clipboard & watchdog ---------- */
-async function autoClipboardSave(){
-  if(!autoClipboardEnabled || suspiciousSave) return;
-  try{ const raw = localStorage.getItem(SAVE_KEY); if(!raw) return; await navigator.clipboard.writeText(btoa(raw)); console.log("Auto-saved to clipboard"); }catch(e){ console.warn("Auto clipboard save failed", e); }
-}
-async function checkVersionWatchdog(){
-  const raw = localStorage.getItem(SAVE_KEY);
-  if(!raw) return;
-  try{
-    const data = JSON.parse(raw);
-    if(data.version && data.version !== GAME_VERSION){
-      try{ await navigator.clipboard.writeText(btoa(raw)); alert("Game updated! Your save was backed up. Refreshing..."); }catch(e){ alert("Game updated! Copy your save manually before refreshing."); }
-      location.reload();
-    }
-  }catch(e){ console.warn("Version check failed", e); }
-}
-
-/* ---------- Export / Import helpers ---------- */
-function exportSave(){ const raw = localStorage.getItem(SAVE_KEY); if(!raw){ alert("No save found."); return; } const encoded = btoa(raw); navigator.clipboard.writeText(encoded).then(()=>{ alert("Save copied to clipboard."); }).catch(()=>{ prompt("Copy this save code:", encoded); }); }
-function importSave(){ const code = prompt("Paste your save code:"); if(!code) return; try{ const json = atob(code.trim()); (async ()=>{ const validated = await validateLoadedSave(json); if(validated){ localStorage.setItem(SAVE_KEY, json); load(); renderAll(); alert("Save imported."); } })(); }catch(e){ alert("Invalid save code."); } }
+setInterval(()=>{autoBuyerTick();},1000);
 
 /* ---------- Init ---------- */
-function initArrays(){ if(!Array.isArray(owned) || owned.length !== BUILDINGS.length) owned = new Array(BUILDINGS.length).fill(0); if(!Array.isArray(buildingCpsMult) || buildingCpsMult.length !== BUILDINGS.length) buildingCpsMult = new Array(BUILDINGS.length).fill(1); }
+
+function initArrays(){
+  if(!Array.isArray(owned)||owned.length!==BUILDINGS.length)owned=new Array(BUILDINGS.length).fill(0);
+  if(!Array.isArray(buildingMult)||buildingMult.length!==BUILDINGS.length)buildingMult=new Array(BUILDINGS.length).fill(1);
+}
 initArrays();
 generateDailyQuests();
-load().then(()=>{
-  const offline = computeOfflineGain();
-  if(offline && offline.gain>0){
-    cookies += offline.gain; totalCookiesEarned += offline.gain;
-    toast("Offline reward: " + fmt(offline.gain));
-    playSound("event");
-  }
-  renderAll();
-  renderQuests();
-  scheduleGoldenCookie();
-  scheduleRandomEvent();
+load();
+
+const offline=computeOfflineGain();
+if(offline.gain>0){
+  cookies+=offline.gain;
+  totalCookiesEarned+=offline.gain;
+  toast("Offline reward: "+fmt(offline.gain));
+}
+renderAll();
+scheduleGoldenCookie();
+scheduleRandomEvent();
+
+/* ---------- UI wiring ---------- */
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    const which=tab.dataset.tab;
+    ["buildings","upgrades","boosts","quests","rush","leaderboard","settings"].forEach(id=>{
+      document.getElementById("panel-"+id).style.display=(id===which)?"":"none";
+    });
+  });
 });
 
-/* ---------- Final render ---------- */
-setTimeout(()=>{ renderAll(); }, 300);
+const cookieBtn=document.getElementById("cookieBtn");
+cookieBtn.addEventListener("click",e=>{
+  const now=Date.now();
+  if(now-lastClickAt<CLICK_RATE_LIMIT_MS)return;
+  lastClickAt=now;
+  cookies+=clickPower;
+  totalCookiesEarned+=clickPower;
+  updateQuestProgress("click",1);
+  const rect=cookieBtn.getBoundingClientRect();
+  spawnFloat("+"+clickPower,rect.left+rect.width/2,rect.top+rect.height/2);
+  playSound("click");
+  if(rushActive){
+    rushScore++;
+    document.getElementById("rushScore").textContent="Rush score: "+rushScore;
+  }
+  save();
+  renderStats();
+});
 
-/* ---------- End of script ---------- */
+document.getElementById("rushBtn").addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelector('.tab[data-tab="rush"]').classList.add("active");
+  ["buildings","upgrades","boosts","quests","rush","leaderboard","settings"].forEach(id=>{
+    document.getElementById("panel-"+id).style.display=(id==="rush")?"":"none";
+  });
+});
+
+document.getElementById("startRushBtn").addEventListener("click",startRush);
+document.getElementById("submitRushBtn").addEventListener("click",()=>{
+  const name=document.getElementById("leaderName").value.trim()||"Anon";
+  submitLeaderboard(name,rushScore);
+  toast("Score submitted");
+});
+
+document.getElementById("exportBtn").addEventListener("click",exportSave);
+document.getElementById("importBtn").addEventListener("click",importSave);
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(!confirm("Reset this run (keep stars)?"))return;
+  cookies=0;clickPower=1;owned=new Array(BUILDINGS.length).fill(0);buildingMult=new Array(BUILDINGS.length).fill(1);
+  boughtUpgrades=[];totalCookiesEarned=0;
+  save();renderAll();
+});
+
+document.getElementById("soundToggle").addEventListener("change",e=>{
+  soundEnabled=e.target.checked;
+  save();
+});
+document.getElementById("autoBuyerToggle").addEventListener("change",e=>{
+  autoBuyerEnabled=e.target.checked;
+  save();
+});
+document.getElementById("autoClipboardToggle").addEventListener("change",e=>{
+  autoClipboardEnabled=e.target.checked;
+  save();
+});
+
+document.getElementById("wipeAllBtn").addEventListener("click",wipeAll);
+
+/* ---------- End ---------- */
 </script>
 </body>
 </html>
