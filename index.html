@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Cookie Clicker+ by Jai — Massive Edition</title>
+<title>Cookie Clicker+ by Jai — Consolidated Massive Edition</title>
 <link rel="icon" href="data:,">
 <style>
+/* ---------- CORE STYLES ---------- */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
@@ -67,6 +68,9 @@ body{
 .danger{background:#3a1b26;border:1px solid #ff6b6b}
 .skin-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;border:1px solid #3a2b4a;font-size:11px;cursor:pointer;margin-right:6px;margin-bottom:4px}
 .skin-pill.active{background:#3a2b4a;border-color:#f7c96a}
+.event-popup{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#17161a;padding:12px;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,0.8);z-index:9999;border:1px solid #2b2233}
+#eventPopupRoot{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9998}
+.event-popup *{pointer-events:auto}
 @media (max-width:980px){.main{flex-direction:column}.left{border-right:none;border-bottom:1px solid #2b2233;flex:0 0 auto}.right{min-width:0}}
 </style>
 </head>
@@ -75,7 +79,7 @@ body{
   <div class="header">
     <div>
       <div class="title">Cookie Clicker+ by Jai</div>
-      <div class="subtitle" id="subtitle">Massive content • Anti‑macro • Autosave every 10s</div>
+      <div class="subtitle" id="subtitle">Massive consolidated build • Anti‑macro • Autosave</div>
     </div>
     <div class="controls">
       <button class="ctrl-btn" id="exportBtn">Export</button>
@@ -103,8 +107,7 @@ body{
         </div>
       </div>
 
-      <button class="cookie-btn" id="cookieBtn">
-        🍪
+      <button class="cookie-btn" id="cookieBtn" aria-label="Cookie button">🍪
         <svg class="cookie-crack" id="cookieCrack" viewBox="0 0 100 100">
           <path d="M10 60 L40 40 L60 70 L90 30" stroke="rgba(0,0,0,0.45)" stroke-width="4" fill="none" stroke-linecap="round"/>
         </svg>
@@ -187,9 +190,11 @@ body{
 </div>
 
 <div id="toastRoot"></div>
+<div id="eventPopupRoot"></div>
 
 <script>
-const GAME_VERSION = "cc-plus-jai-massive-v1";
+/* ---------- CORE ENGINE SHELL (variables + small helpers) ---------- */
+const GAME_VERSION = "cc-plus-jai-consolidated-v1";
 const REPO = (window.location.pathname.split("/")[1] || "default").toLowerCase();
 const SAVE_KEY = REPO + "_cookie_clicker_plus_save";
 const BACKUP_HISTORY_KEY = SAVE_KEY + "_backups";
@@ -217,216 +222,18 @@ let lastSavedAt = Date.now();
 let comboValue = 0;
 let comboDecayTimer = null;
 
-const CLICK_RATE_LIMIT_MS = 70;
-const MAX_CLICKS_PER_SECOND = 12;
+const CLICK_RATE_LIMIT_MS = 40;
+const MAX_CLICKS_PER_SECOND = 18;
 let clickWindow = {count:0,ts:Date.now()};
 
 const AUTOSAVE_INTERVAL_MS = 10000;
 const MAX_OFFLINE_HOURS = 8;
 
-/* ---------- Skins ---------- */
-
-const SKINS = [
-  {id:"dark",name:"Dark",bg:"radial-gradient(circle at top,#1b1028 0%,#09040f 55%,#050308 100%)"},
-  {id:"nebula",name:"Nebula",bg:"radial-gradient(circle at top,#2b003b 0%,#0b0010 55%,#000000 100%)"},
-  {id:"mint",name:"Mint",bg:"linear-gradient(180deg,#071b16 0%,#0f2b24 40%,#071b16 100%)"}
-];
-
-function applySkin(id){
-  const skin=SKINS.find(s=>s.id===id)||SKINS[0];
-  document.body.style.background=skin.bg;
-  currentSkin=skin.id;
-  document.querySelectorAll(".skin-pill").forEach(p=>{
-    p.classList.toggle("active",p.dataset.skin===skin.id);
-  });
-}
-
-/* ---------- Massive content (buildings, boosts, upgrades, achievements, quests, systems) continues in PART 2 ---------- */
-/* ---------- MASSIVE BUILDINGS LIST ---------- */
-
-const BUILDINGS = [
-  {id:0, name:"Cursor", icon:"👆", baseCost:50, baseCps:0.1},
-  {id:1, name:"Grandma", icon:"👵", baseCost:400, baseCps:1},
-  {id:2, name:"Farm", icon:"🌾", baseCost:3000, baseCps:8},
-  {id:3, name:"Mine", icon:"⛏️", baseCost:40000, baseCps:45},
-  {id:4, name:"Factory", icon:"🏭", baseCost:500000, baseCps:260},
-  {id:5, name:"Bank", icon:"🏦", baseCost:7000000, baseCps:1400},
-  {id:6, name:"Temple", icon:"⛪", baseCost:90000000, baseCps:7800},
-  {id:7, name:"Wizard Tower", icon:"🧙", baseCost:1200000000, baseCps:44000},
-  {id:8, name:"Portal", icon:"🌀", baseCost:15000000000, baseCps:260000},
-  {id:9, name:"Time Bakery", icon:"⏳", baseCost:300000000000, baseCps:1500000},
-  {id:10, name:"Galaxy Oven", icon:"🌌", baseCost:9000000000000, baseCps:9000000},
-  {id:11, name:"Quantum Chef", icon:"🧪", baseCost:60000000000000, baseCps:60000000},
-  {id:12, name:"Black Hole Kitchen", icon:"🕳️", baseCost:300000000000000, baseCps:300000000},
-
-  /* MASSIVE NEW CONTENT */
-  {id:13, name:"Stellar Mixer", icon:"⭐", baseCost:1e16, baseCps:1.5e9},
-  {id:14, name:"Nebula Mill", icon:"🌠", baseCost:5e16, baseCps:7e9},
-  {id:15, name:"Dark Matter Oven", icon:"⚫", baseCost:2e17, baseCps:3.5e10},
-  {id:16, name:"Singularity Kitchen", icon:"♾️", baseCost:1e18, baseCps:2e11},
-  {id:17, name:"Multiverse Bakery", icon:"🌐", baseCost:5e18, baseCps:1e12},
-  {id:18, name:"Reality Bender", icon:"🌀", baseCost:2e19, baseCps:5e12},
-  {id:19, name:"Chrono Oven", icon:"⌛", baseCost:1e20, baseCps:2.5e13},
-  {id:20, name:"Entropy Reactor", icon:"🔥", baseCost:8e20, baseCps:1e14},
-  {id:21, name:"Infinity Forge", icon:"💠", baseCost:3e21, baseCps:5e14},
-  {id:22, name:"Cosmic Loom", icon:"🧵", baseCost:1e22, baseCps:2e15},
-  {id:23, name:"Star Core", icon:"🌟", baseCost:5e22, baseCps:1e16},
-  {id:24, name:"Eternity Engine", icon:"♨️", baseCost:2e23, baseCps:5e16}
-];
-
-/* ---------- BOOSTS (balanced) ---------- */
-
-const BOOSTS = [
-  { id:"cpsSmall", name:"+20% CPS (12s)", type:"cpsMult", mult:1.2, duration:12000, cost:5000 },
-  { id:"cpsBig", name:"+50% CPS (10s)", type:"cpsMult", mult:1.5, duration:10000, cost:20000 },
-  { id:"clickBurst", name:"Click x3 (8s)", type:"clickMult", mult:3, duration:8000, cost:15000 },
-  { id:"instant", name:"Instant 20s CPS", type:"instant", seconds:20, cost:30000 },
-  { id:"autoClick", name:"Auto Click (10s)", type:"auto", duration:10000, cost:25000 },
-  { id:"megaCps", name:"MEGA CPS x2 (8s)", type:"cpsMult", mult:2, duration:8000, cost:60000 },
-  { id:"hyperClick", name:"Hyper Click x5 (6s)", type:"clickMult", mult:5, duration:6000, cost:50000 }
-];
-
-/* ---------- UPGRADES (hundreds) ---------- */
-
-let UPGRADES = [];
-function generateUpgrades(){
-  UPGRADES = [];
-  let id = 0;
-
-  /* CLICK UPGRADES */
-  for(let i=1;i<=60;i++){
-    UPGRADES.push({
-      id:id++,
-      type:"click",
-      name:`Click Boost ${i}`,
-      desc:`Increase click power`,
-      cost:Math.floor(200*Math.pow(1.85,i)),
-      value:1+Math.floor(i/2)
-    });
-  }
-
-  /* BUILDING UPGRADES */
-  BUILDINGS.forEach((b,bi)=>{
-    for(let t=1;t<=12;t++){
-      UPGRADES.push({
-        id:id++,
-        type:"building",
-        buildingIndex:bi,
-        name:`${b.name} Upgrade ${t}`,
-        desc:`${b.name} CPS x${(1+0.3*t).toFixed(2)}`,
-        cost:Math.floor(b.baseCost*Math.pow(2.25,t)),
-        mult:1+0.3*t
-      });
-    }
-  });
-
-  /* GLOBAL UPGRADES */
-  for(let g=1;g<=25;g++){
-    UPGRADES.push({
-      id:id++,
-      type:"global",
-      name:`Global Efficiency ${g}`,
-      desc:`All CPS +${g*3}%`,
-      cost:Math.floor(1e6*Math.pow(2.4,g)),
-      cpsMult:1+(g*0.03)
-    });
-  }
-
-  /* PRESTIGE UPGRADES */
-  for(let p=1;p<=20;p++){
-    UPGRADES.push({
-      id:id++,
-      type:"prestige",
-      name:`Star Power ${p}`,
-      desc:`Global CPS +${p*5}%`,
-      cost:p,
-      prestige:true,
-      cpsMult:1+(p*0.05)
-    });
-  }
-}
-generateUpgrades();
-
-/* ---------- ACHIEVEMENTS (lots) ---------- */
-
-const ACHIEVEMENTS = [
-  {id:"a1",name:"First Click",desc:"Click once",check:()=>totalCookiesEarned>=1},
-  {id:"a2",name:"Hundredaire",desc:"Earn 100 cookies",check:()=>totalCookiesEarned>=100},
-  {id:"a3",name:"Thousandaire",desc:"Earn 1,000 cookies",check:()=>totalCookiesEarned>=1000},
-  {id:"a4",name:"Millionaire",desc:"Earn 1,000,000 cookies",check:()=>totalCookiesEarned>=1e6},
-  {id:"a5",name:"Billionaire",desc:"Earn 1,000,000,000 cookies",check:()=>totalCookiesEarned>=1e9},
-  {id:"a6",name:"Trillionaire",desc:"Earn 1,000,000,000,000 cookies",check:()=>totalCookiesEarned>=1e12},
-  {id:"a7",name:"Click Machine",desc:"Reach click power 50",check:()=>clickPower>=50},
-  {id:"a8",name:"Click Monster",desc:"Reach click power 200",check:()=>clickPower>=200},
-  {id:"a9",name:"Builder",desc:"Own 100 buildings total",check:()=>owned.reduce((a,b)=>a+b,0)>=100},
-  {id:"a10",name:"Mega Builder",desc:"Own 500 buildings total",check:()=>owned.reduce((a,b)=>a+b,0)>=500},
-  {id:"a11",name:"Galaxy Chef",desc:"Own a Galaxy Oven",check:()=>owned[10]>=1},
-  {id:"a12",name:"Quantum Master",desc:"Own a Quantum Chef",check:()=>owned[11]>=1},
-  {id:"a13",name:"Black Hole Baker",desc:"Own a Black Hole Kitchen",check:()=>owned[12]>=1},
-  {id:"a14",name:"Beyond Reality",desc:"Own a Multiverse Bakery",check:()=>owned[17]>=1},
-  {id:"a15",name:"Star Collector",desc:"Earn 5 prestige stars",check:()=>prestigeStars>=5},
-  {id:"a16",name:"Galaxy Lord",desc:"Earn 20 prestige stars",check:()=>prestigeStars>=20}
-];
-
-function checkAchievements(){
-  ACHIEVEMENTS.forEach(a=>{
-    if(!achievementsState[a.id] && a.check()){
-      achievementsState[a.id]=true;
-      toast("Achievement unlocked: "+a.name);
-    }
-  });
-}
-
-/* ---------- QUESTS ---------- */
-
-function generateDailyQuests(){
-  const today=new Date().toISOString().slice(0,10);
-  const key=SAVE_KEY+"_quests_date";
-  const storedDate=localStorage.getItem(key);
-  if(storedDate===today){
-    const raw=localStorage.getItem(SAVE_KEY+"_quests");
-    if(raw){quests=JSON.parse(raw);return;}
-  }
-  quests=[
-    {id:"q1",title:"Click Starter",desc:"Click 200 times",progress:0,target:200,reward:{cookies:2000}},
-    {id:"q2",title:"Builder I",desc:"Buy 10 buildings",progress:0,target:10,reward:{cookies:8000}},
-    {id:"q3",title:"Builder II",desc:"Buy 50 buildings",progress:0,target:50,reward:{cookies:50000}},
-    {id:"q4",title:"Million Maker",desc:"Earn 1M cookies",progress:0,target:1000000,reward:{cookies:50000}},
-    {id:"q5",title:"Star Seeker",desc:"Prestige once",progress:0,target:1,reward:{stars:1}}
-  ];
-  localStorage.setItem(key,today);
-  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
-}
-function updateQuestProgress(type,amount=1){
-  let changed=false;
-  quests.forEach(q=>{
-    if(q.id==="q1" && type==="click"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
-    if(q.id==="q2" && type==="buy"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
-    if(q.id==="q3" && type==="buy"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
-    if(q.id==="q4" && type==="earn"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
-    if(q.id==="q5" && type==="prestige"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
-  });
-  if(changed){
-    localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
-    renderQuests();
-  }
-}
-
-function claimQuest(id){
-  const q=quests.find(x=>x.id===id);
-  if(!q||q.claimed||q.progress<q.target)return;
-  if(q.reward.cookies){cookies+=q.reward.cookies;totalCookiesEarned+=q.reward.cookies;}
-  if(q.reward.stars){prestigeStars+=q.reward.stars;}
-  q.claimed=true;
-  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
-  toast("Quest reward claimed!");
-  save();
-  renderAll();
-}
-
-/* ---------- Utility ---------- */
-
+/* ---------- Small helpers (fmt, spawnFloat, toast) ---------- */
 function fmt(n){
+  if(typeof n !== "number") n = Number(n) || 0;
+  if(n>=1e27) return (n/1e27).toFixed(2)+"Oc";
+  if(n>=1e24) return (n/1e24).toFixed(2)+"Sp";
   if(n>=1e21) return (n/1e21).toFixed(2)+"Sx";
   if(n>=1e18) return (n/1e18).toFixed(2)+"E";
   if(n>=1e15) return (n/1e15).toFixed(2)+"Q";
@@ -460,71 +267,253 @@ function toast(msg,ms=2500){
   },ms);
 }
 
-/* ---------- Sound ---------- */
+/* ---------- End of Part A (ready for Part B) ---------- */
+</script>
+/* ---------- Part B: Core game data ---------- */
 
-function playSound(id){
-  if(!soundEnabled) return;
-  try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const o=ctx.createOscillator();
-    const g=ctx.createGain();
-    o.type="square";
-    if(id==="click"){o.frequency.value=880;g.gain.value=0.02;}
-    else if(id==="gold"){o.frequency.value=660;g.gain.value=0.03;}
-    else{o.frequency.value=440;g.gain.value=0.02;}
-    o.connect(g);g.connect(ctx.destination);
-    o.start();
-    setTimeout(()=>{o.stop();ctx.close();},120);
-  }catch(e){}
+/* ---------- Buildings ---------- */
+const BUILDINGS = [
+  {id:0, name:"Cursor", icon:"👆", baseCost:50, baseCps:0.1},
+  {id:1, name:"Grandma", icon:"👵", baseCost:400, baseCps:1},
+  {id:2, name:"Farm", icon:"🌾", baseCost:3000, baseCps:8},
+  {id:3, name:"Mine", icon:"⛏️", baseCost:40000, baseCps:45},
+  {id:4, name:"Factory", icon:"🏭", baseCost:500000, baseCps:260},
+  {id:5, name:"Bank", icon:"🏦", baseCost:7000000, baseCps:1400},
+  {id:6, name:"Temple", icon:"⛪", baseCost:90000000, baseCps:7800},
+  {id:7, name:"Wizard Tower", icon:"🧙", baseCost:1200000000, baseCps:44000},
+  {id:8, name:"Portal", icon:"🌀", baseCost:15000000000, baseCps:260000},
+  {id:9, name:"Time Bakery", icon:"⏳", baseCost:300000000000, baseCps:1500000},
+  {id:10, name:"Galaxy Oven", icon:"🌌", baseCost:9000000000000, baseCps:9000000},
+  {id:11, name:"Quantum Chef", icon:"🧪", baseCost:60000000000000, baseCps:60000000},
+  {id:12, name:"Black Hole Kitchen", icon:"🕳️", baseCost:300000000000000, baseCps:300000000},
+  {id:13, name:"Stellar Mixer", icon:"⭐", baseCost:1e16, baseCps:1.5e9},
+  {id:14, name:"Nebula Mill", icon:"🌠", baseCost:5e16, baseCps:7e9},
+  {id:15, name:"Dark Matter Oven", icon:"⚫", baseCost:2e17, baseCps:3.5e10},
+  {id:16, name:"Singularity Kitchen", icon:"♾️", baseCost:1e18, baseCps:2e11},
+  {id:17, name:"Multiverse Bakery", icon:"🌐", baseCost:5e18, baseCps:1e12},
+  {id:18, name:"Reality Bender", icon:"🌀", baseCost:2e19, baseCps:5e12},
+  {id:19, name:"Chrono Oven", icon:"⌛", baseCost:1e20, baseCps:2.5e13},
+  {id:20, name:"Entropy Reactor", icon:"🔥", baseCost:8e20, baseCps:1e14},
+  {id:21, name:"Infinity Forge", icon:"💠", baseCost:3e21, baseCps:5e14},
+  {id:22, name:"Cosmic Loom", icon:"🧵", baseCost:1e22, baseCps:2e15},
+  {id:23, name:"Star Core", icon:"🌟", baseCost:5e22, baseCps:1e16},
+  {id:24, name:"Eternity Engine", icon:"♨️", baseCost:2e23, baseCps:5e16}
+];
+
+/* Ensure owned/buildingMult arrays are sized */
+if(!Array.isArray(owned) || owned.length < BUILDINGS.length) owned = new Array(BUILDINGS.length).fill(0);
+if(!Array.isArray(buildingMult) || buildingMult.length < BUILDINGS.length) buildingMult = new Array(BUILDINGS.length).fill(1);
+
+/* ---------- Boosts ---------- */
+const BOOSTS = [
+  { id:"cpsSmall", name:"+20% CPS (12s)", type:"cpsMult", mult:1.2, duration:12000, cost:5000 },
+  { id:"cpsBig", name:"+50% CPS (10s)", type:"cpsMult", mult:1.5, duration:10000, cost:20000 },
+  { id:"clickBurst", name:"Click x3 (8s)", type:"clickMult", mult:3, duration:8000, cost:15000 },
+  { id:"instant", name:"Instant 20s CPS", type:"instant", seconds:20, cost:30000 },
+  { id:"autoClick", name:"Auto Click (10s)", type:"auto", duration:10000, cost:25000 },
+  { id:"megaCps", name:"MEGA CPS x2 (8s)", type:"cpsMult", mult:2, duration:8000, cost:60000 },
+  { id:"hyperClick", name:"Hyper Click x5 (6s)", type:"clickMult", mult:5, duration:6000, cost:50000 }
+];
+
+/* ---------- Upgrades generator (large set) ---------- */
+let UPGRADES = [];
+function generateUpgrades(){
+  UPGRADES = [];
+  let id = 0;
+
+  // Click upgrades (60)
+  for(let i=1;i<=60;i++){
+    UPGRADES.push({
+      id:id++,
+      type:"click",
+      name:`Click Boost ${i}`,
+      desc:`Increase click power by ${1+Math.floor(i/2)}`,
+      cost:Math.floor(200*Math.pow(1.85,i)),
+      value:1+Math.floor(i/2)
+    });
+  }
+
+  // Building upgrades (12 per building)
+  BUILDINGS.forEach((b,bi)=>{
+    for(let t=1;t<=12;t++){
+      UPGRADES.push({
+        id:id++,
+        type:"building",
+        buildingIndex:bi,
+        name:`${b.name} Upgrade ${t}`,
+        desc:`${b.name} CPS x${(1+0.3*t).toFixed(2)}`,
+        cost:Math.max(1,Math.floor(b.baseCost*Math.pow(2.25,t))),
+        mult:1+0.3*t
+      });
+    }
+  });
+
+  // Global CPS upgrades (25)
+  for(let g=1;g<=25;g++){
+    UPGRADES.push({
+      id:id++,
+      type:"global",
+      name:`Global Efficiency ${g}`,
+      desc:`All CPS +${g*3}%`,
+      cost:Math.floor(1e6*Math.pow(2.4,g)),
+      cpsMult:1+(g*0.03)
+    });
+  }
+
+  // Prestige upgrades (20)
+  for(let p=1;p<=20;p++){
+    UPGRADES.push({
+      id:id++,
+      type:"prestige",
+      name:`Star Power ${p}`,
+      desc:`Global CPS +${p*5}%`,
+      cost:p,
+      prestige:true,
+      cpsMult:1+(p*0.05)
+    });
+  }
+}
+generateUpgrades();
+
+/* ---------- Achievements ---------- */
+const ACHIEVEMENTS = [
+  {id:"a1",name:"First Click",desc:"Click once",check:()=>totalCookiesEarned>=1},
+  {id:"a2",name:"Hundredaire",desc:"Earn 100 cookies",check:()=>totalCookiesEarned>=100},
+  {id:"a3",name:"Thousandaire",desc:"Earn 1,000 cookies",check:()=>totalCookiesEarned>=1000},
+  {id:"a4",name:"Millionaire",desc:"Earn 1,000,000 cookies",check:()=>totalCookiesEarned>=1e6},
+  {id:"a5",name:"Billionaire",desc:"Earn 1,000,000,000 cookies",check:()=>totalCookiesEarned>=1e9},
+  {id:"a6",name:"Trillionaire",desc:"Earn 1,000,000,000,000 cookies",check:()=>totalCookiesEarned>=1e12},
+  {id:"a7",name:"Click Machine",desc:"Reach click power 50",check:()=>clickPower>=50},
+  {id:"a8",name:"Click Monster",desc:"Reach click power 200",check:()=>clickPower>=200},
+  {id:"a9",name:"Builder",desc:"Own 100 buildings total",check:()=>owned.reduce((a,b)=>a+b,0)>=100},
+  {id:"a10",name:"Mega Builder",desc:"Own 500 buildings total",check:()=>owned.reduce((a,b)=>a+b,0)>=500},
+  {id:"a11",name:"Galaxy Chef",desc:"Own a Galaxy Oven",check:()=>owned[10]>=1},
+  {id:"a12",name:"Quantum Master",desc:"Own a Quantum Chef",check:()=>owned[11]>=1},
+  {id:"a13",name:"Black Hole Baker",desc:"Own a Black Hole Kitchen",check:()=>owned[12]>=1},
+  {id:"a14",name:"Beyond Reality",desc:"Own a Multiverse Bakery",check:()=>owned[17]>=1},
+  {id:"a15",name:"Star Collector",desc:"Earn 5 prestige stars",check:()=>prestigeStars>=5},
+  {id:"a16",name:"Galaxy Lord",desc:"Earn 20 prestige stars",check:()=>prestigeStars>=20}
+];
+
+/* ---------- Achievement checker ---------- */
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a=>{
+    try{
+      if(!achievementsState[a.id] && a.check()){
+        achievementsState[a.id]=true;
+        toast("Achievement unlocked: "+a.name);
+      }
+    }catch(e){}
+  });
 }
 
-/* ---------- CPS ---------- */
+/* ---------- Quests (daily) ---------- */
+function generateDailyQuests(){
+  const today=new Date().toISOString().slice(0,10);
+  const key=SAVE_KEY+"_quests_date";
+  const storedDate=localStorage.getItem(key);
+  if(storedDate===today){
+    const raw=localStorage.getItem(SAVE_KEY+"_quests");
+    if(raw){ try{ quests=JSON.parse(raw); }catch(e){ quests=[]; } return; }
+  }
+  quests=[
+    {id:"q1",title:"Click Starter",desc:"Click 200 times",progress:0,target:200,reward:{cookies:2000}},
+    {id:"q2",title:"Builder I",desc:"Buy 10 buildings",progress:0,target:10,reward:{cookies:8000}},
+    {id:"q3",title:"Builder II",desc:"Buy 50 buildings",progress:0,target:50,reward:{cookies:50000}},
+    {id:"q4",title:"Million Maker",desc:"Earn 1M cookies",progress:0,target:1000000,reward:{cookies:50000}},
+    {id:"q5",title:"Star Seeker",desc:"Prestige once",progress:0,target:1,reward:{stars:1}}
+  ];
+  localStorage.setItem(key,today);
+  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+}
 
+/* ---------- Update quest progress helper ---------- */
+function updateQuestProgress(type,amount=1){
+  let changed=false;
+  quests.forEach(q=>{
+    if(q.id==="q1" && type==="click"){ q.progress=Math.min(q.target,q.progress+amount); changed=true; }
+    if(q.id==="q2" && type==="buy"){ q.progress=Math.min(q.target,q.progress+amount); changed=true; }
+    if(q.id==="q3" && type==="buy"){ q.progress=Math.min(q.target,q.progress+amount); changed=true; }
+    if(q.id==="q4" && type==="earn"){ q.progress=Math.min(q.target,q.progress+amount); changed=true; }
+    if(q.id==="q5" && type==="prestige"){ q.progress=Math.min(q.target,q.progress+amount); changed=true; }
+  });
+  if(changed){
+    localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+    try{ renderQuests(); }catch(e){}
+  }
+}
+
+/* ---------- Claim quest ---------- */
+function claimQuest(id){
+  const q=quests.find(x=>x.id===id);
+  if(!q||q.claimed||q.progress<q.target) return;
+  if(q.reward.cookies){ cookies+=q.reward.cookies; totalCookiesEarned+=q.reward.cookies; }
+  if(q.reward.stars){ prestigeStars+=q.reward.stars; }
+  q.claimed=true;
+  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+  toast("Quest reward claimed!");
+  save();
+  try{ renderAll(); }catch(e){}
+}
+
+/* ---------- End of Part B ---------- */
+/* ---------- Part C: Rendering, click handling, buying, boosts engine ---------- */
+
+/* ---------- Cost and CPS calculations ---------- */
 function buildingCost(i){
-  const b=BUILDINGS[i];
-  const n=owned[i]||0;
-  const growth=1.16+0.02*i;
-  return Math.round(b.baseCost*Math.pow(growth,n));
+  const b = BUILDINGS[i];
+  const n = owned[i] || 0;
+  const growth = 1.16 + 0.02 * i;
+  return Math.max(1, Math.round(b.baseCost * Math.pow(growth, n)));
 }
 
 function totalBaseCps(){
-  let t=0;
+  let t = 0;
   for(let i=0;i<BUILDINGS.length;i++){
-    t+=(owned[i]||0)*BUILDINGS[i].baseCps*(buildingMult[i]||1);
+    t += (owned[i]||0) * BUILDINGS[i].baseCps * (buildingMult[i]||1);
   }
   return t;
 }
 
 function totalCps(){
-  let base=totalBaseCps();
-  activeBoosts.forEach(b=>{if(b.type==="cpsMult") base*=b.mult;});
-  prestigeUpgrades.forEach(p=>{
-    const u=UPGRADES.find(x=>x.id===p);
-    if(u&&u.prestige) base*=u.cpsMult;
+  let base = totalBaseCps();
+  // apply active boosts
+  activeBoosts.forEach(b=>{
+    if(b.type === "cpsMult") base *= b.mult;
   });
-  base*=goldenMultiplier;
+  // apply prestige upgrades (ids stored in prestigeUpgrades)
+  prestigeUpgrades.forEach(pid=>{
+    const u = UPGRADES.find(x=>x.id===pid);
+    if(u && u.prestige && u.cpsMult) base *= u.cpsMult;
+  });
+  base *= goldenMultiplier || 1;
   return base;
 }
 
 /* ---------- Rendering ---------- */
 
 function renderStats(){
-  document.getElementById("cookies").textContent=fmt(cookies);
-  document.getElementById("cps").textContent=fmt(totalCps())+"/s";
-  document.getElementById("clickPower").textContent=clickPower;
-  document.getElementById("starsBadge").textContent="Stars: "+prestigeStars;
+  const elCookies = document.getElementById("cookies");
+  const elCps = document.getElementById("cps");
+  const elClickPower = document.getElementById("clickPower");
+  if(elCookies) elCookies.textContent = fmt(cookies);
+  if(elCps) elCps.textContent = fmt(totalCps()) + "/s";
+  if(elClickPower) elClickPower.textContent = clickPower;
+  const badge = document.getElementById("starsBadge");
+  if(badge) badge.textContent = "Stars: " + prestigeStars;
 }
 
 function renderBuildings(){
-  const root=document.getElementById("buildingsList");
-  root.innerHTML="";
+  const root = document.getElementById("buildingsList");
+  if(!root) return;
+  root.innerHTML = "";
   BUILDINGS.forEach((b,i)=>{
-    const cost=buildingCost(i);
-    const can=cookies>=cost;
-    const card=document.createElement("div");
-    card.className="card"+(can?"":" locked");
-    card.addEventListener("click",()=>{if(cookies<cost)return;buyBuilding(i);});
-    card.innerHTML=`
+    const cost = buildingCost(i);
+    const can = cookies >= cost;
+    const card = document.createElement("div");
+    card.className = "card" + (can ? "" : " locked");
+    card.addEventListener("click", ()=>{ if(cookies>=cost) buyBuilding(i); });
+    card.innerHTML = `
       <div class="card-main">
         <div class="card-icon">${b.icon}</div>
         <div>
@@ -542,27 +531,25 @@ function renderBuildings(){
 }
 
 function renderUpgrades(){
-  const root=document.getElementById("upgradesList");
-  root.innerHTML="";
-  const visible=UPGRADES
-    .filter(u=>!boughtUpgrades.includes(u.id))
-    .sort((a,b)=>a.cost-b.cost)
-    .slice(0,160);
+  const root = document.getElementById("upgradesList");
+  if(!root) return;
+  root.innerHTML = "";
+  const visible = UPGRADES.filter(u=>!boughtUpgrades.includes(u.id)).sort((a,b)=> (a.cost||0)-(b.cost||0)).slice(0,160);
   visible.forEach(u=>{
-    const can=!u.prestige ? cookies>=u.cost : prestigeStars>=u.cost;
-    const card=document.createElement("div");
-    card.className="card"+(can?"":" locked");
-    card.addEventListener("click",()=>buyUpgrade(u));
-    card.innerHTML=`
+    const can = u.prestige ? (prestigeStars >= u.cost) : (cookies >= u.cost);
+    const card = document.createElement("div");
+    card.className = "card" + (can ? "" : " locked");
+    card.addEventListener("click", ()=> buyUpgrade(u));
+    card.innerHTML = `
       <div class="card-main">
-        <div class="card-icon">${u.prestige?"⭐":"⚙️"}</div>
+        <div class="card-icon">${u.prestige ? "⭐" : "⚙️"}</div>
         <div>
           <div class="card-text-title">${u.name}</div>
           <div class="card-text-sub">${u.desc}</div>
         </div>
       </div>
       <div class="card-right">
-        <div class="price">${u.prestige?u.cost+"★":fmt(u.cost)}</div>
+        <div class="price">${u.prestige ? u.cost + "★" : fmt(u.cost)}</div>
       </div>
     `;
     root.appendChild(card);
@@ -570,14 +557,15 @@ function renderUpgrades(){
 }
 
 function renderBoosts(){
-  const root=document.getElementById("boostsList");
-  root.innerHTML="";
+  const root = document.getElementById("boostsList");
+  if(!root) return;
+  root.innerHTML = "";
   BOOSTS.forEach(b=>{
-    const can=cookies>=b.cost;
-    const card=document.createElement("div");
-    card.className="card"+(can?"":" locked");
-    card.addEventListener("click",()=>buyBoost(b));
-    card.innerHTML=`
+    const can = cookies >= b.cost;
+    const card = document.createElement("div");
+    card.className = "card" + (can ? "" : " locked");
+    card.addEventListener("click", ()=> buyBoost(b));
+    card.innerHTML = `
       <div class="card-main">
         <div class="card-icon">⚡</div>
         <div>
@@ -594,13 +582,14 @@ function renderBoosts(){
 }
 
 function renderQuests(){
-  const root=document.getElementById("questsList");
-  root.innerHTML="";
+  const root = document.getElementById("questsList");
+  if(!root) return;
+  root.innerHTML = "";
   quests.forEach(q=>{
-    const card=document.createElement("div");
-    card.className="card";
-    const canClaim=q.progress>=q.target && !q.claimed;
-    card.innerHTML=`
+    const card = document.createElement("div");
+    card.className = "card";
+    const canClaim = q.progress >= q.target && !q.claimed;
+    card.innerHTML = `
       <div class="card-main">
         <div>
           <div class="card-text-title">${q.title}</div>
@@ -608,48 +597,57 @@ function renderQuests(){
         </div>
       </div>
       <div class="card-right">
-        <button class="small-btn" ${canClaim?"":"disabled"}>${q.claimed?"Claimed":canClaim?"Claim":"Incomplete"}</button>
+        <button class="small-btn" ${canClaim ? "" : "disabled"}>${q.claimed ? "Claimed" : (canClaim ? "Claim" : "Incomplete")}</button>
       </div>
     `;
-    card.querySelector("button").addEventListener("click",()=>claimQuest(q.id));
+    const btn = card.querySelector("button");
+    if(btn) btn.addEventListener("click", ()=> claimQuest(q.id));
     root.appendChild(card);
   });
 }
 
 function renderAchievements(){
-  const root=document.getElementById("achievementsList");
-  root.innerHTML="";
+  const root = document.getElementById("achievementsList");
+  if(!root) return;
+  root.innerHTML = "";
   ACHIEVEMENTS.forEach(a=>{
-    const row=document.createElement("div");
-    row.className="ach-row"+(achievementsState[a.id]?"":" locked");
-    row.innerHTML=`
+    const row = document.createElement("div");
+    row.className = "ach-row" + (achievementsState[a.id] ? "" : " locked");
+    row.innerHTML = `
       <div>
         <div class="ach-name">${a.name}</div>
         <div class="ach-desc">${a.desc}</div>
       </div>
-      <div>${achievementsState[a.id]?"✔️":"❌"}</div>
+      <div>${achievementsState[a.id] ? "✔️" : "❌"}</div>
     `;
     root.appendChild(row);
   });
 }
 
 function renderSettings(){
-  document.getElementById("soundToggle").checked=soundEnabled;
-  document.getElementById("autoBuyerToggle").checked=autoBuyerEnabled;
-  document.getElementById("autoClipboardToggle").checked=autoClipboardEnabled;
-  document.getElementById("crackToggle").checked=crackEnabled;
-  document.getElementById("backupCount").textContent=getBackups().length;
+  const sSound = document.getElementById("soundToggle");
+  const sAutoBuyer = document.getElementById("autoBuyerToggle");
+  const sAutoClip = document.getElementById("autoClipboardToggle");
+  const sCrack = document.getElementById("crackToggle");
+  const backupCount = document.getElementById("backupCount");
+  if(sSound) sSound.checked = !!soundEnabled;
+  if(sAutoBuyer) sAutoBuyer.checked = !!autoBuyerEnabled;
+  if(sAutoClip) sAutoClip.checked = !!autoClipboardEnabled;
+  if(sCrack) sCrack.checked = !!crackEnabled;
+  if(backupCount) backupCount.textContent = (getBackups && typeof getBackups === "function") ? getBackups().length : "0";
 
-  const skinsRow=document.getElementById("skinsRow");
-  skinsRow.innerHTML="";
-  SKINS.forEach(s=>{
-    const pill=document.createElement("div");
-    pill.className="skin-pill"+(currentSkin===s.id?" active":"");
-    pill.dataset.skin=s.id;
-    pill.textContent=s.name;
-    pill.addEventListener("click",()=>{applySkin(s.id);save();});
-    skinsRow.appendChild(pill);
-  });
+  const skinsRow = document.getElementById("skinsRow");
+  if(skinsRow){
+    skinsRow.innerHTML = "";
+    SKINS.forEach(s=>{
+      const pill = document.createElement("div");
+      pill.className = "skin-pill" + (currentSkin === s.id ? " active" : "");
+      pill.dataset.skin = s.id;
+      pill.textContent = s.name;
+      pill.addEventListener("click", ()=> { applySkin(s.id); if(typeof save === "function") save(); });
+      skinsRow.appendChild(pill);
+    });
+  }
 }
 
 function renderAll(){
@@ -663,373 +661,447 @@ function renderAll(){
 }
 
 /* ---------- Combo bar ---------- */
-
 function addCombo(){
-  comboValue=Math.min(100,comboValue+8);
-  document.getElementById("comboFill").style.width=comboValue+"%";
+  comboValue = Math.min(100, comboValue + 8);
+  const fill = document.getElementById("comboFill");
+  if(fill) fill.style.width = comboValue + "%";
   if(comboDecayTimer) clearInterval(comboDecayTimer);
-  comboDecayTimer=setInterval(()=>{
-    comboValue=Math.max(0,comboValue-2);
-    document.getElementById("comboFill").style.width=comboValue+"%";
-    if(comboValue<=0){clearInterval(comboDecayTimer);comboDecayTimer=null;}
-  },120);
+  comboDecayTimer = setInterval(()=>{
+    comboValue = Math.max(0, comboValue - 2);
+    if(fill) fill.style.width = comboValue + "%";
+    if(comboValue <= 0){ clearInterval(comboDecayTimer); comboDecayTimer = null; }
+  }, 120);
 }
 
-/* ---------- Anti‑macro + click handler (Chromebook‑safe) ---------- */
-
+/* ---------- Anti-macro and click handling (Chromebook-safe) ---------- */
 let lastClickAt = 0;
 
 function canRegisterClick(){
-  const now=Date.now();
-  if(now-clickWindow.ts>1000){
-    clickWindow.ts=now;
-    clickWindow.count=0;
+  const now = Date.now();
+  if(now - clickWindow.ts > 1000){
+    clickWindow.ts = now;
+    clickWindow.count = 0;
   }
-  if(clickWindow.count>=MAX_CLICKS_PER_SECOND) return false;
+  if(clickWindow.count >= MAX_CLICKS_PER_SECOND) return false;
+  // soft per-click debounce
+  if(now - lastClickAt < CLICK_RATE_LIMIT_MS) return false;
   clickWindow.count++;
-  lastClickAt=now;
+  lastClickAt = now;
   return true;
 }
 
 function handleCookieClick(ev){
-  if(!canRegisterClick()) return;
+  try{
+    if(!canRegisterClick()) return;
 
-  const comboMult = 1 + (comboValue/100)*0.5;
-  let power = clickPower * comboMult;
-  activeBoosts.forEach(b=>{if(b.type==="clickMult") power*=b.mult;});
+    const comboMult = 1 + (comboValue / 100) * 0.5;
+    let power = clickPower * comboMult;
 
-  cookies+=power;
-  totalCookiesEarned+=power;
+    activeBoosts.forEach(b=>{
+      if(b.type === "clickMult") power *= b.mult;
+    });
 
-  updateQuestProgress("click",1);
-  updateQuestProgress("earn",power);
+    cookies += power;
+    totalCookiesEarned += power;
 
-  addCombo();
-  renderStats();
+    updateQuestProgress("click", 1);
+    updateQuestProgress("earn", power);
 
-  const rect=document.getElementById("cookieBtn").getBoundingClientRect();
-  const x=ev.clientX || (rect.left+rect.width/2);
-  const y=ev.clientY || (rect.top+rect.height/2);
-  spawnFloat("+"+fmt(power),x,y);
+    addCombo();
+    renderStats();
 
-  if(crackEnabled){
-    const crack=document.getElementById("cookieCrack");
-    crack.classList.add("show");
-    setTimeout(()=>crack.classList.remove("show"),120);
+    const rect = document.getElementById("cookieBtn").getBoundingClientRect();
+    const x = (ev && ev.clientX) ? ev.clientX : (rect.left + rect.width/2);
+    const y = (ev && ev.clientY) ? ev.clientY : (rect.top + rect.height/2);
+    spawnFloat("+" + fmt(power), x, y);
+
+    if(crackEnabled){
+      const crack = document.getElementById("cookieCrack");
+      if(crack){
+        crack.classList.add("show");
+        setTimeout(()=> crack.classList.remove("show"), 120);
+      }
+    }
+
+    playSound && playSound("click");
+    checkAchievements();
+  }catch(e){
+    console.error("handleCookieClick error:", e);
+    window._cc_lastError = e;
   }
-
-  playSound("click");
-  checkAchievements();
 }
 
-/* ---------- Buying ---------- */
+/* ---------- Buying logic ---------- */
 
 function buyBuilding(i){
-  const cost=buildingCost(i);
-  if(cookies<cost)return;
-  cookies-=cost;
-  owned[i]=(owned[i]||0)+1;
-  updateQuestProgress("buy",1);
+  const cost = buildingCost(i);
+  if(cookies < cost) return;
+  cookies -= cost;
+  owned[i] = (owned[i]||0) + 1;
+  updateQuestProgress("buy", 1);
   renderBuildings();
   renderStats();
   checkAchievements();
-  save();
+  if(typeof save === "function") save();
 }
 
 function buyUpgrade(u){
-  if(boughtUpgrades.includes(u.id))return;
+  if(boughtUpgrades.includes(u.id)) return;
   if(u.prestige){
-    if(prestigeStars<u.cost)return;
-    prestigeStars-=u.cost;
+    if(prestigeStars < u.cost) return;
+    prestigeStars -= u.cost;
     prestigeUpgrades.push(u.id);
-  }else{
-    if(cookies<u.cost)return;
-    cookies-=u.cost;
+  } else {
+    if(cookies < u.cost) return;
+    cookies -= u.cost;
   }
   boughtUpgrades.push(u.id);
-  if(u.type==="click") clickPower+=u.value;
-  if(u.type==="building") buildingMult[u.buildingIndex]=(buildingMult[u.buildingIndex]||1)*u.mult;
-  if(u.type==="global"){
-    buildingMult=buildingMult.map(x=>x||1);
-    for(let i=0;i<BUILDINGS.length;i++){
-      buildingMult[i]*=u.cpsMult;
-    }
+  if(u.type === "click") clickPower += u.value || 0;
+  if(u.type === "building") buildingMult[u.buildingIndex] = (buildingMult[u.buildingIndex]||1) * (u.mult || 1);
+  if(u.type === "global"){
+    for(let i=0;i<BUILDINGS.length;i++) buildingMult[i] = (buildingMult[i]||1) * (u.cpsMult || 1);
   }
   renderUpgrades();
   renderStats();
   checkAchievements();
-  save();
+  if(typeof save === "function") save();
 }
 
 function buyBoost(b){
-  if(cookies<b.cost)return;
-  cookies-=b.cost;
-  if(b.type==="cpsMult" || b.type==="clickMult"){
-    const inst={...b,expires:Date.now()+b.duration};
+  if(cookies < b.cost) return;
+  cookies -= b.cost;
+  if(b.type === "cpsMult" || b.type === "clickMult"){
+    const inst = {...b, expires: Date.now() + b.duration};
     activeBoosts.push(inst);
     setTimeout(()=>{
-      activeBoosts=activeBoosts.filter(x=>x!==inst);
+      activeBoosts = activeBoosts.filter(x=>x !== inst);
       renderStats();
-    },b.duration+50);
-  }else if(b.type==="instant"){
-    const gain=totalCps()*b.seconds;
-    cookies+=gain;
-    totalCookiesEarned+=gain;
-    updateQuestProgress("earn",gain);
-  }else if(b.type==="auto"){
-    const end=Date.now()+b.duration;
-    const autoId=setInterval(()=>{
-      if(Date.now()>end){clearInterval(autoId);return;}
-      handleCookieClick({clientX:window.innerWidth/2,clientY:window.innerHeight/2});
-    },120);
+    }, b.duration + 50);
+  } else if(b.type === "instant"){
+    const gain = totalCps() * b.seconds;
+    cookies += gain;
+    totalCookiesEarned += gain;
+    updateQuestProgress("earn", gain);
+  } else if(b.type === "auto"){
+    const end = Date.now() + b.duration;
+    const autoId = setInterval(()=>{
+      if(Date.now() > end){ clearInterval(autoId); return; }
+      handleCookieClick({ clientX: window.innerWidth/2, clientY: window.innerHeight/2 });
+    }, 120);
   }
   renderStats();
-  save();
+  if(typeof save === "function") save();
 }
 
 /* ---------- Prestige ---------- */
 
 function canPrestige(){
-  return totalCookiesEarned>=1e9;
+  return totalCookiesEarned >= 1e9;
 }
 
 function doPrestige(){
-  if(!canPrestige()){toast("Need 1B total cookies to prestige.");return;}
-  const gained=Math.floor(Math.sqrt(totalCookiesEarned/1e9));
-  if(gained<=0){toast("Not enough progress for stars yet.");return;}
-  prestigeStars+=gained;
-  cookies=0;
-  clickPower=1;
-  owned=Array(BUILDINGS.length).fill(0);
-  buildingMult=Array(BUILDINGS.length).fill(1);
-  boughtUpgrades=[];
-  totalCookiesEarned=0;
-  toast("Prestiged! Gained "+gained+" stars.");
-  updateQuestProgress("prestige",1);
-  save();
+  if(!canPrestige()){ toast("Need 1B total cookies to prestige."); return; }
+  const gained = Math.floor(Math.sqrt(totalCookiesEarned / 1e9));
+  if(gained <= 0){ toast("Not enough progress for stars yet."); return; }
+  prestigeStars += gained;
+  cookies = 0;
+  clickPower = 1;
+  owned = new Array(BUILDINGS.length).fill(0);
+  buildingMult = new Array(BUILDINGS.length).fill(1);
+  boughtUpgrades = [];
+  totalCookiesEarned = 0;
+  toast("Prestiged! Gained " + gained + " stars.");
+  updateQuestProgress("prestige", 1);
+  if(typeof save === "function") save();
   renderAll();
 }
-/* ---------- Autosave / storage ---------- */
 
+/* ---------- Auto-buyer tick (simple) ---------- */
+function autoBuyerTick(){
+  if(!autoBuyerEnabled) return;
+  // buy cheapest affordable building
+  let bestIndex = -1;
+  let bestCost = Infinity;
+  for(let i=0;i<BUILDINGS.length;i++){
+    const cost = buildingCost(i);
+    if(cookies >= cost && cost < bestCost){
+      bestCost = cost;
+      bestIndex = i;
+    }
+  }
+  if(bestIndex >= 0) buyBuilding(bestIndex);
+}
+
+/* ---------- Main loop (CPS accrual) ---------- */
+function mainLoop(){
+  try{
+    const cps = totalCps();
+    const dt = 0.1; // 100ms tick
+    const gain = cps * dt;
+    cookies += gain;
+    totalCookiesEarned += gain;
+    renderStats();
+    autoBuyerTick();
+  }catch(e){
+    console.error("mainLoop error:", e);
+    window._cc_lastError = e;
+  }
+}
+
+/* start main loop (will be cleared/replaced by performance mode if needed) */
+if(!window._cc_mainLoopInterval) window._cc_mainLoopInterval = setInterval(mainLoop, 100);
+
+/* ---------- End of Part C ---------- */
+/* ---------- Part D: Storage, autosave, export/import, tabs, init, closing ---------- */
+
+/* ---------- Backups / Storage ---------- */
 function getBackups(){
   try{
-    const raw=localStorage.getItem(BACKUP_HISTORY_KEY);
-    if(!raw)return[];
+    const raw = localStorage.getItem(BACKUP_HISTORY_KEY);
+    if(!raw) return [];
     return JSON.parse(raw);
-  }catch(e){return[];}
+  }catch(e){
+    return [];
+  }
 }
 
 function pushBackup(payload){
-  const backups=getBackups();
-  backups.unshift({t:Date.now(),data:payload});
-  while(backups.length>10)backups.pop();
-  localStorage.setItem(BACKUP_HISTORY_KEY,JSON.stringify(backups));
+  try{
+    const backups = getBackups();
+    backups.unshift({t: Date.now(), data: payload});
+    while(backups.length > 12) backups.pop();
+    localStorage.setItem(BACKUP_HISTORY_KEY, JSON.stringify(backups));
+  }catch(e){}
 }
 
+/* ---------- Save / Load ---------- */
 function save(){
-  const data={
-    v:GAME_VERSION,
-    cookies,
-    clickPower,
-    owned,
-    buildingMult,
-    boughtUpgrades,
-    totalCookiesEarned,
-    prestigeStars,
-    prestigeUpgrades,
-    achievementsState,
-    soundEnabled,
-    autoBuyerEnabled,
-    autoClipboardEnabled,
-    crackEnabled,
-    currentSkin,
-    goldenMultiplier
-  };
-  const payload=btoa(JSON.stringify(data));
-  localStorage.setItem(SAVE_KEY,payload);
-  lastSavedAt=Date.now();
-  document.getElementById("autosaveHint").textContent="Autosave: "+new Date().toLocaleTimeString();
-  pushBackup(payload);
-  if(autoClipboardEnabled && navigator.clipboard){
-    navigator.clipboard.writeText(payload).catch(()=>{});
+  try{
+    const data = {
+      v: GAME_VERSION,
+      cookies,
+      clickPower,
+      owned,
+      buildingMult,
+      boughtUpgrades,
+      totalCookiesEarned,
+      prestigeStars,
+      prestigeUpgrades,
+      achievementsState,
+      soundEnabled,
+      autoBuyerEnabled,
+      autoClipboardEnabled,
+      crackEnabled,
+      currentSkin,
+      goldenMultiplier,
+      craftingQueue: typeof craftingQueue !== "undefined" ? craftingQueue : [],
+      market: typeof market !== "undefined" ? market : null
+    };
+    const payload = btoa(JSON.stringify(data));
+    localStorage.setItem(SAVE_KEY, payload);
+    lastSavedAt = Date.now();
+    const autosaveEl = document.getElementById("autosaveHint");
+    if(autosaveEl) autosaveEl.textContent = "Autosave: " + new Date().toLocaleTimeString();
+    pushBackup(payload);
+    if(autoClipboardEnabled && navigator.clipboard){
+      navigator.clipboard.writeText(payload).catch(()=>{});
+    }
+  }catch(e){
+    console.error("Save failed", e);
   }
 }
 
 function load(){
   try{
-    const raw=localStorage.getItem(SAVE_KEY);
-    if(!raw)return;
-    const data=JSON.parse(atob(raw));
-    if(!data)return;
-    cookies=data.cookies||0;
-    clickPower=data.clickPower||1;
-    owned=data.owned||[];
-    buildingMult=data.buildingMult||[];
-    boughtUpgrades=data.boughtUpgrades||[];
-    totalCookiesEarned=data.totalCookiesEarned||0;
-    prestigeStars=data.prestigeStars||0;
-    prestigeUpgrades=data.prestigeUpgrades||[];
-    achievementsState=data.achievementsState||{};
-    soundEnabled=data.soundEnabled!==false;
-    autoBuyerEnabled=!!data.autoBuyerEnabled;
-    autoClipboardEnabled=!!data.autoClipboardEnabled;
-    crackEnabled=data.crackEnabled!==false;
-    currentSkin=data.currentSkin||"dark";
-    goldenMultiplier=data.goldenMultiplier||1;
-  }catch(e){}
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return;
+    const data = JSON.parse(atob(raw));
+    if(!data) return;
+    cookies = data.cookies || cookies;
+    clickPower = data.clickPower || clickPower;
+    owned = Array.isArray(data.owned) ? data.owned : owned;
+    buildingMult = Array.isArray(data.buildingMult) ? data.buildingMult : buildingMult;
+    boughtUpgrades = Array.isArray(data.boughtUpgrades) ? data.boughtUpgrades : boughtUpgrades;
+    totalCookiesEarned = data.totalCookiesEarned || totalCookiesEarned;
+    prestigeStars = data.prestigeStars || prestigeStars;
+    prestigeUpgrades = Array.isArray(data.prestigeUpgrades) ? data.prestigeUpgrades : prestigeUpgrades;
+    achievementsState = data.achievementsState || achievementsState;
+    soundEnabled = data.soundEnabled !== false;
+    autoBuyerEnabled = !!data.autoBuyerEnabled;
+    autoClipboardEnabled = !!data.autoClipboardEnabled;
+    crackEnabled = data.crackEnabled !== false;
+    currentSkin = data.currentSkin || currentSkin;
+    goldenMultiplier = data.goldenMultiplier || goldenMultiplier;
+    if(data.craftingQueue) craftingQueue = data.craftingQueue;
+    if(data.market) market = data.market;
+  }catch(e){
+    console.error("Load failed", e);
+  }
 }
 
+/* ---------- Offline progress ---------- */
 function applyOfflineProgress(){
   try{
-    const raw=localStorage.getItem(SAVE_KEY+"_lastTime");
-    const now=Date.now();
-    localStorage.setItem(SAVE_KEY+"_lastTime",String(now));
-    if(!raw)return;
-    const diffMs=now-Number(raw);
-    if(diffMs<=0)return;
-    const hours=Math.min(MAX_OFFLINE_HOURS,diffMs/3600000);
-    const gain=totalCps()*hours*3600;
-    if(gain>0){
-      cookies+=gain;
-      totalCookiesEarned+=gain;
-      document.getElementById("offlineHint").textContent="Offline: +" + fmt(gain);
+    const raw = localStorage.getItem(SAVE_KEY + "_lastTime");
+    const now = Date.now();
+    localStorage.setItem(SAVE_KEY + "_lastTime", String(now));
+    if(!raw) return;
+    const diffMs = now - Number(raw);
+    if(diffMs <= 0) return;
+    const hours = Math.min(MAX_OFFLINE_HOURS, diffMs / 3600000);
+    const gain = totalCps() * hours * 3600;
+    if(gain > 0){
+      cookies += gain;
+      totalCookiesEarned += gain;
+      const offlineEl = document.getElementById("offlineHint");
+      if(offlineEl) offlineEl.textContent = "Offline: +" + fmt(gain);
     }
   }catch(e){}
 }
 
-/* ---------- Export / import / reset ---------- */
-
+/* ---------- Export / Import / Reset ---------- */
 function exportSave(){
-  const raw=localStorage.getItem(SAVE_KEY);
-  if(!raw){toast("No save to export.");return;}
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(raw).then(()=>toast("Save copied to clipboard."),()=>toast("Copy failed."));
-  }else{
-    toast("Clipboard not available.");
-  }
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw){ toast("No save to export."); return; }
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(raw).then(()=> toast("Save copied to clipboard."), ()=> toast("Copy failed."));
+    } else {
+      toast("Clipboard not available.");
+    }
+  }catch(e){ toast("Export failed."); }
 }
 
 function importSave(){
-  const code=prompt("Paste your save code:");
-  if(!code)return;
   try{
+    const code = prompt("Paste your save code:");
+    if(!code) return;
+    // validate
     JSON.parse(atob(code));
+    localStorage.setItem(SAVE_KEY, code);
+    toast("Save imported. Reloading...");
+    setTimeout(()=> location.reload(), 600);
   }catch(e){
     toast("Invalid save code.");
-    return;
   }
-  localStorage.setItem(SAVE_KEY,code);
-  toast("Save imported. Reloading...");
-  setTimeout(()=>location.reload(),600);
 }
 
 function softReset(){
-  if(!confirm("Soft reset? Keeps stars but wipes cookies, buildings, upgrades."))return;
-  cookies=0;
-  clickPower=1;
-  owned=Array(BUILDINGS.length).fill(0);
-  buildingMult=Array(BUILDINGS.length).fill(1);
-  boughtUpgrades=[];
-  totalCookiesEarned=0;
+  if(!confirm("Soft reset? Keeps stars but wipes cookies, buildings, upgrades.")) return;
+  cookies = 0;
+  clickPower = 1;
+  owned = new Array(BUILDINGS.length).fill(0);
+  buildingMult = new Array(BUILDINGS.length).fill(1);
+  boughtUpgrades = [];
+  totalCookiesEarned = 0;
   save();
   renderAll();
 }
 
 /* ---------- Tabs ---------- */
-
 document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click",()=>{
+  tab.addEventListener("click", ()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
     tab.classList.add("active");
-    const name=tab.dataset.tab;
-    document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
-    document.getElementById("panel-"+name).style.display="block";
+    const name = tab.dataset.tab;
+    document.querySelectorAll(".panel").forEach(p=>p.style.display = "none");
+    const panel = document.getElementById("panel-" + name);
+    if(panel) panel.style.display = "block";
   });
 });
 
-/* ---------- Auto buyer ---------- */
+/* ---------- Auto buyer interval ---------- */
+setInterval(()=> {
+  try{ autoBuyerTick(); }catch(e){}
+}, 1000);
 
-function autoBuyerTick(){
-  if(!autoBuyerEnabled)return;
-  const cps=totalCps();
-  if(cps<=0)return;
-
-  let bestIndex=-1;
-  let bestCost=Infinity;
-
-  for(let i=0;i<BUILDINGS.length;i++){
-    const cost=buildingCost(i);
-    if(cookies>=cost && cost<bestCost){
-      bestCost=cost;
-      bestIndex=i;
-    }
-  }
-
-  if(bestIndex>=0) buyBuilding(bestIndex);
-}
-
-/* ---------- Main loop ---------- */
-
-function mainLoop(){
-  const cps=totalCps();
-  const dt=0.1;
-  const gain=cps*dt;
-  cookies+=gain;
-  totalCookiesEarned+=gain;
-  renderStats();
-  autoBuyerTick();
-}
-
-setInterval(mainLoop,100);
-
-/* ---------- Autosave timer ---------- */
-
-setInterval(()=>save(),AUTOSAVE_INTERVAL_MS);
+/* ---------- Autosave interval ---------- */
+setInterval(()=> {
+  try{ save(); }catch(e){}
+}, AUTOSAVE_INTERVAL_MS);
 
 /* ---------- Init ---------- */
-
 function init(){
+  // load and apply
   load();
   applySkin(currentSkin);
   generateDailyQuests();
   applyOfflineProgress();
   renderAll();
 
-  const cookieBtn=document.getElementById("cookieBtn");
+  // cookie button handlers
+  const cookieBtn = document.getElementById("cookieBtn");
+  if(cookieBtn){
+    cookieBtn.addEventListener("mousedown", handleCookieClick);
+    cookieBtn.addEventListener("touchstart", e=>{
+      e.preventDefault();
+      handleCookieClick(e.touches ? e.touches[0] : e);
+    }, {passive:false});
+    // accessibility
+    cookieBtn.setAttribute("tabindex","0");
+    cookieBtn.addEventListener("keydown", (e)=>{
+      if(e.code === "Space" || e.code === "Enter"){
+        e.preventDefault();
+        handleCookieClick({ clientX: cookieBtn.getBoundingClientRect().left + cookieBtn.offsetWidth/2, clientY: cookieBtn.getBoundingClientRect().top + cookieBtn.offsetHeight/2 });
+      }
+    });
+  }
 
-  cookieBtn.addEventListener("mousedown",handleCookieClick);
-  cookieBtn.addEventListener("touchstart",e=>{
-    e.preventDefault();
-    handleCookieClick(e.touches[0]||e);
-  },{passive:false});
+  // buttons
+  const exportBtn = document.getElementById("exportBtn");
+  const importBtn = document.getElementById("importBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  if(exportBtn) exportBtn.addEventListener("click", exportSave);
+  if(importBtn) importBtn.addEventListener("click", importSave);
+  if(resetBtn) resetBtn.addEventListener("click", softReset);
 
-  document.getElementById("exportBtn").addEventListener("click",exportSave);
-  document.getElementById("importBtn").addEventListener("click",importSave);
-  document.getElementById("resetBtn").addEventListener("click",softReset);
+  // settings toggles
+  const soundToggle = document.getElementById("soundToggle");
+  const autoBuyerToggle = document.getElementById("autoBuyerToggle");
+  const autoClipboardToggle = document.getElementById("autoClipboardToggle");
+  const crackToggle = document.getElementById("crackToggle");
+  if(soundToggle) soundToggle.addEventListener("change", e=>{ soundEnabled = e.target.checked; save(); });
+  if(autoBuyerToggle) autoBuyerToggle.addEventListener("change", e=>{ autoBuyerEnabled = e.target.checked; save(); });
+  if(autoClipboardToggle) autoClipboardToggle.addEventListener("change", e=>{ autoClipboardEnabled = e.target.checked; save(); });
+  if(crackToggle) crackToggle.addEventListener("change", e=>{ crackEnabled = e.target.checked; save(); });
 
-  document.getElementById("soundToggle").addEventListener("change",e=>{soundEnabled=e.target.checked;save();});
-  document.getElementById("autoBuyerToggle").addEventListener("change",e=>{autoBuyerEnabled=e.target.checked;save();});
-  document.getElementById("autoClipboardToggle").addEventListener("change",e=>{autoClipboardEnabled=e.target.checked;save();});
-  document.getElementById("crackToggle").addEventListener("change",e=>{crackEnabled=e.target.checked;save();});
-
-  document.getElementById("wipeAllBtn").addEventListener("click",()=>{
-    if(!confirm("Wipe ALL local data? Backup will be kept."))return;
-    const raw=localStorage.getItem(SAVE_KEY);
-    if(raw)pushBackup(raw);
+  // wipe all
+  const wipeBtn = document.getElementById("wipeAllBtn");
+  if(wipeBtn) wipeBtn.addEventListener("click", ()=>{
+    if(!confirm("Wipe ALL local data? Backup will be kept.")) return;
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(raw) pushBackup(raw);
     localStorage.removeItem(SAVE_KEY);
     toast("Wiped. Reloading...");
-    setTimeout(()=>location.reload(),600);
+    setTimeout(()=> location.reload(), 600);
   });
 
-  document.getElementById("prestigeBtn").addEventListener("click",doPrestige);
+  // prestige
+  const prestigeBtn = document.getElementById("prestigeBtn");
+  if(prestigeBtn) prestigeBtn.addEventListener("click", doPrestige);
 
+  // rush placeholder
+  const rushBtn = document.getElementById("rushBtn");
+  if(rushBtn) rushBtn.addEventListener("click", ()=> {
+    toast("Rush mode coming soon. Use mini-games and boss fights for extra rewards.");
+  });
+
+  // inject extra UIs if available
+  if(typeof injectExtraUI === "function") try{ injectExtraUI(); }catch(e){}
+  if(typeof injectPart6UI === "function") try{ injectPart6UI(); }catch(e){}
+
+  // schedule golden cookie and boss spawns if functions exist
+  if(typeof scheduleGoldenCookieVariant === "function") try{ scheduleGoldenCookieVariant(); }catch(e){}
+  if(typeof scheduleBossSpawns === "function") try{ scheduleBossSpawns(); }catch(e){}
+
+  // final achievement check
   checkAchievements();
 }
 
-window.addEventListener("load",init);
-</script>
-</body>
-</html>
+/* run init on load */
+window.addEventListener("load", init);
+
+/* ---------- End of Part D (file end) ---------- */
 /* ---------- PART 5: BOSSES, MINIGAMES, PRESTIGE TREES, SEASONS, GOLDEN VARIANTS ---------- */
 
 /* ---------- Boss definitions ---------- */
@@ -1044,13 +1116,13 @@ let bossState = null; // {hp,phase,lastAttack}
 
 /* ---------- Boss UI helpers ---------- */
 function spawnBossUI(boss){
-  // simple popup with HP and attack button
-  const root=document.getElementById("eventPopupRoot");
-  root.innerHTML="";
-  const el=document.createElement("div");
-  el.className="event-popup";
-  el.id="bossPopup";
-  el.innerHTML=`
+  const root = document.getElementById("eventPopupRoot");
+  if(!root) return;
+  root.innerHTML = "";
+  const el = document.createElement("div");
+  el.className = "event-popup";
+  el.id = "bossPopup";
+  el.innerHTML = `
     <div style="font-weight:800;margin-bottom:8px">${boss.name}</div>
     <div id="bossHp" style="font-weight:700;color:#f7c96a">HP: ${fmt(bossState.hp)}</div>
     <div style="height:8px"></div>
@@ -1060,55 +1132,51 @@ function spawnBossUI(boss){
     </div>
   `;
   root.appendChild(el);
-  document.getElementById("bossAttackBtn").addEventListener("click",bossPlayerAttack);
-  document.getElementById("bossFleeBtn").addEventListener("click",bossFlee);
+  document.getElementById("bossAttackBtn").addEventListener("click", bossPlayerAttack);
+  document.getElementById("bossFleeBtn").addEventListener("click", bossFlee);
 }
 
 /* ---------- Boss mechanics ---------- */
 function canSpawnBoss(){
-  // spawn if not active and player has enough cookies or cps
   if(activeBoss) return false;
-  const unlocked = BOSSES.filter(b=>totalCookiesEarned>=b.unlockAt);
-  return unlocked.length>0;
+  const unlocked = BOSSES.filter(b => totalCookiesEarned >= b.unlockAt);
+  return unlocked.length > 0;
 }
 
 function spawnRandomBoss(){
-  const candidates = BOSSES.filter(b=>totalCookiesEarned>=b.unlockAt);
-  if(candidates.length===0) return;
-  const boss = candidates[Math.floor(Math.random()*candidates.length)];
+  const candidates = BOSSES.filter(b => totalCookiesEarned >= b.unlockAt);
+  if(candidates.length === 0) return;
+  const boss = candidates[Math.floor(Math.random() * candidates.length)];
   activeBoss = boss;
-  bossState = { hp: boss.hp, phase:1, lastAttack:Date.now() };
+  bossState = { hp: boss.hp, phase: 1, lastAttack: Date.now() };
   spawnBossUI(boss);
-  toast("A wild "+boss.name+" appeared!");
-  // boss auto attacks
-  bossState.timer = setInterval(()=>bossAutoAttack(boss), boss.attackInterval);
+  toast("A wild " + boss.name + " appeared!");
+  bossState.timer = setInterval(() => bossAutoAttack(boss), boss.attackInterval);
 }
 
 function bossAutoAttack(boss){
   if(!bossState) return;
-  // boss deals damage to player's cookies (thematic)
-  const dmg = boss.attackPower * (1 + (bossState.phase-1)*0.5);
+  const dmg = boss.attackPower * (1 + (bossState.phase - 1) * 0.5);
   const loss = Math.min(cookies, dmg);
   cookies -= loss;
-  totalCookiesEarned = Math.max(0, totalCookiesEarned - Math.floor(loss/2));
+  totalCookiesEarned = Math.max(0, totalCookiesEarned - Math.floor(loss / 2));
   renderStats();
-  spawnFloat("-"+fmt(loss), window.innerWidth/2, window.innerHeight/2);
-  // escalate phase if hp below thresholds
-  if(bossState.hp < boss.hp*0.6 && bossState.phase===1) bossState.phase=2;
-  if(bossState.hp < boss.hp*0.25 && bossState.phase===2) bossState.phase=3;
+  spawnFloat("-" + fmt(loss), window.innerWidth/2, window.innerHeight/2);
+  if(bossState.hp < boss.hp * 0.6 && bossState.phase === 1) bossState.phase = 2;
+  if(bossState.hp < boss.hp * 0.25 && bossState.phase === 2) bossState.phase = 3;
 }
 
 function bossPlayerAttack(){
   if(!activeBoss || !bossState) return;
-  // player's attack scales with clickPower and stars
-  const base = clickPower * (1 + prestigeStars*0.05);
-  const crit = Math.random() < Math.min(0.15, comboValue/200) ? 2 : 1;
+  const base = clickPower * (1 + prestigeStars * 0.05);
+  const crit = Math.random() < Math.min(0.15, comboValue / 200) ? 2 : 1;
   const dmg = Math.floor(base * crit);
   bossState.hp = Math.max(0, bossState.hp - dmg);
-  spawnFloat("-"+fmt(dmg), window.innerWidth/2, window.innerHeight/2);
-  if(bossState.hp<=0) bossDefeated();
+  spawnFloat("-" + fmt(dmg), window.innerWidth/2, window.innerHeight/2);
+  if(bossState.hp <= 0) bossDefeated();
   else {
-    document.getElementById("bossHp").textContent = "HP: "+fmt(bossState.hp);
+    const hpEl = document.getElementById("bossHp");
+    if(hpEl) hpEl.textContent = "HP: " + fmt(bossState.hp);
   }
 }
 
@@ -1119,10 +1187,11 @@ function bossDefeated(){
   cookies += reward.cookies;
   totalCookiesEarned += reward.cookies;
   prestigeStars += reward.stars || 0;
-  toast("Defeated "+activeBoss.name+"! Reward: "+fmt(reward.cookies)+(reward.stars?(" and "+reward.stars+"★"):""));
-  document.getElementById("eventPopupRoot").innerHTML="";
-  activeBoss=null;
-  bossState=null;
+  toast("Defeated " + activeBoss.name + "! Reward: " + fmt(reward.cookies) + (reward.stars ? (" and " + reward.stars + "★") : ""));
+  const root = document.getElementById("eventPopupRoot");
+  if(root) root.innerHTML = "";
+  activeBoss = null;
+  bossState = null;
   save();
   renderAll();
 }
@@ -1130,25 +1199,27 @@ function bossDefeated(){
 function bossFlee(){
   if(!activeBoss) return;
   clearInterval(bossState.timer);
-  toast(activeBoss.name+" fled!");
-  document.getElementById("eventPopupRoot").innerHTML="";
-  activeBoss=null;
-  bossState=null;
+  toast(activeBoss.name + " fled!");
+  const root = document.getElementById("eventPopupRoot");
+  if(root) root.innerHTML = "";
+  activeBoss = null;
+  bossState = null;
 }
 
 /* ---------- Mini-games ---------- */
 
 /* 1) Click Challenge: click as fast as possible for 8s, reward scales */
 function startClickChallenge(){
-  const duration=8000;
-  let score=0;
-  let running=true;
-  const root=document.getElementById("eventPopupRoot");
-  root.innerHTML="";
-  const el=document.createElement("div");
-  el.className="event-popup";
-  el.id="clickChallenge";
-  el.innerHTML=`
+  const duration = 8000;
+  let score = 0;
+  let running = true;
+  const root = document.getElementById("eventPopupRoot");
+  if(!root) return;
+  root.innerHTML = "";
+  const el = document.createElement("div");
+  el.className = "event-popup";
+  el.id = "clickChallenge";
+  el.innerHTML = `
     <div style="font-weight:800;margin-bottom:8px">Click Challenge (8s)</div>
     <div id="ccTimer" style="font-weight:700;color:#f7c96a">8.0s</div>
     <div style="height:8px"></div>
@@ -1157,40 +1228,42 @@ function startClickChallenge(){
     <div id="ccScore" style="font-weight:700">Score: 0</div>
   `;
   root.appendChild(el);
-  const btn=document.getElementById("ccClickBtn");
-  const scoreEl=document.getElementById("ccScore");
-  btn.addEventListener("click",()=>{
+  const btn = document.getElementById("ccClickBtn");
+  const scoreEl = document.getElementById("ccScore");
+  btn.addEventListener("click", ()=>{
     if(!running) return;
     score++;
-    scoreEl.textContent="Score: "+score;
+    scoreEl.textContent = "Score: " + score;
   });
-  let timeLeft=duration;
-  const tId=setInterval(()=>{
-    timeLeft-=100;
-    document.getElementById("ccTimer").textContent=(timeLeft/1000).toFixed(1)+"s";
-    if(timeLeft<=0){
+  let timeLeft = duration;
+  const tId = setInterval(()=>{
+    timeLeft -= 100;
+    const timerEl = document.getElementById("ccTimer");
+    if(timerEl) timerEl.textContent = (timeLeft / 1000).toFixed(1) + "s";
+    if(timeLeft <= 0){
       clearInterval(tId);
-      running=false;
-      root.innerHTML="";
-      const reward=Math.floor( (score*clickPower) + (score*comboValue*0.1) );
-      cookies+=reward;
-      totalCookiesEarned+=reward;
-      toast("Click Challenge complete! Reward: "+fmt(reward));
-      updateQuestProgress("earn",reward);
+      running = false;
+      if(root) root.innerHTML = "";
+      const reward = Math.floor((score * clickPower) + (score * comboValue * 0.1));
+      cookies += reward;
+      totalCookiesEarned += reward;
+      toast("Click Challenge complete! Reward: " + fmt(reward));
+      updateQuestProgress("earn", reward);
       save();
       renderAll();
     }
-  },100);
+  }, 100);
 }
 
 /* 2) Puzzle mini-game (simple memory) */
 function startMemoryPuzzle(){
-  const root=document.getElementById("eventPopupRoot");
-  root.innerHTML="";
-  const el=document.createElement("div");
-  el.className="event-popup";
-  el.id="memoryPuzzle";
-  el.innerHTML=`
+  const root = document.getElementById("eventPopupRoot");
+  if(!root) return;
+  root.innerHTML = "";
+  const el = document.createElement("div");
+  el.className = "event-popup";
+  el.id = "memoryPuzzle";
+  el.innerHTML = `
     <div style="font-weight:800;margin-bottom:8px">Memory Puzzle</div>
     <div style="font-size:13px;color:#c3b7e0;margin-bottom:8px">Repeat the sequence of icons. 3 rounds to win.</div>
     <div id="mpBoard" style="display:flex;gap:8px;justify-content:center;margin-bottom:8px"></div>
@@ -1198,59 +1271,59 @@ function startMemoryPuzzle(){
   `;
   root.appendChild(el);
 
-  const icons=["🍪","⭐","⚡","🔥"];
-  let sequence=[];
-  let round=0;
-  let accepting=false;
+  const icons = ["🍪","⭐","⚡","🔥"];
+  let sequence = [];
+  let round = 0;
+  let accepting = false;
 
   function nextRound(){
     round++;
-    sequence.push(icons[Math.floor(Math.random()*icons.length)]);
+    sequence.push(icons[Math.floor(Math.random() * icons.length)]);
     showSequence();
   }
 
   function showSequence(){
-    accepting=false;
-    const board=document.getElementById("mpBoard");
-    board.innerHTML=sequence.map(s=>`<div style="font-size:28px">${s}</div>`).join("");
-    setTimeout(()=>{ board.innerHTML=""; showControls(); }, 800 + sequence.length*400);
+    accepting = false;
+    const board = document.getElementById("mpBoard");
+    if(board) board.innerHTML = sequence.map(s => `<div style="font-size:28px">${s}</div>`).join("");
+    setTimeout(()=>{ if(board) board.innerHTML = ""; showControls(); }, 800 + sequence.length * 400);
   }
 
   function showControls(){
-    const controls=document.getElementById("mpControls");
-    controls.innerHTML="";
+    const controls = document.getElementById("mpControls");
+    if(!controls) return;
+    controls.innerHTML = "";
     icons.forEach(ic=>{
-      const b=document.createElement("button");
-      b.className="small-btn";
-      b.textContent=ic;
-      b.addEventListener("click",()=>playerInput(ic));
+      const b = document.createElement("button");
+      b.className = "small-btn";
+      b.textContent = ic;
+      b.addEventListener("click", ()=> playerInput(ic));
       controls.appendChild(b);
     });
-    accepting=true;
-    playerAttempt=[];
+    accepting = true;
+    playerAttempt = [];
   }
 
-  let playerAttempt=[];
+  let playerAttempt = [];
   function playerInput(ic){
     if(!accepting) return;
     playerAttempt.push(ic);
-    if(playerAttempt.length===sequence.length){
-      accepting=false;
-      if(playerAttempt.join("")===sequence.join("")){
-        if(round>=3){
-          // win
-          const reward=5000 + round*2000;
-          cookies+=reward; totalCookiesEarned+=reward;
-          toast("Puzzle solved! Reward: "+fmt(reward));
-          root.innerHTML="";
+    if(playerAttempt.length === sequence.length){
+      accepting = false;
+      if(playerAttempt.join("") === sequence.join("")){
+        if(round >= 3){
+          const reward = 5000 + round * 2000;
+          cookies += reward; totalCookiesEarned += reward;
+          toast("Puzzle solved! Reward: " + fmt(reward));
+          if(root) root.innerHTML = "";
           save(); renderAll();
         } else {
           toast("Round cleared!");
-          setTimeout(nextRound,600);
+          setTimeout(nextRound, 600);
         }
       } else {
         toast("Wrong sequence. Puzzle failed.");
-        root.innerHTML="";
+        if(root) root.innerHTML = "";
       }
     }
   }
@@ -1282,69 +1355,72 @@ let unlockedPrestigeNodes = {}; // {nodeId:true}
 
 /* ---------- Prestige tree UI + purchase ---------- */
 function renderPrestigeTreeUI(){
-  const root=document.getElementById("panel-upgrades");
-  // append a prestige tree section at top
-  const container=document.createElement("div");
-  container.className="section-title";
-  container.style.marginTop="6px";
-  container.textContent="Prestige Trees (use stars)";
-  root.prepend(container);
+  const root = document.getElementById("panel-upgrades");
+  if(!root) return;
+  const existing = document.getElementById("prestigeTreeWrap");
+  if(existing) existing.remove();
 
-  const treeWrap=document.createElement("div");
-  treeWrap.style.display="flex";
-  treeWrap.style.gap="8px";
-  treeWrap.style.marginBottom="12px";
+  const container = document.createElement("div");
+  container.id = "prestigeTreeWrap";
+  container.style.marginTop = "8px";
+
+  const title = document.createElement("div");
+  title.className = "section-title";
+  title.textContent = "Prestige Trees (use stars)";
+  container.appendChild(title);
+
+  const treeWrap = document.createElement("div");
+  treeWrap.style.display = "flex";
+  treeWrap.style.gap = "8px";
+  treeWrap.style.marginBottom = "12px";
 
   PRESTIGE_TREES.forEach(tree=>{
-    const col=document.createElement("div");
-    col.style.background="#17161a";
-    col.style.padding="8px";
-    col.style.borderRadius="8px";
-    col.style.minWidth="160px";
-    col.innerHTML=`<div style="font-weight:800;color:#f7c96a;margin-bottom:6px">${tree.name}</div>`;
+    const col = document.createElement("div");
+    col.style.background = "#17161a";
+    col.style.padding = "8px";
+    col.style.borderRadius = "8px";
+    col.style.minWidth = "160px";
+    col.innerHTML = `<div style="font-weight:800;color:#f7c96a;margin-bottom:6px">${tree.name}</div>`;
     tree.nodes.forEach(node=>{
-      const btn=document.createElement("button");
-      btn.className="small-btn";
-      btn.style.display="block";
-      btn.style.marginBottom="6px";
-      btn.textContent=`${node.desc} (${node.cost}★)`;
-      if(unlockedPrestigeNodes[node.id]) btn.disabled=true;
-      btn.addEventListener("click",()=>{
+      const btn = document.createElement("button");
+      btn.className = "small-btn";
+      btn.style.display = "block";
+      btn.style.marginBottom = "6px";
+      btn.textContent = `${node.desc} (${node.cost}★)`;
+      if(unlockedPrestigeNodes[node.id]) btn.disabled = true;
+      btn.addEventListener("click", ()=>{
         if(unlockedPrestigeNodes[node.id]) return;
-        if(prestigeStars<node.cost){toast("Not enough stars.");return;}
-        prestigeStars-=node.cost;
-        unlockedPrestigeNodes[node.id]=true;
+        if(prestigeStars < node.cost){ toast("Not enough stars."); return; }
+        prestigeStars -= node.cost;
+        unlockedPrestigeNodes[node.id] = true;
         applyPrestigeNode(node);
-        toast("Unlocked: "+node.desc);
+        toast("Unlocked: " + node.desc);
         save();
         renderAll();
-        renderPrestigeTreeUI(); // refresh
+        renderPrestigeTreeUI();
       });
       col.appendChild(btn);
     });
     treeWrap.appendChild(col);
   });
 
-  root.prepend(treeWrap);
+  container.appendChild(treeWrap);
+  root.prepend(container);
 }
 
 /* ---------- Apply prestige node effects ---------- */
 function applyPrestigeNode(node){
   if(node.desc.includes("click")) {
-    // +% click power
-    const pct = parseInt(node.desc.match(/\+(\d+)%/)[1]);
+    const pct = parseInt((node.desc.match(/\+(\d+)%/)||[0,0])[1] || 0);
     clickPower = Math.max(1, Math.floor(clickPower * (1 + pct/100)));
   } else if(node.desc.includes("CPS")){
-    const pct = parseInt(node.desc.match(/\+(\d+)%/)[1]);
-    // apply to buildingMult globally
-    for(let i=0;i<buildingMult.length;i++) buildingMult[i]=(buildingMult[i]||1)*(1+pct/100);
+    const pct = parseInt((node.desc.match(/\+(\d+)%/)||[0,0])[1] || 0);
+    for(let i=0;i<buildingMult.length;i++) buildingMult[i] = (buildingMult[i]||1) * (1 + pct/100);
   } else if(node.desc.includes("cost")){
-    // store a global discount
-    const match=node.desc.match(/-(\d+)%/);
+    const match = node.desc.match(/-(\d+)%/);
     if(match){
-      const pct=parseInt(match[1]);
-      // apply by reducing baseCost temporarily (affects future cost calc)
-      BUILDINGS.forEach(b=>b.baseCost=Math.max(1,Math.floor(b.baseCost*(1-pct/100))));
+      const pct = parseInt(match[1]);
+      BUILDINGS.forEach(b => b.baseCost = Math.max(1, Math.floor(b.baseCost * (1 - pct/100))));
     }
   }
 }
@@ -1352,16 +1428,16 @@ function applyPrestigeNode(node){
 /* ---------- Seasonal events ---------- */
 
 const SEASONS = [
-  {id:"s_halloween",name:"Halloween",startMonth:10,desc:"Spooky cookies: +10% click power",apply:()=>{clickPower=Math.floor(clickPower*1.1);}},
-  {id:"s_winter",name:"Winter",startMonth:12,desc:"Festive ovens: +10% CPS",apply:()=>{for(let i=0;i<buildingMult.length;i++) buildingMult[i]*=1.1;}},
+  {id:"s_halloween",name:"Halloween",startMonth:10,desc:"Spooky cookies: +10% click power",apply:()=>{ clickPower = Math.floor(clickPower * 1.1); }},
+  {id:"s_winter",name:"Winter",startMonth:12,desc:"Festive ovens: +10% CPS",apply:()=>{ for(let i=0;i<buildingMult.length;i++) buildingMult[i] *= 1.1; }},
   {id:"s_summer",name:"Summer",startMonth:6,desc:"Sunny boost: golden cookies spawn more often",apply:()=>{/* handled in golden spawn logic */}}
 ];
 
 function checkSeasonalEvents(){
-  const m=new Date().getMonth()+1;
+  const m = new Date().getMonth() + 1;
   SEASONS.forEach(s=>{
-    if(s.startMonth===m){
-      toast("Season: "+s.name+" active — "+s.desc);
+    if(s.startMonth === m){
+      toast("Season: " + s.name + " active — " + s.desc);
       if(s.apply) s.apply();
     }
   });
@@ -1369,70 +1445,66 @@ function checkSeasonalEvents(){
 
 /* ---------- Golden cookie variants ---------- */
 
-let goldenSpawnRate = 60000 + Math.random()*60000; // base
+let goldenSpawnRate = 60000 + Math.random() * 60000;
 let goldenTimerId = null;
 
 function scheduleGoldenCookieVariant(){
   if(goldenTimerId) clearTimeout(goldenTimerId);
-  // seasonal adjustments
-  const month=new Date().getMonth()+1;
-  let rate = 60000 + Math.random()*90000;
-  if(month===6) rate *= 0.7; // summer: more often
+  const month = new Date().getMonth() + 1;
+  let rate = 60000 + Math.random() * 90000;
+  if(month === 6) rate *= 0.7;
   goldenTimerId = setTimeout(spawnGoldenVariant, rate);
 }
 
 function spawnGoldenVariant(){
-  const panel=document.getElementById("leftPanel");
-  const rect=panel.getBoundingClientRect();
-  const x=Math.random()*(rect.width-80)+10;
-  const y=Math.random()*(rect.height-80)+10;
-  const gc=document.createElement("div");
-  gc.className="golden-cookie";
-  gc.style.left=x+"px";
-  gc.style.top=y+"px";
-  // choose variant
-  const r=Math.random();
-  if(r<0.4) gc.textContent="⭐"; // cookie reward
-  else if(r<0.7) gc.textContent="⏱️"; // time boost
-  else gc.textContent="💥"; // instant big effect
+  const panel = document.getElementById("leftPanel");
+  if(!panel) { scheduleGoldenCookieVariant(); return; }
+  const rect = panel.getBoundingClientRect();
+  const x = Math.random() * (rect.width - 80) + 10;
+  const y = Math.random() * (rect.height - 80) + 10;
+  const gc = document.createElement("div");
+  gc.className = "golden-cookie";
+  gc.style.left = x + "px";
+  gc.style.top = y + "px";
+  const r = Math.random();
+  if(r < 0.4) gc.textContent = "⭐";
+  else if(r < 0.7) gc.textContent = "⏱️";
+  else gc.textContent = "💥";
   panel.appendChild(gc);
 
-  gc.addEventListener("click",()=>{
+  gc.addEventListener("click", ()=>{
     gc.remove();
-    if(gc.textContent==="⭐"){
-      const bonus=Math.max(200,Math.floor(totalBaseCps()*20));
-      cookies+=bonus; totalCookiesEarned+=bonus;
-      spawnFloat("+"+fmt(bonus),rect.left+x+30,rect.top+y+30);
+    if(gc.textContent === "⭐"){
+      const bonus = Math.max(200, Math.floor(totalBaseCps() * 20));
+      cookies += bonus; totalCookiesEarned += bonus;
+      spawnFloat("+" + fmt(bonus), rect.left + x + 30, rect.top + y + 30);
       toast("Golden cookie: bonus!");
-    } else if(gc.textContent==="⏱️"){
-      // short global speed up
-      activeBoosts.push({type:"cpsMult",mult:1.5,expires:Date.now()+15000});
-      setTimeout(()=>{activeBoosts=activeBoosts.filter(b=>b.expires>Date.now());},15000);
-      spawnFloat("Time Boost",rect.left+x+30,rect.top+y+30);
+    } else if(gc.textContent === "⏱️"){
+      activeBoosts.push({type:"cpsMult", mult:1.5, expires: Date.now() + 15000});
+      setTimeout(()=>{ activeBoosts = activeBoosts.filter(b => b.expires > Date.now()); }, 15000);
+      spawnFloat("Time Boost", rect.left + x + 30, rect.top + y + 30);
     } else {
-      // big instant reward but with cooldown
-      const bonus=Math.max(1000,Math.floor(totalBaseCps()*60));
-      cookies+=bonus; totalCookiesEarned+=bonus;
-      spawnFloat("BIG +"+fmt(bonus),rect.left+x+30,rect.top+y+30);
+      const bonus = Math.max(1000, Math.floor(totalBaseCps() * 60));
+      cookies += bonus; totalCookiesEarned += bonus;
+      spawnFloat("BIG +" + fmt(bonus), rect.left + x + 30, rect.top + y + 30);
       toast("Massive golden effect!");
     }
-    playSound("gold");
+    playSound && playSound("gold");
     save();
     renderAll();
     scheduleGoldenCookieVariant();
   });
 
-  setTimeout(()=>{ if(gc.parentNode){gc.remove(); scheduleGoldenCookieVariant();} },10000);
+  setTimeout(()=>{ if(gc.parentNode){ gc.remove(); scheduleGoldenCookieVariant(); } }, 10000);
 }
 
 /* ---------- Hook new UI pieces into existing panels ---------- */
 function injectExtraUI(){
-  // Add boss/minigame buttons to settings panel top
-  const settingsPanel=document.getElementById("panel-settings");
+  const settingsPanel = document.getElementById("panel-settings");
   if(!settingsPanel) return;
-  const extra=document.createElement("div");
-  extra.style.marginBottom="10px";
-  extra.innerHTML=`
+  const extra = document.createElement("div");
+  extra.style.marginBottom = "10px";
+  extra.innerHTML = `
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
       <button id="spawnBossBtn" class="small-btn">Spawn Boss</button>
       <button id="clickChallengeBtn" class="small-btn">Click Challenge</button>
@@ -1441,32 +1513,28 @@ function injectExtraUI(){
     </div>
   `;
   settingsPanel.prepend(extra);
-  document.getElementById("spawnBossBtn").addEventListener("click",()=>spawnRandomBoss());
-  document.getElementById("clickChallengeBtn").addEventListener("click",()=>startClickChallenge());
-  document.getElementById("memoryPuzzleBtn").addEventListener("click",()=>startMemoryPuzzle());
-  document.getElementById("showPrestigeTreeBtn").addEventListener("click",()=>{
-    // switch to upgrades panel and render prestige UI
+  document.getElementById("spawnBossBtn").addEventListener("click", ()=> spawnRandomBoss());
+  document.getElementById("clickChallengeBtn").addEventListener("click", ()=> startClickChallenge());
+  document.getElementById("memoryPuzzleBtn").addEventListener("click", ()=> startMemoryPuzzle());
+  document.getElementById("showPrestigeTreeBtn").addEventListener("click", ()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
     document.querySelector('.tab[data-tab="upgrades"]').classList.add("active");
     document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
-    document.getElementById("panel-upgrades").style.display="block";
+    document.getElementById("panel-upgrades").style.display = "block";
     renderPrestigeTreeUI();
   });
 }
 
 /* ---------- Initialize part 5 systems on load ---------- */
 (function initPart5(){
-  // ensure arrays exist
-  if(!Array.isArray(owned) || owned.length<BUILDINGS.length) owned = new Array(BUILDINGS.length).fill(0);
-  if(!Array.isArray(buildingMult) || buildingMult.length<BUILDINGS.length) buildingMult = new Array(BUILDINGS.length).fill(1);
-  // schedule golden cookie variants and seasonal checks
+  if(!Array.isArray(owned) || owned.length < BUILDINGS.length) owned = new Array(BUILDINGS.length).fill(0);
+  if(!Array.isArray(buildingMult) || buildingMult.length < BUILDINGS.length) buildingMult = new Array(BUILDINGS.length).fill(1);
   scheduleGoldenCookieVariant();
   checkSeasonalEvents();
-  // inject UI when DOM ready (if init already ran, call immediately)
-  if(document.readyState==="complete" || document.readyState==="interactive"){
+  if(document.readyState === "complete" || document.readyState === "interactive"){
     injectExtraUI();
   } else {
-    window.addEventListener("load",injectExtraUI);
+    window.addEventListener("load", injectExtraUI);
   }
 })();
 /* ---------- PART 6: ADVANCED PRESTIGE UI, BOSS AI IMPROVEMENTS, SEASONAL CALENDAR, MORE MINI-GAMES, SAVE MIGRATION ---------- */
@@ -1803,9 +1871,8 @@ function exportReadableBackup(){
 })();
 /* ---------- PART 7: FINAL EXPANSION — LEADERBOARDS, MORE ACHIEVEMENTS, UI POLISH, ACCESSIBILITY, PERFORMANCE TWEAKS ---------- */
 
-/* ---------- Extra Buildings / Upgrades / Achievements (final content push) ---------- */
+/* ---------- Extra late-game content ---------- */
 (function extendContentPart7(){
-  // Add a few ultra-tier buildings if not already present
   const extraBuildings = [
     {id:25, name:"Void Foundry", icon:"🔮", baseCost:1e24, baseCps:2e17},
     {id:26, name:"Omega Oven", icon:"♾️", baseCost:5e25, baseCps:1e18},
@@ -1815,63 +1882,51 @@ function exportReadableBackup(){
     if(!BUILDINGS.find(x=>x.id===b.id)) BUILDINGS.push(b);
   });
 
-  // Add a handful of late-game upgrades
   const extraUpgrades = [
     { id:99901, type:"global", name:"Late Game Efficiency I", desc:"All CPS +50%", cost:1e12, cpsMult:1.5 },
     { id:99902, type:"global", name:"Late Game Efficiency II", desc:"All CPS +100%", cost:1e15, cpsMult:2.0 },
     { id:99903, type:"click", name:"Click God I", desc:"Huge click power boost", cost:5e13, value:5000 }
   ];
-  extraUpgrades.forEach(u=>{
-    if(!UPGRADES.find(x=>x.id===u.id)) UPGRADES.push(u);
-  });
+  extraUpgrades.forEach(u=>{ if(!UPGRADES.find(x=>x.id===u.id)) UPGRADES.push(u); });
 
-  // Add achievements for late-game milestones
   const extraAchievements = [
     {id:"a100",name:"Void Lord",desc:"Own a Void Foundry",check:()=>owned[25]>=1},
     {id:"a101",name:"Omega Master",desc:"Own an Omega Oven",check:()=>owned[26]>=1},
     {id:"a102",name:"Singularity Tamer",desc:"Own a Singularity Forge",check:()=>owned[27]>=1},
-    {id:"a103",name:"Collector Supreme",desc:"Collect 1000 achievements (meta)",check:()=>Object.keys(achievementsState).length>=1000}
+    {id:"a103",name:"Collector Supreme",desc:"Collect 100 achievements",check:()=>Object.keys(achievementsState).filter(k=>achievementsState[k]).length>=100}
   ];
-  extraAchievements.forEach(a=>{
-    if(!ACHIEVEMENTS.find(x=>x.id===a.id)) ACHIEVEMENTS.push(a);
-  });
+  extraAchievements.forEach(a=>{ if(!ACHIEVEMENTS.find(x=>x.id===a.id)) ACHIEVEMENTS.push(a); });
 })();
 
-/* ---------- Local Leaderboard (no network) ---------- */
+/* ---------- Local Leaderboard (client-only) ---------- */
 const LEADERBOARD_KEY = SAVE_KEY + "_leaderboard";
-
 function getLeaderboard(){
-  try{
-    const raw = localStorage.getItem(LEADERBOARD_KEY);
-    if(!raw) return [];
-    return JSON.parse(raw);
-  }catch(e){ return []; }
+  try{ const raw = localStorage.getItem(LEADERBOARD_KEY); return raw ? JSON.parse(raw) : []; }catch(e){ return []; }
 }
-
 function pushLeaderboardEntry(name,score){
-  const board = getLeaderboard();
-  board.push({name: String(name).slice(0,24), score: Math.floor(score), t: Date.now()});
-  board.sort((a,b)=>b.score-a.score);
-  while(board.length>20) board.pop();
-  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(board));
+  try{
+    const board = getLeaderboard();
+    board.push({name: String(name).slice(0,24), score: Math.floor(score), t: Date.now()});
+    board.sort((a,b)=>b.score-a.score);
+    while(board.length>20) board.pop();
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(board));
+  }catch(e){}
 }
-
 function renderLeaderboardPanel(){
-  // create a simple modal listing top scores
   const root = document.getElementById("eventPopupRoot");
-  root.innerHTML="";
+  if(!root) return;
+  root.innerHTML = "";
   const el = document.createElement("div");
-  el.className="event-popup";
+  el.className = "event-popup";
   el.innerHTML = `<div style="font-weight:800;margin-bottom:8px">Local Leaderboard</div>`;
   const board = getLeaderboard();
   if(board.length===0) el.innerHTML += `<div class="muted">No scores yet. Play Rush or submit a score.</div>`;
   else {
     const list = document.createElement("div");
-    list.style.maxHeight="320px";
-    list.style.overflow="auto";
+    list.style.maxHeight="320px"; list.style.overflow="auto";
     board.forEach((r,i)=>{
       const row = document.createElement("div");
-      row.className="leaderboard-row";
+      row.style.display="flex"; row.style.justifyContent="space-between"; row.style.padding="6px 8px";
       row.innerHTML = `<div>${i+1}. ${r.name}</div><div>${fmt(r.score)}</div>`;
       list.appendChild(row);
     });
@@ -1879,10 +1934,10 @@ function renderLeaderboardPanel(){
   }
   el.innerHTML += `<div style="height:8px"></div><div style="display:flex;gap:8px;justify-content:center"><button id="lbClose" class="small-btn">Close</button></div>`;
   root.appendChild(el);
-  document.getElementById("lbClose").addEventListener("click",()=>root.innerHTML="");
+  document.getElementById("lbClose").addEventListener("click", ()=> root.innerHTML = "");
 }
 
-/* ---------- Rush mode submit helper (exposed to Rush UI) ---------- */
+/* ---------- Rush score submit helper ---------- */
 function submitRushScore(name,score){
   if(!name) name = "Anon";
   pushLeaderboardEntry(name, score);
@@ -1891,22 +1946,18 @@ function submitRushScore(name,score){
 
 /* ---------- Accessibility & Keyboard Controls ---------- */
 (function setupAccessibility(){
-  // Allow spacebar and Enter to click cookie only when cookie is focused
   const cookieBtn = document.getElementById("cookieBtn");
-  cookieBtn.setAttribute("tabindex","0");
-  cookieBtn.setAttribute("role","button");
-  cookieBtn.setAttribute("aria-label","Cookie button. Click to earn cookies.");
-  cookieBtn.addEventListener("keydown", (e)=>{
-    if(e.code==="Space" || e.code==="Enter"){
-      e.preventDefault();
-      handleCookieClick({clientX: cookieBtn.getBoundingClientRect().left + cookieBtn.offsetWidth/2, clientY: cookieBtn.getBoundingClientRect().top + cookieBtn.offsetHeight/2});
-    }
-  });
+  if(cookieBtn){
+    cookieBtn.setAttribute("tabindex","0");
+    cookieBtn.setAttribute("role","button");
+    cookieBtn.setAttribute("aria-label","Cookie button. Click to earn cookies.");
+    cookieBtn.addEventListener("keydown", (e)=>{
+      if(e.code==="Space" || e.code==="Enter"){ e.preventDefault(); handleCookieClick({ clientX: cookieBtn.getBoundingClientRect().left + cookieBtn.offsetWidth/2, clientY: cookieBtn.getBoundingClientRect().top + cookieBtn.offsetHeight/2 }); }
+    });
+  }
 
-  // Global hotkeys (non-intrusive)
   window.addEventListener("keydown", (e)=>{
     if(e.ctrlKey && e.key.toLowerCase()==="b"){
-      // open buildings tab
       document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
       document.querySelector('.tab[data-tab="buildings"]').classList.add("active");
       document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
@@ -1914,7 +1965,6 @@ function submitRushScore(name,score){
       e.preventDefault();
     }
     if(e.ctrlKey && e.key.toLowerCase()==="u"){
-      // open upgrades
       document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
       document.querySelector('.tab[data-tab="upgrades"]').classList.add("active");
       document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
@@ -1924,9 +1974,8 @@ function submitRushScore(name,score){
   });
 })();
 
-/* ---------- UI Polish: Tooltips, Tiny Animations, Performance Mode ---------- */
+/* ---------- UI Polish: Tooltips, Performance Mode ---------- */
 (function uiPolish(){
-  // Simple tooltip helper
   document.body.addEventListener("mouseover", (e)=>{
     const t = e.target;
     if(t && t.dataset && t.dataset.tooltip){
@@ -1952,25 +2001,19 @@ function submitRushScore(name,score){
   });
   document.body.addEventListener("mousemove", (e)=>{
     const tip = document.getElementById("ccTooltip");
-    if(tip && tip.style.display==="block"){
-      tip.style.left = (e.clientX + 12) + "px";
-      tip.style.top = (e.clientY + 12) + "px";
-    }
+    if(tip && tip.style.display==="block"){ tip.style.left = (e.clientX + 12) + "px"; tip.style.top = (e.clientY + 12) + "px"; }
   });
   document.body.addEventListener("mouseout", (e)=>{
     const tip = document.getElementById("ccTooltip");
     if(tip) tip.style.display = "none";
   });
 
-  // Performance mode toggle (reduces animation and interval frequency)
   let perfMode = false;
   function setPerformanceMode(on){
     perfMode = !!on;
     if(perfMode){
-      // reduce main loop frequency to 500ms
       if(window._cc_mainLoopInterval) clearInterval(window._cc_mainLoopInterval);
       window._cc_mainLoopInterval = setInterval(mainLoop, 500);
-      // reduce golden spawn frequency
       if(goldenTimerId) clearTimeout(goldenTimerId);
       goldenTimerId = setTimeout(spawnGoldenVariant, 180000);
       toast("Performance mode ON");
@@ -1983,7 +2026,6 @@ function submitRushScore(name,score){
     save();
   }
 
-  // Add performance toggle to settings
   const settingsPanel = document.getElementById("panel-settings");
   if(settingsPanel){
     const perfRow = document.createElement("div");
@@ -1994,24 +2036,16 @@ function submitRushScore(name,score){
   }
 })();
 
-/* ---------- Final save hooks and graceful shutdown ---------- */
+/* ---------- Final hooks and help button ---------- */
 (function finalHooks(){
-  // Save last time for offline progress
   window.addEventListener("beforeunload", ()=>{
-    try{
-      localStorage.setItem(SAVE_KEY+"_lastTime", String(Date.now()));
-      save();
-    }catch(e){}
+    try{ localStorage.setItem(SAVE_KEY + "_lastTime", String(Date.now())); save(); }catch(e){}
   });
 
-  // Expose some debug helpers on window for advanced players (non-intrusive)
   window.CC = window.CC || {};
-  window.CC.getState = ()=>({
-    cookies, clickPower, owned, totalCookiesEarned, prestigeStars, activeBoss, craftingQueue, market
-  });
+  window.CC.getState = ()=>({ cookies, clickPower, owned, totalCookiesEarned, prestigeStars, activeBoss, craftingQueue, market });
   window.CC.resetLeaderboard = ()=>{ localStorage.removeItem(LEADERBOARD_KEY); toast("Leaderboard cleared."); };
 
-  // Add a small help overlay button
   const helpBtn = document.createElement("button");
   helpBtn.className = "small-btn";
   helpBtn.style.position = "fixed";
@@ -2021,42 +2055,34 @@ function submitRushScore(name,score){
   helpBtn.textContent = "Help";
   helpBtn.addEventListener("click", ()=>{
     const root = document.getElementById("eventPopupRoot");
+    if(!root) return;
     root.innerHTML = `<div class="event-popup" style="max-width:420px">
       <div style="font-weight:800;margin-bottom:8px">Cookie Clicker+ Help</div>
       <div style="text-align:left;font-size:13px;color:#c3b7e0">
         <div><strong>Click</strong> the cookie to earn cookies. Use buildings to generate CPS.</div>
         <div style="height:6px"></div>
-        <div><strong>Rush</strong> mode and mini-games reward extra cookies and leaderboard scores.</div>
+        <div><strong>Mini-games</strong> and bosses reward extra cookies and leaderboard scores.</div>
         <div style="height:6px"></div>
         <div><strong>Prestige</strong> grants stars to unlock powerful upgrades and prestige trees.</div>
         <div style="height:6px"></div>
-        <div>Use <strong>Ctrl+B</strong> to open Buildings, <strong>Ctrl+U</strong> for Upgrades. Focus cookie and press Space to click via keyboard.</div>
+        <div>Hotkeys: <strong>Ctrl+B</strong> = Buildings, <strong>Ctrl+U</strong> = Upgrades. Focus cookie and press Space to click via keyboard.</div>
       </div>
       <div style="height:8px"></div>
       <div style="display:flex;justify-content:center"><button id="helpClose" class="small-btn">Close</button></div>
     </div>`;
-    document.getElementById("helpClose").addEventListener("click", ()=> document.getElementById("eventPopupRoot").innerHTML="");
+    document.getElementById("helpClose").addEventListener("click", ()=> document.getElementById("eventPopupRoot").innerHTML = "");
   });
   document.body.appendChild(helpBtn);
 })();
 
-/* ---------- Final render refresh to include new UI pieces ---------- */
+/* ---------- Final refresh to pick up new content ---------- */
 (function refreshAfterPart7(){
-  // ensure arrays lengths
-  if(!Array.isArray(owned) || owned.length<BUILDINGS.length) owned = new Array(BUILDINGS.length).fill(0);
-  if(!Array.isArray(buildingMult) || buildingMult.length<BUILDINGS.length) buildingMult = new Array(BUILDINGS.length).fill(1);
-
-  // re-render panels to pick up new content
-  renderAll();
-
-  // ensure injected UIs exist
-  if(typeof injectExtraUI === "function") injectExtraUI();
-  if(typeof injectPart6UI === "function") injectPart6UI();
-
-  // schedule golden and boss spawns if missing
-  if(!goldenTimerId) scheduleGoldenCookieVariant();
-  if(!bossSpawnTimer) scheduleBossSpawns();
-
-  // small final toast
-  toast("Massive expansion loaded — enjoy the game!");
+  if(!Array.isArray(owned) || owned.length < BUILDINGS.length) owned = new Array(BUILDINGS.length).fill(0);
+  if(!Array.isArray(buildingMult) || buildingMult.length < BUILDINGS.length) buildingMult = new Array(BUILDINGS.length).fill(1);
+  try{ renderAll(); }catch(e){}
+  try{ if(typeof injectExtraUI === "function") injectExtraUI(); }catch(e){}
+  try{ if(typeof injectPart6UI === "function") injectPart6UI(); }catch(e){}
+  try{ scheduleGoldenCookieVariant(); }catch(e){}
+  try{ scheduleBossSpawns(); }catch(e){}
+  toast("Final expansion loaded — enjoy the massive game!");
 })();
