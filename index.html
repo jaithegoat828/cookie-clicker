@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Cookie Clicker+ by Jai (Hard Mode)</title>
+<title>Cookie Clicker+ by Jai — Big Content Edition</title>
 <link rel="icon" href="data:,">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
-  background:linear-gradient(180deg,#0b0b12 0%,#151521 40%,#1f1820 100%);
+  background:radial-gradient(circle at top,#1b1028 0%,#09040f 55%,#050308 100%);
   display:flex;align-items:center;justify-content:center;height:100%;color:#eee;
 }
-.game{width:min(1300px,98vw);height:min(960px,96vh);background:#15141b;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,0.6);display:flex;flex-direction:column;overflow:hidden;border:1px solid #2b2233}
-.header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #2b2233;background:linear-gradient(90deg,#1f1b26,#221b2a)}
+.game{width:min(1300px,98vw);height:min(960px,96vh);background:#15141b;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,0.7);display:flex;flex-direction:column;overflow:hidden;border:1px solid #2b2233}
+.header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #2b2233;background:linear-gradient(90deg,#24172f,#2b1836)}
 .title{font-weight:800;color:#f7c96a;font-size:20px}
-.subtitle{font-size:12px;color:#b9a6d8}
+.subtitle{font-size:12px;color:#c3b7e0}
 .controls{display:flex;gap:8px;align-items:center}
 .ctrl-btn{background:#2b2233;border:none;padding:6px 10px;border-radius:999px;color:#f7c96a;cursor:pointer;font-size:13px}
 .ctrl-btn:hover{background:#3a2b4a}
@@ -31,6 +31,8 @@ body{
 .cookie-crack.show{opacity:1}
 .left-footer{display:flex;gap:8px;margin-top:8px;align-items:center;justify-content:space-between;width:100%;max-width:520px}
 .mini-label{font-size:11px;color:#9b8cc0}
+.combo-bar{width:100%;max-width:520px;height:8px;border-radius:999px;background:#1f1b26;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.6)}
+.combo-fill{height:100%;background:linear-gradient(90deg,#f7c96a,#ff6b6b);width:0%;transition:width .1s}
 .right{flex:1;display:flex;flex-direction:column;background:#181320;min-width:420px;min-height:0}
 .tabs{display:flex;border-bottom:1px solid #2b2233;background:#1f1b26}
 .tab{flex:1;padding:10px 6px;text-align:center;cursor:pointer;font-weight:700;color:#b9a6d8;font-size:13px}
@@ -55,21 +57,16 @@ body{
 .small-btn{padding:6px 8px;border-radius:8px;border:none;background:#2b2233;color:#f7c96a;cursor:pointer;font-size:12px}
 .small-btn:hover{background:#3a2b4a}
 .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#2b2233;color:#f7c96a;font-weight:800}
-.leaderboard-row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:6px;background:#1f1b26;margin-bottom:6px;font-size:13px}
-.event-popup{position:fixed;left:50%;top:12%;transform:translateX(-50%);background:#1f1b26;padding:12px 14px;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,0.8);z-index:999;font-size:13px;max-width:320px;text-align:center;border:1px solid #3a2b4a}
+.ach-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:8px;background:#1f1b26;margin-bottom:6px;font-size:12px}
+.ach-row.locked{opacity:.4}
+.ach-name{font-weight:700;color:#f7c96a}
+.ach-desc{color:#c3b7e0;font-size:11px}
 .toast{position:fixed;right:18px;bottom:18px;background:#1f1b26;padding:10px 14px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.8);z-index:999;opacity:0;transform:translateY(10px);transition:all .25s;font-size:13px;border:1px solid #3a2b4a}
 .toast.show{opacity:1;transform:translateY(0)}
 .settings-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:13px}
 .danger{background:#3a1b26;border:1px solid #ff6b6b}
 .skin-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;border:1px solid #3a2b4a;font-size:11px;cursor:pointer;margin-right:6px;margin-bottom:4px}
 .skin-pill.active{background:#3a2b4a;border-color:#f7c96a}
-.ach-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:8px;background:#1f1b26;margin-bottom:6px;font-size:12px}
-.ach-row.locked{opacity:.4}
-.ach-name{font-weight:700;color:#f7c96a}
-.ach-desc{color:#c3b7e0;font-size:11px}
-.tag{display:inline-block;padding:2px 6px;border-radius:999px;font-size:10px;background:#2b2233;color:#c3b7e0;margin-left:4px}
-.combo-bar{width:100%;max-width:520px;height:8px;border-radius:999px;background:#1f1b26;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.6)}
-.combo-fill{height:100%;background:linear-gradient(90deg,#f7c96a,#ff6b6b);width:0%;transition:width .1s}
 @media (max-width:980px){.main{flex-direction:column}.left{border-right:none;border-bottom:1px solid #2b2233;flex:0 0 auto}.right{min-width:0}}
 </style>
 </head>
@@ -78,7 +75,7 @@ body{
   <div class="header">
     <div>
       <div class="title">Cookie Clicker+ by Jai</div>
-      <div class="subtitle" id="subtitle">Hard mode • Anti‑macro • Autosave every 10s</div>
+      <div class="subtitle" id="subtitle">Big content • Anti‑macro • Autosave every 10s</div>
     </div>
     <div class="controls">
       <button class="ctrl-btn" id="exportBtn">Export</button>
@@ -135,7 +132,6 @@ body{
         <div class="tab" data-tab="upgrades">Upgrades</div>
         <div class="tab" data-tab="boosts">Boosts</div>
         <div class="tab" data-tab="quests">Quests</div>
-        <div class="tab" data-tab="rush">Rush</div>
         <div class="tab" data-tab="achievements">Achievements</div>
         <div class="tab" data-tab="settings">Settings</div>
       </div>
@@ -160,16 +156,6 @@ body{
         <div id="questsList"></div>
         <div style="height:10px"></div>
         <div class="muted">Quests reset daily (per browser).</div>
-      </div>
-
-      <div class="panel" id="panel-rush" style="display:none">
-        <div class="section-title">Rush Mode</div>
-        <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
-          <div class="muted">Click as fast as you can for 10 seconds. Reward scales with click power and stars.</div>
-          <div id="rushTimer" style="font-weight:800;color:#f7c96a;font-size:20px">Ready</div>
-          <button class="small-btn" id="startRushBtn">Start Rush (10s)</button>
-          <div id="rushScore" class="muted">Rush score: 0</div>
-        </div>
       </div>
 
       <div class="panel" id="panel-achievements" style="display:none">
@@ -200,11 +186,10 @@ body{
   </div>
 </div>
 
-<div id="eventPopupRoot"></div>
 <div id="toastRoot"></div>
 
 <script>
-const GAME_VERSION = "cc-plus-jai-hard-v1";
+const GAME_VERSION = "cc-plus-jai-big-content-v1";
 const REPO = (window.location.pathname.split("/")[1] || "default").toLowerCase();
 const SAVE_KEY = REPO + "_cookie_clicker_plus_save";
 const BACKUP_HISTORY_KEY = SAVE_KEY + "_backups";
@@ -225,20 +210,15 @@ let autoClipboardEnabled = false;
 let crackEnabled = true;
 let currentSkin = "dark";
 
-let rushActive = false;
-let rushScore = 0;
-let rushTimerId = null;
-let rushTimeLeft = 0;
 let goldenMultiplier = 1;
 let activeBoosts = [];
-let lastClickAt = 0;
 let lastSavedAt = Date.now();
 
 let comboValue = 0;
 let comboDecayTimer = null;
 
-const CLICK_RATE_LIMIT_MS = 70;        // anti‑macro
-const MAX_CLICKS_PER_SECOND = 12;      // hard cap
+const CLICK_RATE_LIMIT_MS = 70;
+const MAX_CLICKS_PER_SECOND = 12;
 let clickWindow = {count:0,ts:Date.now()};
 
 const AUTOSAVE_INTERVAL_MS = 10000;
@@ -247,7 +227,7 @@ const MAX_OFFLINE_HOURS = 8;
 /* ---------- Skins ---------- */
 
 const SKINS = [
-  {id:"dark",name:"Dark",bg:"linear-gradient(180deg,#0b0b12 0%,#151521 40%,#1f1820 100%)"},
+  {id:"dark",name:"Dark",bg:"radial-gradient(circle at top,#1b1028 0%,#09040f 55%,#050308 100%)"},
   {id:"nebula",name:"Nebula",bg:"radial-gradient(circle at top,#2b003b 0%,#0b0010 55%,#000000 100%)"},
   {id:"mint",name:"Mint",bg:"linear-gradient(180deg,#071b16 0%,#0f2b24 40%,#071b16 100%)"}
 ];
@@ -261,26 +241,33 @@ function applySkin(id){
   });
 }
 
-/* ---------- Buildings / Boosts / Upgrades / Achievements (continued in Part 2) ---------- */
-/* ---------- Buildings ---------- */
+/* ---------- Big content definitions (buildings, boosts, upgrades, achievements, quests) continue in PART 2 ---------- */
+/* ---------- Buildings (lots) ---------- */
 
 const BUILDINGS = [
-  { id:0, name:"Cursor", icon:"👆", baseCost:50, baseCps:0.1 },
-  { id:1, name:"Grandma", icon:"👵", baseCost:400, baseCps:1 },
-  { id:2, name:"Farm", icon:"🌾", baseCost:3000, baseCps:8 },
-  { id:3, name:"Mine", icon:"⛏️", baseCost:40000, baseCps:45 },
-  { id:4, name:"Factory", icon:"🏭", baseCost:500000, baseCps:260 },
-  { id:5, name:"Bank", icon:"🏦", baseCost:7000000, baseCps:1400 },
-  { id:6, name:"Temple", icon:"⛪", baseCost:90000000, baseCps:7800 },
-  { id:7, name:"Wizard Tower", icon:"🧙", baseCost:1200000000, baseCps:44000 },
-  { id:8, name:"Portal", icon:"🌀", baseCost:15000000000, baseCps:260000 },
-  { id:9, name:"Time Bakery", icon:"⏳", baseCost:300000000000, baseCps:1500000 },
-  { id:10, name:"Galaxy Oven", icon:"🌌", baseCost:9000000000000, baseCps:9000000 },
-  { id:11, name:"Quantum Chef", icon:"🧪", baseCost:60000000000000, baseCps:60000000 },
-  { id:12, name:"Black Hole Kitchen", icon:"🕳️", baseCost:300000000000000, baseCps:300000000 }
+  {id:0, name:"Cursor", icon:"👆", baseCost:50, baseCps:0.1},
+  {id:1, name:"Grandma", icon:"👵", baseCost:400, baseCps:1},
+  {id:2, name:"Farm", icon:"🌾", baseCost:3000, baseCps:8},
+  {id:3, name:"Mine", icon:"⛏️", baseCost:40000, baseCps:45},
+  {id:4, name:"Factory", icon:"🏭", baseCost:500000, baseCps:260},
+  {id:5, name:"Bank", icon:"🏦", baseCost:7000000, baseCps:1400},
+  {id:6, name:"Temple", icon:"⛪", baseCost:90000000, baseCps:7800},
+  {id:7, name:"Wizard Tower", icon:"🧙", baseCost:1200000000, baseCps:44000},
+  {id:8, name:"Portal", icon:"🌀", baseCost:15000000000, baseCps:260000},
+  {id:9, name:"Time Bakery", icon:"⏳", baseCost:300000000000, baseCps:1500000},
+  {id:10, name:"Galaxy Oven", icon:"🌌", baseCost:9000000000000, baseCps:9000000},
+  {id:11, name:"Quantum Chef", icon:"🧪", baseCost:60000000000000, baseCps:60000000},
+  {id:12, name:"Black Hole Kitchen", icon:"🕳️", baseCost:300000000000000, baseCps:300000000},
+  {id:13, name:"Stellar Mixer", icon:"⭐", baseCost:1e16, baseCps:1.5e9},
+  {id:14, name:"Nebula Mill", icon:"🌠", baseCost:5e16, baseCps:7e9},
+  {id:15, name:"Dark Matter Oven", icon:"⚫", baseCost:2e17, baseCps:3.5e10},
+  {id:16, name:"Singularity Kitchen", icon:"♾️", baseCost:1e18, baseCps:2e11},
+  {id:17, name:"Multiverse Bakery", icon:"🌐", baseCost:5e18, baseCps:1e12},
+  {id:18, name:"Reality Bender", icon:"🌀", baseCost:2e19, baseCps:5e12},
+  {id:19, name:"Chrono Oven", icon:"⌛", baseCost:1e20, baseCps:2.5e13}
 ];
 
-/* ---------- Boosts (Rebalanced) ---------- */
+/* ---------- Boosts ---------- */
 
 const BOOSTS = [
   { id:"cpsSmall", name:"+20% CPS (12s)", type:"cpsMult", mult:1.2, duration:12000, cost:5000 },
@@ -292,42 +279,54 @@ const BOOSTS = [
   { id:"hyperClick", name:"Hyper Click x5 (6s)", type:"clickMult", mult:5, duration:6000, cost:50000 }
 ];
 
-/* ---------- Upgrades ---------- */
+/* ---------- Upgrades (lots) ---------- */
 
 let UPGRADES = [];
 function generateUpgrades(){
   UPGRADES = [];
   let id = 0;
 
-  // Click upgrades (harder)
-  for(let i=1;i<=25;i++){
+  // Click upgrades
+  for(let i=1;i<=40;i++){
     UPGRADES.push({
       id:id++,
       type:"click",
       name:`Click Boost ${i}`,
       desc:`Increase click power`,
-      cost:Math.floor(200*Math.pow(1.9,i)),
+      cost:Math.floor(150*Math.pow(1.85,i)),
       value:1+Math.floor(i/2)
     });
   }
 
-  // Building upgrades
+  // Building upgrades (3 per building, then more)
   BUILDINGS.forEach((b,bi)=>{
-    for(let t=1;t<=12;t++){
+    for(let t=1;t<=8;t++){
       UPGRADES.push({
         id:id++,
         type:"building",
         buildingIndex:bi,
         name:`${b.name} Upgrade ${t}`,
-        desc:`${b.name} CPS x${(1+0.25*t).toFixed(2)}`,
-        cost:Math.floor(b.baseCost*Math.pow(2.3,t)),
-        mult:1+0.25*t
+        desc:`${b.name} CPS x${(1+0.3*t).toFixed(2)}`,
+        cost:Math.floor(b.baseCost*Math.pow(2.2,t)),
+        mult:1+0.3*t
       });
     }
   });
 
-  // Prestige upgrades
-  for(let p=1;p<=10;p++){
+  // Global CPS upgrades
+  for(let g=1;g<=20;g++){
+    UPGRADES.push({
+      id:id++,
+      type:"global",
+      name:`Global Efficiency ${g}`,
+      desc:`All CPS +${g*3}%`,
+      cost:Math.floor(1e6*Math.pow(2.4,g)),
+      cpsMult:1+(g*0.03)
+    });
+  }
+
+  // Prestige upgrades (stars)
+  for(let p=1;p<=15;p++){
     UPGRADES.push({
       id:id++,
       type:"prestige",
@@ -341,7 +340,7 @@ function generateUpgrades(){
 }
 generateUpgrades();
 
-/* ---------- Achievements ---------- */
+/* ---------- Achievements (many) ---------- */
 
 const ACHIEVEMENTS = [
   {id:"a1",name:"First Click",desc:"Click once",check:()=>totalCookiesEarned>=1},
@@ -349,11 +348,17 @@ const ACHIEVEMENTS = [
   {id:"a3",name:"Thousandaire",desc:"Earn 1,000 cookies",check:()=>totalCookiesEarned>=1000},
   {id:"a4",name:"Millionaire",desc:"Earn 1,000,000 cookies",check:()=>totalCookiesEarned>=1e6},
   {id:"a5",name:"Billionaire",desc:"Earn 1,000,000,000 cookies",check:()=>totalCookiesEarned>=1e9},
-  {id:"a6",name:"Click Machine",desc:"Reach click power 50",check:()=>clickPower>=50},
-  {id:"a7",name:"Builder",desc:"Own 100 buildings total",check:()=>owned.reduce((a,b)=>a+b,0)>=100},
-  {id:"a8",name:"Galaxy Chef",desc:"Own a Galaxy Oven",check:()=>owned[10]>=1},
-  {id:"a9",name:"Quantum Master",desc:"Own a Quantum Chef",check:()=>owned[11]>=1},
-  {id:"a10",name:"Black Hole Baker",desc:"Own a Black Hole Kitchen",check:()=>owned[12]>=1}
+  {id:"a6",name:"Trillionaire",desc:"Earn 1,000,000,000,000 cookies",check:()=>totalCookiesEarned>=1e12},
+  {id:"a7",name:"Click Machine",desc:"Reach click power 50",check:()=>clickPower>=50},
+  {id:"a8",name:"Click Monster",desc:"Reach click power 200",check:()=>clickPower>=200},
+  {id:"a9",name:"Builder",desc:"Own 100 buildings total",check:()=>owned.reduce((a,b)=>a+b,0)>=100},
+  {id:"a10",name:"Mega Builder",desc:"Own 500 buildings total",check:()=>owned.reduce((a,b)=>a+b,0)>=500},
+  {id:"a11",name:"Galaxy Chef",desc:"Own a Galaxy Oven",check:()=>owned[10]>=1},
+  {id:"a12",name:"Quantum Master",desc:"Own a Quantum Chef",check:()=>owned[11]>=1},
+  {id:"a13",name:"Black Hole Baker",desc:"Own a Black Hole Kitchen",check:()=>owned[12]>=1},
+  {id:"a14",name:"Beyond Reality",desc:"Own a Multiverse Bakery",check:()=>owned[17]>=1},
+  {id:"a15",name:"Star Collector",desc:"Earn 5 prestige stars",check:()=>prestigeStars>=5},
+  {id:"a16",name:"Galaxy Lord",desc:"Earn 20 prestige stars",check:()=>prestigeStars>=20}
 ];
 
 function checkAchievements(){
@@ -365,9 +370,58 @@ function checkAchievements(){
   });
 }
 
+/* ---------- Quests ---------- */
+
+function generateDailyQuests(){
+  const today=new Date().toISOString().slice(0,10);
+  const key=SAVE_KEY+"_quests_date";
+  const storedDate=localStorage.getItem(key);
+  if(storedDate===today){
+    const raw=localStorage.getItem(SAVE_KEY+"_quests");
+    if(raw){quests=JSON.parse(raw);return;}
+  }
+  quests=[
+    {id:"q1",title:"Click Starter",desc:"Click 200 times",progress:0,target:200,reward:{cookies:2000}},
+    {id:"q2",title:"Builder I",desc:"Buy 10 buildings",progress:0,target:10,reward:{cookies:8000}},
+    {id:"q3",title:"Builder II",desc:"Buy 50 buildings",progress:0,target:50,reward:{cookies:50000}},
+    {id:"q4",title:"Million Maker",desc:"Earn 1M cookies",progress:0,target:1000000,reward:{cookies:50000}},
+    {id:"q5",title:"Star Seeker",desc:"Prestige once",progress:0,target:1,reward:{stars:1}}
+  ];
+  localStorage.setItem(key,today);
+  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+}
+
+function updateQuestProgress(type,amount=1){
+  let changed=false;
+  quests.forEach(q=>{
+    if(q.id==="q1" && type==="click"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
+    if(q.id==="q2" && type==="buy"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
+    if(q.id==="q3" && type==="buy"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
+    if(q.id==="q4" && type==="earn"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
+    if(q.id==="q5" && type==="prestige"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
+  });
+  if(changed){
+    localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+    renderQuests();
+  }
+}
+
+function claimQuest(id){
+  const q=quests.find(x=>x.id===id);
+  if(!q||q.claimed||q.progress<q.target)return;
+  if(q.reward.cookies){cookies+=q.reward.cookies;totalCookiesEarned+=q.reward.cookies;}
+  if(q.reward.stars){prestigeStars+=q.reward.stars;}
+  q.claimed=true;
+  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+  toast("Quest reward claimed!");
+  save();
+  renderAll();
+}
+
 /* ---------- Utility ---------- */
 
 function fmt(n){
+  if(n>=1e18) return (n/1e18).toFixed(2)+"E";
   if(n>=1e15) return (n/1e15).toFixed(2)+"Q";
   if(n>=1e12) return (n/1e12).toFixed(2)+"T";
   if(n>=1e9) return (n/1e9).toFixed(2)+"B";
@@ -422,7 +476,7 @@ function playSound(id){
 function buildingCost(i){
   const b=BUILDINGS[i];
   const n=owned[i]||0;
-  const growth=1.18+0.03*i; // harder
+  const growth=1.16+0.02*i;
   return Math.round(b.baseCost*Math.pow(growth,n));
 }
 
@@ -437,11 +491,11 @@ function totalBaseCps(){
 function totalCps(){
   let base=totalBaseCps();
   activeBoosts.forEach(b=>{if(b.type==="cpsMult") base*=b.mult;});
-  base*=goldenMultiplier;
   prestigeUpgrades.forEach(p=>{
     const u=UPGRADES.find(x=>x.id===p);
     if(u&&u.prestige) base*=u.cpsMult;
   });
+  base*=goldenMultiplier;
   return base;
 }
 
@@ -483,9 +537,9 @@ function renderBuildings(){
 function renderUpgrades(){
   const root=document.getElementById("upgradesList");
   root.innerHTML="";
-  const visible=UPGRADES.filter(u=>!boughtUpgrades.includes(u.id)).sort((a,b)=>a.cost-b.cost).slice(0,100);
+  const visible=UPGRADES.filter(u=>!boughtUpgrades.includes(u.id)).sort((a,b)=>a.cost-b.cost).slice(0,120);
   visible.forEach(u=>{
-    const can=cookies>=u.cost;
+    const can=cookies>=u.cost && (!u.prestige || prestigeStars>=u.cost);
     const card=document.createElement("div");
     card.className="card"+(can?"":" locked");
     card.addEventListener("click",()=>buyUpgrade(u));
@@ -498,7 +552,7 @@ function renderUpgrades(){
         </div>
       </div>
       <div class="card-right">
-        <div class="price">${fmt(u.cost)}</div>
+        <div class="price">${u.prestige?u.cost+"★":fmt(u.cost)}</div>
       </div>
     `;
     root.appendChild(card);
@@ -598,76 +652,383 @@ function renderAll(){
   renderSettings();
 }
 
-/* ---------- Quests ---------- */
+/* ---------- Combo bar ---------- */
 
-function generateDailyQuests(){
-  const today=new Date().toISOString().slice(0,10);
-  const key=SAVE_KEY+"_quests_date";
-  const storedDate=localStorage.getItem(key);
-  if(storedDate===today){
-    const raw=localStorage.getItem(SAVE_KEY+"_quests");
-    if(raw){quests=JSON.parse(raw);return;}
-  }
-  quests=[
-    {id:"q1",title:"Click Starter",desc:"Click 200 times",progress:0,target:200,reward:{cookies:2000}},
-    {id:"q2",title:"Builder I",desc:"Buy 10 buildings",progress:0,target:10,reward:{cookies:8000}},
-    {id:"q3",title:"Rush Rookie",desc:"Finish 1 rush",progress:0,target:1,reward:{stars:1}},
-    {id:"q4",title:"Million Maker",desc:"Earn 1M cookies",progress:0,target:1000000,reward:{cookies:50000}}
-  ];
-  localStorage.setItem(key,today);
-  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
+function addCombo(){
+  comboValue=Math.min(100,comboValue+8);
+  document.getElementById("comboFill").style.width=comboValue+"%";
+  if(comboDecayTimer) clearInterval(comboDecayTimer);
+  comboDecayTimer=setInterval(()=>{
+    comboValue=Math.max(0,comboValue-2);
+    document.getElementById("comboFill").style.width=comboValue+"%";
+    if(comboValue<=0){clearInterval(comboDecayTimer);comboDecayTimer=null;}
+  },120);
 }
 
-function updateQuestProgress(type,amount=1){
-  let changed=false;
-  quests.forEach(q=>{
-    if(q.id==="q1" && type==="click"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
-    if(q.id==="q2" && type==="buy"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
-    if(q.id==="q3" && type==="rush"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
-    if(q.id==="q4" && type==="earn"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
-  });
-  if(changed){
-    localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
-    renderQuests();
+/* ---------- Click handling (anti‑macro) ---------- */
+
+function canRegisterClick(){
+  const now=Date.now();
+  if(now-lastClickAt<CLICK_RATE_LIMIT_MS) return false;
+  if(now-clickWindow.ts>1000){
+    clickWindow.ts=now;
+    clickWindow.count=0;
   }
+  if(clickWindow.count>=MAX_CLICKS_PER_SECOND) return false;
+  clickWindow.count++;
+  lastClickAt=now;
+  return true;
 }
 
-function claimQuest(id){
-  const q=quests.find(x=>x.id===id);
-  if(!q||q.claimed||q.progress<q.target)return;
-  if(q.reward.cookies){cookies+=q.reward.cookies;totalCookiesEarned+=q.reward.cookies;}
-  if(q.reward.stars){prestigeStars+=q.reward.stars;}
-  q.claimed=true;
-  localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
-  toast("Quest reward claimed!");
+function handleCookieClick(ev){
+  if(!canRegisterClick()) return;
+  const multClick = 1 + (comboValue/100)*0.5;
+  let power = clickPower * multClick;
+  activeBoosts.forEach(b=>{if(b.type==="clickMult") power*=b.mult;});
+  cookies+=power;
+  totalCookiesEarned+=power;
+  updateQuestProgress("click",1);
+  updateQuestProgress("earn",power);
+  addCombo();
+  renderStats();
+  const rect=ev.currentTarget.getBoundingClientRect();
+  const x=ev.clientX|| (rect.left+rect.width/2);
+  const y=ev.clientY|| (rect.top+rect.height/2);
+  spawnFloat("+"+fmt(power),x,y);
+  if(crackEnabled){
+    const crack=document.getElementById("cookieCrack");
+    crack.classList.add("show");
+    setTimeout(()=>crack.classList.remove("show"),120);
+  }
+  playSound("click");
+  checkAchievements();
+}
+
+/* ---------- Buying ---------- */
+
+function buyBuilding(i){
+  const cost=buildingCost(i);
+  if(cookies<cost)return;
+  cookies-=cost;
+  owned[i]=(owned[i]||0)+1;
+  updateQuestProgress("buy",1);
+  renderBuildings();
+  renderStats();
+  checkAchievements();
+  save();
+}
+
+function buyUpgrade(u){
+  if(boughtUpgrades.includes(u.id))return;
+  if(u.prestige){
+    if(prestigeStars<u.cost)return;
+    prestigeStars-=u.cost;
+    prestigeUpgrades.push(u.id);
+  }else{
+    if(cookies<u.cost)return;
+    cookies-=u.cost;
+  }
+  boughtUpgrades.push(u.id);
+  if(u.type==="click") clickPower+=u.value;
+  if(u.type==="building") buildingMult[u.buildingIndex]=(buildingMult[u.buildingIndex]||1)*u.mult;
+  if(u.type==="global"){
+    buildingMult=buildingMult.map(x=>x||1);
+    for(let i=0;i<BUILDINGS.length;i++){
+      buildingMult[i]*=u.cpsMult;
+    }
+  }
+  renderUpgrades();
+  renderStats();
+  checkAchievements();
+  save();
+}
+
+function buyBoost(b){
+  if(cookies<b.cost)return;
+  cookies-=b.cost;
+  if(b.type==="cpsMult" || b.type==="clickMult"){
+    const inst={...b,expires:Date.now()+b.duration};
+    activeBoosts.push(inst);
+    setTimeout(()=>{
+      activeBoosts=activeBoosts.filter(x=>x!==inst);
+      renderStats();
+    },b.duration+50);
+  }else if(b.type==="instant"){
+    const gain=totalCps()*b.seconds;
+    cookies+=gain;
+    totalCookiesEarned+=gain;
+    updateQuestProgress("earn",gain);
+  }else if(b.type==="auto"){
+    const end=Date.now()+b.duration;
+    const autoId=setInterval(()=>{
+      if(Date.now()>end){clearInterval(autoId);return;}
+      handleCookieClick({currentTarget:document.getElementById("cookieBtn"),clientX:window.innerWidth/2,clientY:window.innerHeight/2});
+    },120);
+  }
+  renderStats();
+  save();
+}
+
+/* ---------- Prestige ---------- */
+
+function canPrestige(){
+  return totalCookiesEarned>=1e9;
+}
+
+function doPrestige(){
+  if(!canPrestige()){toast("Need 1B total cookies to prestige.");return;}
+  const gained=Math.floor(Math.sqrt(totalCookiesEarned/1e9));
+  if(gained<=0){toast("Not enough progress for stars yet.");return;}
+  prestigeStars+=gained;
+  cookies=0;
+  clickPower=1;
+  owned=Array(BUILDINGS.length).fill(0);
+  buildingMult=Array(BUILDINGS.length).fill(1);
+  boughtUpgrades=[];
+  totalCookiesEarned=0;
+  toast("Prestiged! Gained "+gained+" stars.");
+  updateQuestProgress("prestige",1);
   save();
   renderAll();
 }
 
-/* ---------- Rush ---------- */
+/* ---------- Autosave / storage ---------- */
 
-function startRush(){
-  if(rushActive)return;
-  rushActive=true;
-  rushScore=0;
-  rushTimeLeft=10;
-  document.getElementById("rushTimer").textContent="10.0s";
-  playSound("event");
-  rushTimerId=setInterval(()=>{
-    rushTimeLeft-=0.1;
-    if(rushTimeLeft<=0) endRush();
-    else document.getElementById("rushTimer").textContent=rushTimeLeft.toFixed(1)+"s";
-  },100);
-  toast("Rush started!");
+function getBackups(){
+  try{
+    const raw=localStorage.getItem(BACKUP_HISTORY_KEY);
+    if(!raw)return[];
+    return JSON.parse(raw);
+  }catch(e){return[];}
 }
 
-function endRush(){
-  if(!rushActive)return;
-  rushActive=false;
-  clearInterval(rushTimerId);
-  rushTimerId=null;
-  document.getElementById("rushTimer").textContent="Ready";
-  const reward=Math.floor(rushScore*clickPower*(1+prestigeStars*0.1));
-  cookies+=reward;
-  totalCookiesEarned+=reward;
-  document.getElementById("rushScore").textContent="Rush score: "+rushScore+" →
+function pushBackup(payload){
+  const backups=getBackups();
+  backups.unshift({t:Date.now(),data:payload});
+  while(backups.length>10)backups.pop();
+  localStorage.setItem(BACKUP_HISTORY_KEY,JSON.stringify(backups));
+}
+
+function save(){
+  const data={
+    v:GAME_VERSION,
+    cookies,
+    clickPower,
+    owned,
+    buildingMult,
+    boughtUpgrades,
+    totalCookiesEarned,
+    prestigeStars,
+    prestigeUpgrades,
+    achievementsState,
+    soundEnabled,
+    autoBuyerEnabled,
+    autoClipboardEnabled,
+    crackEnabled,
+    currentSkin,
+    goldenMultiplier
+  };
+  const payload=btoa(JSON.stringify(data));
+  localStorage.setItem(SAVE_KEY,payload);
+  lastSavedAt=Date.now();
+  document.getElementById("autosaveHint").textContent="Autosave: "+new Date().toLocaleTimeString();
+  pushBackup(payload);
+  if(autoClipboardEnabled && navigator.clipboard){
+    navigator.clipboard.writeText(payload).catch(()=>{});
+  }
+}
+
+function load(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw)return;
+    const data=JSON.parse(atob(raw));
+    if(!data)return;
+    cookies=data.cookies||0;
+    clickPower=data.clickPower||1;
+    owned=data.owned||[];
+    buildingMult=data.buildingMult||[];
+    boughtUpgrades=data.boughtUpgrades||[];
+    totalCookiesEarned=data.totalCookiesEarned||0;
+    prestigeStars=data.prestigeStars||0;
+    prestigeUpgrades=data.prestigeUpgrades||[];
+    achievementsState=data.achievementsState||{};
+    soundEnabled=data.soundEnabled!==false;
+    autoBuyerEnabled=!!data.autoBuyerEnabled;
+    autoClipboardEnabled=!!data.autoClipboardEnabled;
+    crackEnabled=data.crackEnabled!==false;
+    currentSkin=data.currentSkin||"dark";
+    goldenMultiplier=data.goldenMultiplier||1;
+  }catch(e){}
+}
+
+function applyOfflineProgress(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY+"_lastTime");
+    const now=Date.now();
+    localStorage.setItem(SAVE_KEY+"_lastTime",String(now));
+    if(!raw)return;
+    const diffMs=now-Number(raw);
+    if(diffMs<=0)return;
+    const hours=Math.min(MAX_OFFLINE_HOURS,diffMs/3600000);
+    const gain=totalCps()*hours*3600;
+    if(gain>0){
+      cookies+=gain;
+      totalCookiesEarned+=gain;
+      document.getElementById("offlineHint").textContent="Offline: +" + fmt(gain);
+    }
+  }catch(e){}
+}
+
+/* ---------- Export / import / reset ---------- */
+
+function exportSave(){
+  const raw=localStorage.getItem(SAVE_KEY);
+  if(!raw){toast("No save to export.");return;}
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(raw).then(()=>toast("Save copied to clipboard."),()=>toast("Copy failed, but save exists in storage."));
+  }else{
+    toast("Clipboard not available, but save exists in storage.");
+  }
+}
+
+function importSave(){
+  const code=prompt("Paste your save code:");
+  if(!code)return;
+  try{
+    JSON.parse(atob(code));
+  }catch(e){
+    toast("Invalid save code.");
+    return;
+  }
+  localStorage.setItem(SAVE_KEY,code);
+  toast("Save imported. Reloading...");
+  setTimeout(()=>location.reload(),600);
+}
+
+function softReset(){
+  if(!confirm("Soft reset? This keeps stars but wipes cookies, buildings, upgrades."))return;
+  cookies=0;
+  clickPower=1;
+  owned=Array(BUILDINGS.length).fill(0);
+  buildingMult=Array(BUILDINGS.length).fill(1);
+  boughtUpgrades=[];
+  totalCookiesEarned=0;
+  save();
+  renderAll();
+}
+
+/* ---------- Settings ---------- */
+
+function renderSettings(){
+  document.getElementById("soundToggle").checked=soundEnabled;
+  document.getElementById("autoBuyerToggle").checked=autoBuyerEnabled;
+  document.getElementById("autoClipboardToggle").checked=autoClipboardEnabled;
+  document.getElementById("crackToggle").checked=crackEnabled;
+  document.getElementById("backupCount").textContent=getBackups().length;
+
+  const skinsRow=document.getElementById("skinsRow");
+  skinsRow.innerHTML="";
+  SKINS.forEach(s=>{
+    const pill=document.createElement("div");
+    pill.className="skin-pill"+(currentSkin===s.id?" active":"");
+    pill.dataset.skin=s.id;
+    pill.textContent=s.name;
+    pill.addEventListener("click",()=>{applySkin(s.id);save();});
+    skinsRow.appendChild(pill);
+  });
+}
+
+/* ---------- Tabs ---------- */
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    const name=tab.dataset.tab;
+    document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
+    document.getElementById("panel-"+name).style.display="block";
+  });
+});
+
+/* ---------- Auto buyer ---------- */
+
+function autoBuyerTick(){
+  if(!autoBuyerEnabled)return;
+  const cps=totalCps();
+  if(cps<=0)return;
+  // buy cheapest building we can afford that increases cps
+  let bestIndex=-1;
+  let bestCost=Infinity;
+  for(let i=0;i<BUILDINGS.length;i++){
+    const cost=buildingCost(i);
+    if(cookies>=cost && cost<bestCost){
+      bestCost=cost;
+      bestIndex=i;
+    }
+  }
+  if(bestIndex>=0) buyBuilding(bestIndex);
+}
+
+/* ---------- Main loop ---------- */
+
+function mainLoop(){
+  const cps=totalCps();
+  const dt=0.1;
+  const gain=cps*dt;
+  cookies+=gain;
+  totalCookiesEarned+=gain;
+  renderStats();
+  autoBuyerTick();
+}
+
+setInterval(mainLoop,100);
+
+/* ---------- Autosave timer ---------- */
+
+setInterval(()=>{
+  save();
+},AUTOSAVE_INTERVAL_MS);
+
+/* ---------- Init ---------- */
+
+function init(){
+  load();
+  applySkin(currentSkin);
+  generateDailyQuests();
+  applyOfflineProgress();
+  renderAll();
+
+  const cookieBtn=document.getElementById("cookieBtn");
+  cookieBtn.addEventListener("click",handleCookieClick);
+  cookieBtn.addEventListener("touchstart",e=>{e.preventDefault();handleCookieClick(e.touches[0]||e);},{passive:false});
+
+  document.getElementById("exportBtn").addEventListener("click",exportSave);
+  document.getElementById("importBtn").addEventListener("click",importSave);
+  document.getElementById("resetBtn").addEventListener("click",softReset);
+
+  document.getElementById("soundToggle").addEventListener("change",e=>{soundEnabled=e.target.checked;save();});
+  document.getElementById("autoBuyerToggle").addEventListener("change",e=>{autoBuyerEnabled=e.target.checked;save();});
+  document.getElementById("autoClipboardToggle").addEventListener("change",e=>{autoClipboardEnabled=e.target.checked;save();});
+  document.getElementById("crackToggle").addEventListener("change",e=>{crackEnabled=e.target.checked;save();});
+  document.getElementById("wipeAllBtn").addEventListener("click",()=>{
+    if(!confirm("Wipe all local data? Backup will be kept."))return;
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(raw)pushBackup(raw);
+    localStorage.removeItem(SAVE_KEY);
+    toast("Wiped. Reloading...");
+    setTimeout(()=>location.reload(),600);
+  });
+
+  document.getElementById("prestigeBtn").addEventListener("click",doPrestige);
+  document.getElementById("rushBtn").addEventListener("click",()=>{
+    toast("Rush mode not implemented in this build yet (content‑only edition).");
+  });
+
+  checkAchievements();
+}
+
+window.addEventListener("load",init);
+</script>
+</body>
+</html>
