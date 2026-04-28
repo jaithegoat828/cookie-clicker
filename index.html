@@ -666,43 +666,66 @@ function addCombo(){
 }
 
 /* ---------- Click handling (anti‑macro) ---------- */
+// NEW anti‑macro that NEVER blocks normal clicking
+function canRegisterClick() {
+  const now = Date.now();
 
-function canRegisterClick(){
-  const now=Date.now();
-  if(now-lastClickAt<CLICK_RATE_LIMIT_MS) return false;
-  if(now-clickWindow.ts>1000){
-    clickWindow.ts=now;
-    clickWindow.count=0;
+  // Reset window every second
+  if (now - clickWindow.ts > 1000) {
+    clickWindow.ts = now;
+    clickWindow.count = 0;
   }
-  if(clickWindow.count>=MAX_CLICKS_PER_SECOND) return false;
+
+  // Allow up to MAX_CLICKS_PER_SECOND real clicks
+  if (clickWindow.count >= MAX_CLICKS_PER_SECOND) {
+    return false; // too fast = macro
+  }
+
   clickWindow.count++;
-  lastClickAt=now;
+  lastClickAt = now;
   return true;
 }
 
-function handleCookieClick(ev){
-  if(!canRegisterClick()) return;
-  const multClick = 1 + (comboValue/100)*0.5;
-  let power = clickPower * multClick;
-  activeBoosts.forEach(b=>{if(b.type==="clickMult") power*=b.mult;});
-  cookies+=power;
-  totalCookiesEarned+=power;
-  updateQuestProgress("click",1);
-  updateQuestProgress("earn",power);
+// NEW universal click handler (Chromebook‑safe)
+function handleCookieClick(ev) {
+  // Anti‑macro
+  if (!canRegisterClick()) return;
+
+  // Calculate click power
+  const comboMult = 1 + (comboValue / 100) * 0.5;
+  let power = clickPower * comboMult;
+
+  // Apply click boosts
+  activeBoosts.forEach(b => {
+    if (b.type === "clickMult") power *= b.mult;
+  });
+
+  cookies += power;
+  totalCookiesEarned += power;
+
+  updateQuestProgress("click", 1);
+  updateQuestProgress("earn", power);
+
   addCombo();
   renderStats();
-  const rect=ev.currentTarget.getBoundingClientRect();
-  const x=ev.clientX|| (rect.left+rect.width/2);
-  const y=ev.clientY|| (rect.top+rect.height/2);
-  spawnFloat("+"+fmt(power),x,y);
-  if(crackEnabled){
-    const crack=document.getElementById("cookieCrack");
+
+  // Floating text position
+  const rect = cookieBtn.getBoundingClientRect();
+  const x = ev.clientX || (rect.left + rect.width / 2);
+  const y = ev.clientY || (rect.top + rect.height / 2);
+  spawnFloat("+" + fmt(power), x, y);
+
+  // Crack animation
+  if (crackEnabled) {
+    const crack = document.getElementById("cookieCrack");
     crack.classList.add("show");
-    setTimeout(()=>crack.classList.remove("show"),120);
+    setTimeout(() => crack.classList.remove("show"), 120);
   }
+
   playSound("click");
   checkAchievements();
 }
+
 
 /* ---------- Buying ---------- */
 
