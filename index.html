@@ -3,58 +3,74 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Cookie Clicker+ by Jai</title>
+<title>Cookie Clicker+ by Jai (Hard Mode)</title>
 <link rel="icon" href="data:,">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
-  background:linear-gradient(180deg,#fffaf0 0%,#f3e6d0 100%);
-  display:flex;align-items:center;justify-content:center;height:100%;color:#333;
+  background:linear-gradient(180deg,#0b0b12 0%,#151521 40%,#1f1820 100%);
+  display:flex;align-items:center;justify-content:center;height:100%;color:#eee;
 }
-.game{width:min(1250px,98vw);height:min(920px,96vh);background:#fff;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,0.12);display:flex;flex-direction:column;overflow:hidden}
-.header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #efe0c8;background:linear-gradient(90deg,#fff,#fffaf0)}
-.title{font-weight:800;color:#b36f1f;font-size:20px}
-.subtitle{font-size:12px;color:#8b7a6a}
+.game{width:min(1300px,98vw);height:min(960px,96vh);background:#15141b;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,0.6);display:flex;flex-direction:column;overflow:hidden;border:1px solid #2b2233}
+.header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #2b2233;background:linear-gradient(90deg,#1f1b26,#221b2a)}
+.title{font-weight:800;color:#f7c96a;font-size:20px}
+.subtitle{font-size:12px;color:#b9a6d8}
 .controls{display:flex;gap:8px;align-items:center}
-.ctrl-btn{background:#f6e9cf;border:none;padding:6px 10px;border-radius:999px;color:#7a5a1f;cursor:pointer;font-size:13px}
+.ctrl-btn{background:#2b2233;border:none;padding:6px 10px;border-radius:999px;color:#f7c96a;cursor:pointer;font-size:13px}
+.ctrl-btn:hover{background:#3a2b4a}
 .main{display:flex;flex:1;min-height:0}
-.left{flex:0 0 44%;border-right:1px solid #efe0c8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px;background:linear-gradient(135deg,#fffdf7,#f7ebd6);position:relative;min-width:320px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;background:#fff;padding:12px;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,0.06);width:100%;max-width:520px}
-.stat-label{font-size:11px;color:#999;text-transform:uppercase}
-.stat-value{font-weight:800;color:#c28a2a;font-size:18px}
-.cookie-btn{width:280px;height:280px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(circle at 30% 30%,#fff4c7 0%,#ffe08a 35%,#f0b94a 60%,#c27a2a 100%);box-shadow:inset -10px -10px 18px rgba(0,0,0,0.25),inset 8px 8px 14px rgba(255,255,255,0.4),0 18px 36px rgba(0,0,0,0.35);font-size:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:transform .08s}
-.cookie-btn:active{transform:scale(.94)}
-.right{flex:1;display:flex;flex-direction:column;background:#faf6ee;min-width:420px;min-height:0}
-.tabs{display:flex;border-bottom:1px solid #efe0c8;background:#fffaf0}
-.tab{flex:1;padding:12px;text-align:center;cursor:pointer;font-weight:700;color:#a07a2a}
-.tab.active{background:#fff;border-bottom:3px solid #d49b2a;color:#d49b2a}
+.left{flex:0 0 44%;border-right:1px solid #2b2233;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px;background:radial-gradient(circle at top,#2a2238 0%,#181320 55%,#100c16 100%);position:relative;min-width:320px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;background:#1f1b26;padding:12px;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,0.6);width:100%;max-width:520px}
+.stat-label{font-size:11px;color:#8a7aa8;text-transform:uppercase}
+.stat-value{font-weight:800;color:#f7c96a;font-size:18px}
+.cookie-btn{width:280px;height:280px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(circle at 30% 30%,#ffe8b5 0%,#f7c96a 35%,#d48a3a 60%,#7a3a1a 100%);box-shadow:inset -10px -10px 18px rgba(0,0,0,0.45),inset 8px 8px 14px rgba(255,255,255,0.25),0 18px 36px rgba(0,0,0,0.7);font-size:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:transform .08s,box-shadow .08s}
+.cookie-btn:active{transform:scale(.94);box-shadow:inset -6px -6px 12px rgba(0,0,0,0.45),inset 4px 4px 10px rgba(255,255,255,0.25),0 10px 24px rgba(0,0,0,0.6)}
+.cookie-crack{position:absolute;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .2s}
+.cookie-crack.show{opacity:1}
+.left-footer{display:flex;gap:8px;margin-top:8px;align-items:center;justify-content:space-between;width:100%;max-width:520px}
+.mini-label{font-size:11px;color:#9b8cc0}
+.right{flex:1;display:flex;flex-direction:column;background:#181320;min-width:420px;min-height:0}
+.tabs{display:flex;border-bottom:1px solid #2b2233;background:#1f1b26}
+.tab{flex:1;padding:10px 6px;text-align:center;cursor:pointer;font-weight:700;color:#b9a6d8;font-size:13px}
+.tab.active{background:#221b2a;border-bottom:3px solid #f7c96a;color:#f7c96a}
 .panel{flex:1;overflow:auto;padding:12px;min-height:0}
-.section-title{font-size:12px;color:#999;text-transform:uppercase;margin:6px 2px}
-.card{background:#fff;border-radius:10px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;box-shadow:0 6px 14px rgba(0,0,0,0.06);cursor:pointer;border:1px solid transparent}
+.section-title{font-size:12px;color:#8a7aa8;text-transform:uppercase;margin:6px 2px}
+.card{background:#1f1b26;border-radius:10px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;box-shadow:0 6px 14px rgba(0,0,0,0.6);cursor:pointer;border:1px solid transparent;transition:transform .06s,box-shadow .06s,border-color .06s}
+.card:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(0,0,0,0.7);border-color:#3a2b4a}
 .card.locked{opacity:.35;cursor:not-allowed}
 .card-main{display:flex;gap:10px;align-items:flex-start}
 .card-icon{font-size:22px}
-.card-text-title{font-weight:800;color:#b37a1f}
-.card-text-sub{font-size:12px;color:#777;margin-top:4px}
+.card-text-title{font-weight:800;color:#f7c96a}
+.card-text-sub{font-size:12px;color:#c3b7e0;margin-top:4px}
 .card-right{text-align:right}
-.price{font-weight:800;color:#c28a2a}
-.owned{color:#999;margin-top:6px;font-size:12px}
-.float{position:fixed;font-weight:800;color:#d49a2a;text-shadow:0 0 6px rgba(255,255,255,0.8);pointer-events:none;animation:rise .9s ease-out forwards}
+.price{font-weight:800;color:#f7c96a}
+.owned{color:#8a7aa8;margin-top:6px;font-size:12px}
+.float{position:fixed;font-weight:800;color:#f7c96a;text-shadow:0 0 6px rgba(0,0,0,0.8);pointer-events:none;animation:rise .9s ease-out forwards}
 @keyframes rise{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-70px)}}
 .golden-cookie{position:absolute;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff9d1 0%,#ffe680 40%,#f0c040 70%,#b8860b 100%);box-shadow:0 0 16px rgba(255,215,0,0.9);display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;animation:pulse 1s infinite alternate;z-index:6}
 @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.08)}}
-.muted{color:#777;font-size:13px}
-.small-btn{padding:6px 8px;border-radius:8px;border:none;background:#fffaf0;color:#7a5a1f;cursor:pointer;font-size:12px}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff3d1;color:#b37a1f;font-weight:800}
-.leaderboard-row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:6px;background:#fff;margin-bottom:6px}
-.event-popup{position:fixed;left:50%;top:12%;transform:translateX(-50%);background:#fff;padding:12px;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,0.2);z-index:999}
-.toast{position:fixed;right:18px;bottom:18px;background:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.18);z-index:999;opacity:0;transform:translateY(10px);transition:all .25s}
+.muted{color:#9b8cc0;font-size:13px}
+.small-btn{padding:6px 8px;border-radius:8px;border:none;background:#2b2233;color:#f7c96a;cursor:pointer;font-size:12px}
+.small-btn:hover{background:#3a2b4a}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#2b2233;color:#f7c96a;font-weight:800}
+.leaderboard-row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:6px;background:#1f1b26;margin-bottom:6px;font-size:13px}
+.event-popup{position:fixed;left:50%;top:12%;transform:translateX(-50%);background:#1f1b26;padding:12px 14px;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,0.8);z-index:999;font-size:13px;max-width:320px;text-align:center;border:1px solid #3a2b4a}
+.toast{position:fixed;right:18px;bottom:18px;background:#1f1b26;padding:10px 14px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.8);z-index:999;opacity:0;transform:translateY(10px);transition:all .25s;font-size:13px;border:1px solid #3a2b4a}
 .toast.show{opacity:1;transform:translateY(0)}
-.settings-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
-.danger{background:#ffecec;border:1px solid #ffb3b3}
-@media (max-width:980px){.main{flex-direction:column}.left{border-right:none;border-bottom:1px solid #efe0c8;flex:0 0 auto}.right{min-width:0}}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:13px}
+.danger{background:#3a1b26;border:1px solid #ff6b6b}
+.skin-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;border:1px solid #3a2b4a;font-size:11px;cursor:pointer;margin-right:6px;margin-bottom:4px}
+.skin-pill.active{background:#3a2b4a;border-color:#f7c96a}
+.ach-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:8px;background:#1f1b26;margin-bottom:6px;font-size:12px}
+.ach-row.locked{opacity:.4}
+.ach-name{font-weight:700;color:#f7c96a}
+.ach-desc{color:#c3b7e0;font-size:11px}
+.tag{display:inline-block;padding:2px 6px;border-radius:999px;font-size:10px;background:#2b2233;color:#c3b7e0;margin-left:4px}
+.combo-bar{width:100%;max-width:520px;height:8px;border-radius:999px;background:#1f1b26;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.6)}
+.combo-fill{height:100%;background:linear-gradient(90deg,#f7c96a,#ff6b6b);width:0%;transition:width .1s}
+@media (max-width:980px){.main{flex-direction:column}.left{border-right:none;border-bottom:1px solid #2b2233;flex:0 0 auto}.right{min-width:0}}
 </style>
 </head>
 <body>
@@ -62,12 +78,12 @@ body{
   <div class="header">
     <div>
       <div class="title">Cookie Clicker+ by Jai</div>
-      <div class="subtitle" id="subtitle">Big run • Autosave every 10s • No cheats</div>
+      <div class="subtitle" id="subtitle">Hard mode • Anti‑macro • Autosave every 10s</div>
     </div>
     <div class="controls">
       <button class="ctrl-btn" id="exportBtn">Export</button>
       <button class="ctrl-btn" id="importBtn">Import</button>
-      <button class="ctrl-btn" id="resetBtn">Reset</button>
+      <button class="ctrl-btn" id="resetBtn">Soft Reset</button>
       <span style="width:8px"></span>
       <div class="badge" id="starsBadge">Stars: 0</div>
     </div>
@@ -90,12 +106,26 @@ body{
         </div>
       </div>
 
-      <button class="cookie-btn" id="cookieBtn">🍪</button>
+      <button class="cookie-btn" id="cookieBtn">
+        🍪
+        <svg class="cookie-crack" id="cookieCrack" viewBox="0 0 100 100">
+          <path d="M10 60 L40 40 L60 70 L90 30" stroke="rgba(0,0,0,0.45)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>
+      </button>
 
-      <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
-        <div class="muted" id="offlineHint">Offline: none</div>
-        <div style="width:8px"></div>
-        <button class="small-btn" id="rushBtn">Rush</button>
+      <div class="combo-bar">
+        <div class="combo-fill" id="comboFill"></div>
+      </div>
+
+      <div class="left-footer">
+        <div>
+          <div class="mini-label" id="offlineHint">Offline: none</div>
+          <div class="mini-label" id="autosaveHint">Autosave: OK</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="small-btn" id="rushBtn">Rush</button>
+          <button class="small-btn" id="prestigeBtn">Prestige</button>
+        </div>
       </div>
     </div>
 
@@ -106,7 +136,7 @@ body{
         <div class="tab" data-tab="boosts">Boosts</div>
         <div class="tab" data-tab="quests">Quests</div>
         <div class="tab" data-tab="rush">Rush</div>
-        <div class="tab" data-tab="leaderboard">Leaderboard</div>
+        <div class="tab" data-tab="achievements">Achievements</div>
         <div class="tab" data-tab="settings">Settings</div>
       </div>
 
@@ -135,32 +165,29 @@ body{
       <div class="panel" id="panel-rush" style="display:none">
         <div class="section-title">Rush Mode</div>
         <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
-          <div class="muted">Click as fast as you can for 10 seconds. Reward scales with click power.</div>
-          <div id="rushTimer" style="font-weight:800;color:#b37a1f;font-size:20px">Ready</div>
+          <div class="muted">Click as fast as you can for 10 seconds. Reward scales with click power and stars.</div>
+          <div id="rushTimer" style="font-weight:800;color:#f7c96a;font-size:20px">Ready</div>
           <button class="small-btn" id="startRushBtn">Start Rush (10s)</button>
           <div id="rushScore" class="muted">Rush score: 0</div>
-          <div style="height:8px"></div>
-          <div>
-            <input id="leaderName" placeholder="Name for leaderboard" style="padding:6px;border-radius:6px;border:1px solid #ddd" />
-            <button class="small-btn" id="submitRushBtn">Submit Score</button>
-          </div>
         </div>
       </div>
 
-      <div class="panel" id="panel-leaderboard" style="display:none">
-        <div class="section-title">Local Leaderboard</div>
-        <div id="leaderboardList"></div>
-        <div style="height:8px"></div>
-        <div class="muted">Stored locally in this browser only.</div>
+      <div class="panel" id="panel-achievements" style="display:none">
+        <div class="section-title">Achievements</div>
+        <div id="achievementsList"></div>
       </div>
 
       <div class="panel" id="panel-settings" style="display:none">
         <div class="section-title">Settings</div>
-        <div style="background:#fff;padding:12px;border-radius:10px;box-shadow:0 6px 14px rgba(0,0,0,0.06)">
+        <div style="background:#1f1b26;padding:12px;border-radius:10px;box-shadow:0 6px 14px rgba(0,0,0,0.6)">
           <div class="settings-row"><div>Sound Effects</div><div><input type="checkbox" id="soundToggle" checked /></div></div>
           <div class="settings-row"><div>Auto‑Buyer</div><div><input type="checkbox" id="autoBuyerToggle" /></div></div>
           <div class="settings-row"><div>Auto‑Clipboard Export</div><div><input type="checkbox" id="autoClipboardToggle" /></div></div>
-          <div style="height:8px;border-top:1px solid #eee;margin-top:8px"></div>
+          <div class="settings-row"><div>Show crack animation</div><div><input type="checkbox" id="crackToggle" checked /></div></div>
+          <div style="height:8px;border-top:1px solid #2b2233;margin-top:8px"></div>
+          <div style="font-weight:800;margin-top:8px;margin-bottom:4px">Skins</div>
+          <div id="skinsRow"></div>
+          <div style="height:8px;border-top:1px solid #2b2233;margin-top:8px"></div>
           <div style="font-weight:800;margin-top:8px">Admin</div>
           <div class="muted" style="margin-bottom:6px">Wipe is local only and creates a backup first.</div>
           <button class="small-btn danger" id="wipeAllBtn">Wipe All Local Data</button>
@@ -177,15 +204,7 @@ body{
 <div id="toastRoot"></div>
 
 <script>
-/* =========================
-   Cookie Clicker+ by Jai
-   - Bigger game
-   - Simple, reliable autosave
-   - Repo-safe storage for GitHub Pages
-   - No turbo / no cheats
-   ========================= */
-
-const GAME_VERSION = "cc-plus-jai-v1";
+const GAME_VERSION = "cc-plus-jai-hard-v1";
 const REPO = (window.location.pathname.split("/")[1] || "default").toLowerCase();
 const SAVE_KEY = REPO + "_cookie_clicker_plus_save";
 const BACKUP_HISTORY_KEY = SAVE_KEY + "_backups";
@@ -203,6 +222,9 @@ let quests = [];
 let soundEnabled = true;
 let autoBuyerEnabled = false;
 let autoClipboardEnabled = false;
+let crackEnabled = true;
+let currentSkin = "dark";
+
 let rushActive = false;
 let rushScore = 0;
 let rushTimerId = null;
@@ -212,11 +234,35 @@ let activeBoosts = [];
 let lastClickAt = 0;
 let lastSavedAt = Date.now();
 
-const CLICK_RATE_LIMIT_MS = 50;
-const AUTOSAVE_INTERVAL_MS = 10000;
-const MAX_OFFLINE_HOURS = 12;
+let comboValue = 0;
+let comboDecayTimer = null;
 
-/* ---------- Data ---------- */
+const CLICK_RATE_LIMIT_MS = 70;        // anti‑macro
+const MAX_CLICKS_PER_SECOND = 12;      // hard cap
+let clickWindow = {count:0,ts:Date.now()};
+
+const AUTOSAVE_INTERVAL_MS = 10000;
+const MAX_OFFLINE_HOURS = 8;
+
+/* ---------- Skins ---------- */
+
+const SKINS = [
+  {id:"dark",name:"Dark",bg:"linear-gradient(180deg,#0b0b12 0%,#151521 40%,#1f1820 100%)"},
+  {id:"nebula",name:"Nebula",bg:"radial-gradient(circle at top,#2b003b 0%,#0b0010 55%,#000000 100%)"},
+  {id:"mint",name:"Mint",bg:"linear-gradient(180deg,#071b16 0%,#0f2b24 40%,#071b16 100%)"}
+];
+
+function applySkin(id){
+  const skin=SKINS.find(s=>s.id===id)||SKINS[0];
+  document.body.style.background=skin.bg;
+  currentSkin=skin.id;
+  document.querySelectorAll(".skin-pill").forEach(p=>{
+    p.classList.toggle("active",p.dataset.skin===skin.id);
+  });
+}
+
+/* ---------- Buildings / Boosts / Upgrades / Achievements (continued in Part 2) ---------- */
+/* ---------- Buildings ---------- */
 
 const BUILDINGS = [
   { id:0, name:"Cursor", icon:"👆", baseCost:50, baseCps:0.1 },
@@ -228,50 +274,101 @@ const BUILDINGS = [
   { id:6, name:"Temple", icon:"⛪", baseCost:90000000, baseCps:7800 },
   { id:7, name:"Wizard Tower", icon:"🧙", baseCost:1200000000, baseCps:44000 },
   { id:8, name:"Portal", icon:"🌀", baseCost:15000000000, baseCps:260000 },
-  { id:9, name:"Time Bakery", icon:"⏳", baseCost:300000000000, baseCps:1500000 }
+  { id:9, name:"Time Bakery", icon:"⏳", baseCost:300000000000, baseCps:1500000 },
+  { id:10, name:"Galaxy Oven", icon:"🌌", baseCost:9000000000000, baseCps:9000000 },
+  { id:11, name:"Quantum Chef", icon:"🧪", baseCost:60000000000000, baseCps:60000000 },
+  { id:12, name:"Black Hole Kitchen", icon:"🕳️", baseCost:300000000000000, baseCps:300000000 }
 ];
 
+/* ---------- Boosts (Rebalanced) ---------- */
+
 const BOOSTS = [
-  { id:"cpsSmall", name:"+30% CPS (20s)", type:"cpsMult", mult:1.3, duration:20000, cost:2000 },
-  { id:"cpsBig", name:"+80% CPS (15s)", type:"cpsMult", mult:1.8, duration:15000, cost:8000 },
-  { id:"clickBurst", name:"Click x6 (10s)", type:"clickMult", mult:6, duration:10000, cost:5000 },
-  { id:"instant", name:"Instant 30s CPS", type:"instant", seconds:30, cost:6000 },
-  { id:"autoClick", name:"Auto Click (15s)", type:"auto", duration:15000, cost:4500 }
+  { id:"cpsSmall", name:"+20% CPS (12s)", type:"cpsMult", mult:1.2, duration:12000, cost:5000 },
+  { id:"cpsBig", name:"+50% CPS (10s)", type:"cpsMult", mult:1.5, duration:10000, cost:20000 },
+  { id:"clickBurst", name:"Click x3 (8s)", type:"clickMult", mult:3, duration:8000, cost:15000 },
+  { id:"instant", name:"Instant 20s CPS", type:"instant", seconds:20, cost:30000 },
+  { id:"autoClick", name:"Auto Click (10s)", type:"auto", duration:10000, cost:25000 },
+  { id:"megaCps", name:"MEGA CPS x2 (8s)", type:"cpsMult", mult:2, duration:8000, cost:60000 },
+  { id:"hyperClick", name:"Hyper Click x5 (6s)", type:"clickMult", mult:5, duration:6000, cost:50000 }
 ];
+
+/* ---------- Upgrades ---------- */
 
 let UPGRADES = [];
 function generateUpgrades(){
   UPGRADES = [];
   let id = 0;
-  for(let i=1;i<=15;i++){
+
+  // Click upgrades (harder)
+  for(let i=1;i<=25;i++){
     UPGRADES.push({
       id:id++,
       type:"click",
       name:`Click Boost ${i}`,
       desc:`Increase click power`,
-      cost:Math.floor(100*Math.pow(1.7,i)),
+      cost:Math.floor(200*Math.pow(1.9,i)),
       value:1+Math.floor(i/2)
     });
   }
+
+  // Building upgrades
   BUILDINGS.forEach((b,bi)=>{
-    for(let t=1;t<=8;t++){
+    for(let t=1;t<=12;t++){
       UPGRADES.push({
         id:id++,
         type:"building",
         buildingIndex:bi,
         name:`${b.name} Upgrade ${t}`,
-        desc:`${b.name} CPS x${(1+0.2*t).toFixed(2)}`,
-        cost:Math.floor(b.baseCost*Math.pow(2.1,t)),
-        mult:1+0.2*t
+        desc:`${b.name} CPS x${(1+0.25*t).toFixed(2)}`,
+        cost:Math.floor(b.baseCost*Math.pow(2.3,t)),
+        mult:1+0.25*t
       });
     }
   });
+
+  // Prestige upgrades
+  for(let p=1;p<=10;p++){
+    UPGRADES.push({
+      id:id++,
+      type:"prestige",
+      name:`Star Power ${p}`,
+      desc:`Global CPS +${p*5}%`,
+      cost:p,
+      prestige:true,
+      cpsMult:1+(p*0.05)
+    });
+  }
 }
 generateUpgrades();
 
-/* ---------- Utils ---------- */
+/* ---------- Achievements ---------- */
+
+const ACHIEVEMENTS = [
+  {id:"a1",name:"First Click",desc:"Click once",check:()=>totalCookiesEarned>=1},
+  {id:"a2",name:"Hundredaire",desc:"Earn 100 cookies",check:()=>totalCookiesEarned>=100},
+  {id:"a3",name:"Thousandaire",desc:"Earn 1,000 cookies",check:()=>totalCookiesEarned>=1000},
+  {id:"a4",name:"Millionaire",desc:"Earn 1,000,000 cookies",check:()=>totalCookiesEarned>=1e6},
+  {id:"a5",name:"Billionaire",desc:"Earn 1,000,000,000 cookies",check:()=>totalCookiesEarned>=1e9},
+  {id:"a6",name:"Click Machine",desc:"Reach click power 50",check:()=>clickPower>=50},
+  {id:"a7",name:"Builder",desc:"Own 100 buildings total",check:()=>owned.reduce((a,b)=>a+b,0)>=100},
+  {id:"a8",name:"Galaxy Chef",desc:"Own a Galaxy Oven",check:()=>owned[10]>=1},
+  {id:"a9",name:"Quantum Master",desc:"Own a Quantum Chef",check:()=>owned[11]>=1},
+  {id:"a10",name:"Black Hole Baker",desc:"Own a Black Hole Kitchen",check:()=>owned[12]>=1}
+];
+
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a=>{
+    if(!achievementsState[a.id] && a.check()){
+      achievementsState[a.id]=true;
+      toast("Achievement unlocked: "+a.name);
+    }
+  });
+}
+
+/* ---------- Utility ---------- */
 
 function fmt(n){
+  if(n>=1e15) return (n/1e15).toFixed(2)+"Q";
   if(n>=1e12) return (n/1e12).toFixed(2)+"T";
   if(n>=1e9) return (n/1e9).toFixed(2)+"B";
   if(n>=1e6) return (n/1e6).toFixed(2)+"M";
@@ -302,6 +399,8 @@ function toast(msg,ms=2500){
   },ms);
 }
 
+/* ---------- Sound ---------- */
+
 function playSound(id){
   if(!soundEnabled) return;
   try{
@@ -318,12 +417,12 @@ function playSound(id){
   }catch(e){}
 }
 
-/* ---------- CPS & buildings ---------- */
+/* ---------- CPS ---------- */
 
 function buildingCost(i){
   const b=BUILDINGS[i];
   const n=owned[i]||0;
-  const growth=1.15+0.02*i;
+  const growth=1.18+0.03*i; // harder
   return Math.round(b.baseCost*Math.pow(growth,n));
 }
 
@@ -339,23 +438,20 @@ function totalCps(){
   let base=totalBaseCps();
   activeBoosts.forEach(b=>{if(b.type==="cpsMult") base*=b.mult;});
   base*=goldenMultiplier;
+  prestigeUpgrades.forEach(p=>{
+    const u=UPGRADES.find(x=>x.id===p);
+    if(u&&u.prestige) base*=u.cpsMult;
+  });
   return base;
 }
 
 /* ---------- Rendering ---------- */
 
-const cookiesEl=document.getElementById("cookies");
-const cpsEl=document.getElementById("cps");
-const clickPowerEl=document.getElementById("clickPower");
-
 function renderStats(){
-  cookiesEl.textContent=fmt(cookies);
-  cpsEl.textContent=fmt(totalCps())+"/s";
-  clickPowerEl.textContent=clickPower;
+  document.getElementById("cookies").textContent=fmt(cookies);
+  document.getElementById("cps").textContent=fmt(totalCps())+"/s";
+  document.getElementById("clickPower").textContent=clickPower;
   document.getElementById("starsBadge").textContent="Stars: "+prestigeStars;
-  const offline=computeOfflineGain();
-  if(offline.gain>0) document.getElementById("offlineHint").textContent="Offline: +"+fmt(offline.gain);
-  else document.getElementById("offlineHint").textContent="Offline: none";
 }
 
 function renderBuildings(){
@@ -367,30 +463,19 @@ function renderBuildings(){
     const card=document.createElement("div");
     card.className="card"+(can?"":" locked");
     card.addEventListener("click",()=>{if(cookies<cost)return;buyBuilding(i);});
-    const main=document.createElement("div");
-    main.className="card-main";
-    const icon=document.createElement("div");
-    icon.className="card-icon";
-    icon.textContent=b.icon;
-    const textWrap=document.createElement("div");
-    const title=document.createElement("div");
-    title.className="card-text-title";
-    title.textContent=b.name;
-    const sub=document.createElement("div");
-    sub.className="card-text-sub";
-    sub.textContent=`+${fmt(b.baseCps*(buildingMult[i]||1))} cps each`;
-    textWrap.appendChild(title);textWrap.appendChild(sub);
-    main.appendChild(icon);main.appendChild(textWrap);
-    const right=document.createElement("div");
-    right.className="card-right";
-    const price=document.createElement("div");
-    price.className="price";
-    price.textContent=fmt(cost);
-    const ownedEl=document.createElement("div");
-    ownedEl.className="owned";
-    ownedEl.textContent="Owned: "+(owned[i]||0);
-    right.appendChild(price);right.appendChild(ownedEl);
-    card.appendChild(main);card.appendChild(right);
+    card.innerHTML=`
+      <div class="card-main">
+        <div class="card-icon">${b.icon}</div>
+        <div>
+          <div class="card-text-title">${b.name}</div>
+          <div class="card-text-sub">+${fmt(b.baseCps*(buildingMult[i]||1))} cps each</div>
+        </div>
+      </div>
+      <div class="card-right">
+        <div class="price">${fmt(cost)}</div>
+        <div class="owned">Owned: ${owned[i]||0}</div>
+      </div>
+    `;
     root.appendChild(card);
   });
 }
@@ -398,33 +483,24 @@ function renderBuildings(){
 function renderUpgrades(){
   const root=document.getElementById("upgradesList");
   root.innerHTML="";
-  const visible=UPGRADES.filter(u=>!boughtUpgrades.includes(u.id)).sort((a,b)=>a.cost-b.cost).slice(0,80);
+  const visible=UPGRADES.filter(u=>!boughtUpgrades.includes(u.id)).sort((a,b)=>a.cost-b.cost).slice(0,100);
   visible.forEach(u=>{
     const can=cookies>=u.cost;
     const card=document.createElement("div");
     card.className="card"+(can?"":" locked");
     card.addEventListener("click",()=>buyUpgrade(u));
-    const main=document.createElement("div");
-    main.className="card-main";
-    const icon=document.createElement("div");
-    icon.className="card-icon";
-    icon.textContent=u.type==="click"?"🖱️":"⚙️";
-    const textWrap=document.createElement("div");
-    const title=document.createElement("div");
-    title.className="card-text-title";
-    title.textContent=u.name;
-    const sub=document.createElement("div");
-    sub.className="card-text-sub";
-    sub.textContent=u.desc;
-    textWrap.appendChild(title);textWrap.appendChild(sub);
-    main.appendChild(icon);main.appendChild(textWrap);
-    const right=document.createElement("div");
-    right.className="card-right";
-    const price=document.createElement("div");
-    price.className="price";
-    price.textContent=fmt(u.cost);
-    right.appendChild(price);
-    card.appendChild(main);card.appendChild(right);
+    card.innerHTML=`
+      <div class="card-main">
+        <div class="card-icon">${u.prestige?"⭐":"⚙️"}</div>
+        <div>
+          <div class="card-text-title">${u.name}</div>
+          <div class="card-text-sub">${u.desc}</div>
+        </div>
+      </div>
+      <div class="card-right">
+        <div class="price">${fmt(u.cost)}</div>
+      </div>
+    `;
     root.appendChild(card);
   });
 }
@@ -437,27 +513,18 @@ function renderBoosts(){
     const card=document.createElement("div");
     card.className="card"+(can?"":" locked");
     card.addEventListener("click",()=>buyBoost(b));
-    const main=document.createElement("div");
-    main.className="card-main";
-    const icon=document.createElement("div");
-    icon.className="card-icon";
-    icon.textContent="⚡";
-    const textWrap=document.createElement("div");
-    const title=document.createElement("div");
-    title.className="card-text-title";
-    title.textContent=b.name;
-    const sub=document.createElement("div");
-    sub.className="card-text-sub";
-    sub.textContent=`Cost: ${fmt(b.cost)}`;
-    textWrap.appendChild(title);textWrap.appendChild(sub);
-    main.appendChild(icon);main.appendChild(textWrap);
-    const right=document.createElement("div");
-    right.className="card-right";
-    const price=document.createElement("div");
-    price.className="price";
-    price.textContent=fmt(b.cost);
-    right.appendChild(price);
-    card.appendChild(main);card.appendChild(right);
+    card.innerHTML=`
+      <div class="card-main">
+        <div class="card-icon">⚡</div>
+        <div>
+          <div class="card-text-title">${b.name}</div>
+          <div class="card-text-sub">Cost: ${fmt(b.cost)}</div>
+        </div>
+      </div>
+      <div class="card-right">
+        <div class="price">${fmt(b.cost)}</div>
+      </div>
+    `;
     root.appendChild(card);
   });
 }
@@ -468,41 +535,37 @@ function renderQuests(){
   quests.forEach(q=>{
     const card=document.createElement("div");
     card.className="card";
-    const main=document.createElement("div");
-    main.className="card-main";
-    const text=document.createElement("div");
-    const title=document.createElement("div");
-    title.className="card-text-title";
-    title.textContent=q.title;
-    const sub=document.createElement("div");
-    sub.className="card-text-sub";
-    sub.textContent=`${q.desc} (${q.progress}/${q.target})`;
-    text.appendChild(title);text.appendChild(sub);
-    main.appendChild(text);
-    const right=document.createElement("div");
-    right.className="card-right";
-    const btn=document.createElement("button");
-    btn.className="small-btn";
-    if(q.claimed) {btn.textContent="Claimed";btn.disabled=true;}
-    else if(q.progress>=q.target){btn.textContent="Claim";btn.disabled=false;}
-    else {btn.textContent="Incomplete";btn.disabled=true;}
-    btn.addEventListener("click",()=>claimQuest(q.id));
-    right.appendChild(btn);
-    card.appendChild(main);card.appendChild(right);
+    const canClaim=q.progress>=q.target && !q.claimed;
+    card.innerHTML=`
+      <div class="card-main">
+        <div>
+          <div class="card-text-title">${q.title}</div>
+          <div class="card-text-sub">${q.desc} (${q.progress}/${q.target})</div>
+        </div>
+      </div>
+      <div class="card-right">
+        <button class="small-btn" ${canClaim?"":"disabled"}>${q.claimed?"Claimed":canClaim?"Claim":"Incomplete"}</button>
+      </div>
+    `;
+    card.querySelector("button").addEventListener("click",()=>claimQuest(q.id));
     root.appendChild(card);
   });
 }
 
-function renderLeaderboard(){
-  const root=document.getElementById("leaderboardList");
+function renderAchievements(){
+  const root=document.getElementById("achievementsList");
   root.innerHTML="";
-  const list=getLeaderboard();
-  if(list.length===0){root.textContent="No scores yet.";return;}
-  list.slice(0,20).forEach((r,i)=>{
-    const el=document.createElement("div");
-    el.className="leaderboard-row";
-    el.innerHTML=`<div>#${i+1} ${r.name}</div><div>${fmt(r.score)}</div>`;
-    root.appendChild(el);
+  ACHIEVEMENTS.forEach(a=>{
+    const row=document.createElement("div");
+    row.className="ach-row"+(achievementsState[a.id]?"":" locked");
+    row.innerHTML=`
+      <div>
+        <div class="ach-name">${a.name}</div>
+        <div class="ach-desc">${a.desc}</div>
+      </div>
+      <div>${achievementsState[a.id]?"✔️":"❌"}</div>
+    `;
+    root.appendChild(row);
   });
 }
 
@@ -510,7 +573,19 @@ function renderSettings(){
   document.getElementById("soundToggle").checked=soundEnabled;
   document.getElementById("autoBuyerToggle").checked=autoBuyerEnabled;
   document.getElementById("autoClipboardToggle").checked=autoClipboardEnabled;
+  document.getElementById("crackToggle").checked=crackEnabled;
   document.getElementById("backupCount").textContent=getBackups().length;
+
+  const skinsRow=document.getElementById("skinsRow");
+  skinsRow.innerHTML="";
+  SKINS.forEach(s=>{
+    const pill=document.createElement("div");
+    pill.className="skin-pill"+(currentSkin===s.id?" active":"");
+    pill.dataset.skin=s.id;
+    pill.textContent=s.name;
+    pill.addEventListener("click",()=>{applySkin(s.id);save();});
+    skinsRow.appendChild(pill);
+  });
 }
 
 function renderAll(){
@@ -519,7 +594,7 @@ function renderAll(){
   renderUpgrades();
   renderBoosts();
   renderQuests();
-  renderLeaderboard();
+  renderAchievements();
   renderSettings();
 }
 
@@ -536,7 +611,8 @@ function generateDailyQuests(){
   quests=[
     {id:"q1",title:"Click Starter",desc:"Click 200 times",progress:0,target:200,reward:{cookies:2000}},
     {id:"q2",title:"Builder I",desc:"Buy 10 buildings",progress:0,target:10,reward:{cookies:8000}},
-    {id:"q3",title:"Rush Rookie",desc:"Finish 1 rush",progress:0,target:1,reward:{stars:1}}
+    {id:"q3",title:"Rush Rookie",desc:"Finish 1 rush",progress:0,target:1,reward:{stars:1}},
+    {id:"q4",title:"Million Maker",desc:"Earn 1M cookies",progress:0,target:1000000,reward:{cookies:50000}}
   ];
   localStorage.setItem(key,today);
   localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
@@ -548,6 +624,7 @@ function updateQuestProgress(type,amount=1){
     if(q.id==="q1" && type==="click"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
     if(q.id==="q2" && type==="buy"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
     if(q.id==="q3" && type==="rush"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
+    if(q.id==="q4" && type==="earn"){q.progress=Math.min(q.target,q.progress+amount);changed=true;}
   });
   if(changed){
     localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
@@ -565,23 +642,6 @@ function claimQuest(id){
   toast("Quest reward claimed!");
   save();
   renderAll();
-}
-
-/* ---------- Leaderboard ---------- */
-
-function getLeaderboard(){
-  try{
-    const raw=localStorage.getItem(SAVE_KEY+"_leader");
-    return raw?JSON.parse(raw):[];
-  }catch(e){return[];}
-}
-
-function submitLeaderboard(name,score){
-  const list=getLeaderboard();
-  list.push({name,score,date:Date.now()});
-  list.sort((a,b)=>b.score-a.score);
-  localStorage.setItem(SAVE_KEY+"_leader",JSON.stringify(list.slice(0,50)));
-  renderLeaderboard();
 }
 
 /* ---------- Rush ---------- */
@@ -607,409 +667,7 @@ function endRush(){
   clearInterval(rushTimerId);
   rushTimerId=null;
   document.getElementById("rushTimer").textContent="Ready";
-  const reward=Math.floor(rushScore*clickPower*5);
+  const reward=Math.floor(rushScore*clickPower*(1+prestigeStars*0.1));
   cookies+=reward;
   totalCookiesEarned+=reward;
-  document.getElementById("rushScore").textContent="Rush score: "+rushScore+" → Reward: "+fmt(reward);
-  updateQuestProgress("rush",1);
-  save();
-  renderAll();
-  toast("Rush ended! Reward: "+fmt(reward));
-}
-
-/* ---------- Boosts ---------- */
-
-let autoClickerInterval=null;
-
-function buyBoost(b){
-  if(cookies<b.cost)return;
-  cookies-=b.cost;
-  totalCookiesEarned+=b.cost;
-  if(b.type==="cpsMult"){
-    activeBoosts.push({type:"cpsMult",mult:b.mult,expires:Date.now()+b.duration});
-    setTimeout(()=>{activeBoosts=activeBoosts.filter(x=>x.expires>Date.now());},b.duration+100);
-  }else if(b.type==="clickMult"){
-    clickPower*=b.mult;
-    setTimeout(()=>{clickPower=Math.max(1,Math.floor(clickPower/b.mult));renderStats();},b.duration);
-  }else if(b.type==="instant"){
-    const gain=Math.floor(totalBaseCps()*b.seconds);
-    cookies+=gain;
-    totalCookiesEarned+=gain;
-    spawnFloat("+"+fmt(gain),window.innerWidth/2,window.innerHeight/2);
-  }else if(b.type==="auto"){
-    if(autoClickerInterval)clearInterval(autoClickerInterval);
-    autoClickerInterval=setInterval(()=>{
-      cookies+=clickPower;
-      totalCookiesEarned+=clickPower;
-      renderStats();
-    },200);
-    setTimeout(()=>{clearInterval(autoClickerInterval);autoClickerInterval=null;},b.duration);
-  }
-  playSound("event");
-  save();
-  renderAll();
-}
-
-/* ---------- Golden cookie ---------- */
-
-let goldenTimer=null;
-function scheduleGoldenCookie(){
-  const delay=60000+Math.random()*60000;
-  goldenTimer=setTimeout(spawnGoldenCookie,delay);
-}
-function spawnGoldenCookie(){
-  const panel=document.getElementById("leftPanel");
-  const rect=panel.getBoundingClientRect();
-  const x=Math.random()*(rect.width-80)+10;
-  const y=Math.random()*(rect.height-80)+10;
-  const gc=document.createElement("div");
-  gc.className="golden-cookie";
-  gc.style.left=x+"px";
-  gc.style.top=y+"px";
-  gc.textContent="⭐";
-  panel.appendChild(gc);
-  gc.addEventListener("click",()=>{
-    gc.remove();
-    const mode=Math.random();
-    if(mode<0.33){
-      const bonus=Math.max(200,Math.floor(totalBaseCps()*20));
-      cookies+=bonus;totalCookiesEarned+=bonus;
-      spawnFloat("+"+fmt(bonus),rect.left+x+30,rect.top+y+30);
-    }else if(mode<0.66){
-      goldenMultiplier=2;
-      spawnFloat("CPS x2",rect.left+x+30,rect.top+y+30);
-      setTimeout(()=>{goldenMultiplier=1;renderStats();},15000);
-    }else{
-      goldenMultiplier=3;
-      spawnFloat("CPS x3",rect.left+x+30,rect.top+y+30);
-      setTimeout(()=>{goldenMultiplier=1;renderStats();},10000);
-    }
-    playSound("gold");
-    save();
-    renderAll();
-    scheduleGoldenCookie();
-  });
-  setTimeout(()=>{if(gc.parentNode){gc.remove();scheduleGoldenCookie();}},10000);
-}
-
-/* ---------- Offline ---------- */
-
-function saveTimestamp(){
-  lastSavedAt=Date.now();
-  localStorage.setItem(SAVE_KEY+"_ts",String(lastSavedAt));
-}
-
-function computeOfflineGain(){
-  try{
-    const raw=localStorage.getItem(SAVE_KEY+"_ts");
-    if(!raw)return{gain:0,elapsed:0};
-    const prev=parseInt(raw,10);
-    if(isNaN(prev))return{gain:0,elapsed:0};
-    const now=Date.now();
-    const elapsed=Math.max(0,now-prev);
-    const cap=MAX_OFFLINE_HOURS*3600*1000;
-    const used=Math.min(elapsed,cap);
-    const cps=totalCps();
-    const gain=Math.floor(cps*(used/1000)*0.5);
-    return{gain,elapsed:used};
-  }catch(e){return{gain:0,elapsed:0};}
-}
-
-/* ---------- Backups ---------- */
-
-function getBackups(){
-  try{
-    const raw=localStorage.getItem(BACKUP_HISTORY_KEY);
-    return raw?JSON.parse(raw):[];
-  }catch(e){return[];}
-}
-
-function pushBackup(rawJson){
-  try{
-    const list=getBackups();
-    list.unshift({ts:Date.now(),data:rawJson});
-    while(list.length>10)list.pop();
-    localStorage.setItem(BACKUP_HISTORY_KEY,JSON.stringify(list));
-  }catch(e){}
-}
-
-/* ---------- Save / Load (simple, robust) ---------- */
-
-function save(){
-  const data={
-    version:GAME_VERSION,
-    cookies,clickPower,owned,buildingMult,boughtUpgrades,
-    totalCookiesEarned,prestigeStars,prestigeUpgrades,
-    achievementsState,quests,
-    soundEnabled,autoBuyerEnabled,autoClipboardEnabled
-  };
-  try{
-    const raw=JSON.stringify(data);
-    localStorage.setItem(SAVE_KEY,raw);
-    pushBackup(raw);
-    saveTimestamp();
-    return true;
-  }catch(e){
-    console.warn("Save failed",e);
-    return false;
-  }
-}
-
-function load(){
-  try{
-    const raw=localStorage.getItem(SAVE_KEY);
-    if(!raw)return;
-    const data=JSON.parse(raw);
-    cookies=data.cookies||0;
-    clickPower=data.clickPower||1;
-    owned=Array.isArray(data.owned)&&data.owned.length===BUILDINGS.length?data.owned:new Array(BUILDINGS.length).fill(0);
-    buildingMult=Array.isArray(data.buildingMult)&&data.buildingMult.length===BUILDINGS.length?data.buildingMult:new Array(BUILDINGS.length).fill(1);
-    boughtUpgrades=Array.isArray(data.boughtUpgrades)?data.boughtUpgrades:[];
-    totalCookiesEarned=data.totalCookiesEarned||0;
-    prestigeStars=data.prestigeStars||0;
-    prestigeUpgrades=Array.isArray(data.prestigeUpgrades)?data.prestigeUpgrades:[];
-    achievementsState=data.achievementsState||{};
-    quests=Array.isArray(data.quests)?data.quests:quests;
-    soundEnabled=!!data.soundEnabled;
-    autoBuyerEnabled=!!data.autoBuyerEnabled;
-    autoClipboardEnabled=!!data.autoClipboardEnabled;
-  }catch(e){
-    console.warn("Load failed",e);
-  }
-}
-
-/* ---------- Auto-buyer ---------- */
-
-function autoBuyerTick(){
-  if(!autoBuyerEnabled)return;
-  let bestIndex=-1;
-  let bestScore=0;
-  for(let i=0;i<BUILDINGS.length;i++){
-    const cost=buildingCost(i);
-    if(cookies<cost)continue;
-    const gain=BUILDINGS[i].baseCps*(buildingMult[i]||1);
-    const score=gain/cost;
-    if(score>bestScore){bestScore=score;bestIndex=i;}
-  }
-  if(bestIndex>=0)buyBuilding(bestIndex);
-}
-
-/* ---------- Actions ---------- */
-
-function buyBuilding(i){
-  const cost=buildingCost(i);
-  if(cookies<cost)return;
-  cookies-=cost;
-  owned[i]=(owned[i]||0)+1;
-  totalCookiesEarned+=cost;
-  updateQuestProgress("buy",1);
-  playSound("click");
-  save();
-  renderAll();
-}
-
-function applyUpgradeEffect(u){
-  if(u.type==="click"){
-    clickPower+=u.value||1;
-  }else if(u.type==="building"){
-    buildingMult[u.buildingIndex]=(buildingMult[u.buildingIndex]||1)*(u.mult||1.2);
-  }
-}
-
-function buyUpgrade(u){
-  if(cookies<u.cost)return;
-  cookies-=u.cost;
-  boughtUpgrades.push(u.id);
-  totalCookiesEarned+=u.cost;
-  applyUpgradeEffect(u);
-  playSound("event");
-  save();
-  renderAll();
-}
-
-/* ---------- Events ---------- */
-
-const EVENTS=[
-  {id:"meteor",name:"Meteor Shower",apply:()=>{activeBoosts.push({type:"cpsMult",mult:1.1,expires:Date.now()+60000});showEventPopup("Meteor Shower: +10% CPS for 60s");}},
-  {id:"storm",name:"Lucky Storm",apply:()=>{for(let i=0;i<3;i++)setTimeout(spawnGoldenCookie,800*i);showEventPopup("Lucky Storm: golden cookies incoming!");}},
-  {id:"sale",name:"Flash Sale",apply:()=>{BUILDINGS.forEach(b=>b.baseCost=Math.floor(b.baseCost*0.9));showEventPopup("Flash Sale: buildings slightly cheaper this run.");}}
-];
-
-function scheduleRandomEvent(){
-  const delay=180000+Math.random()*240000;
-  setTimeout(()=>{
-    const ev=EVENTS[Math.floor(Math.random()*EVENTS.length)];
-    ev.apply();
-    playSound("event");
-    scheduleRandomEvent();
-  },delay);
-}
-
-function showEventPopup(text){
-  const root=document.getElementById("eventPopupRoot");
-  root.innerHTML="";
-  const el=document.createElement("div");
-  el.className="event-popup";
-  el.textContent=text;
-  root.appendChild(el);
-  setTimeout(()=>{root.innerHTML="";},6000);
-}
-
-/* ---------- Clipboard helpers ---------- */
-
-function exportSave(){
-  const raw=localStorage.getItem(SAVE_KEY);
-  if(!raw){alert("No save found.");return;}
-  const encoded=btoa(raw);
-  navigator.clipboard.writeText(encoded).then(()=>{
-    alert("Save copied to clipboard.");
-  }).catch(()=>{
-    prompt("Copy this save code:",encoded);
-  });
-}
-
-function importSave(){
-  const code=prompt("Paste your save code:");
-  if(!code)return;
-  try{
-    const json=atob(code.trim());
-    localStorage.setItem(SAVE_KEY,json);
-    load();
-    renderAll();
-    alert("Save imported.");
-  }catch(e){
-    alert("Invalid save code.");
-  }
-}
-
-/* ---------- Wipe ---------- */
-
-function wipeAll(){
-  if(!confirm("Wipe ALL local data for this game? This cannot be undone."))return;
-  const raw=localStorage.getItem(SAVE_KEY);
-  if(raw)pushBackup(raw);
-  localStorage.removeItem(SAVE_KEY);
-  localStorage.removeItem(SAVE_KEY+"_ts");
-  localStorage.removeItem(SAVE_KEY+"_leader");
-  localStorage.removeItem(SAVE_KEY+"_quests");
-  localStorage.removeItem(SAVE_KEY+"_quests_date");
-  cookies=0;clickPower=1;owned=new Array(BUILDINGS.length).fill(0);buildingMult=new Array(BUILDINGS.length).fill(1);
-  boughtUpgrades=[];totalCookiesEarned=0;prestigeStars=0;prestigeUpgrades=[];achievementsState={};
-  generateDailyQuests();
-  toast("All local data wiped (backup kept).");
-  save();
-  renderAll();
-}
-
-/* ---------- Autosave ---------- */
-
-setInterval(()=>{save();},AUTOSAVE_INTERVAL_MS);
-
-/* ---------- CPS tick ---------- */
-
-setInterval(()=>{
-  const cps=totalCps();
-  cookies+=cps/10;
-  totalCookiesEarned+=cps/10;
-  renderStats();
-},100);
-
-/* ---------- Auto-buyer tick ---------- */
-
-setInterval(()=>{autoBuyerTick();},1000);
-
-/* ---------- Init ---------- */
-
-function initArrays(){
-  if(!Array.isArray(owned)||owned.length!==BUILDINGS.length)owned=new Array(BUILDINGS.length).fill(0);
-  if(!Array.isArray(buildingMult)||buildingMult.length!==BUILDINGS.length)buildingMult=new Array(BUILDINGS.length).fill(1);
-}
-initArrays();
-generateDailyQuests();
-load();
-
-const offline=computeOfflineGain();
-if(offline.gain>0){
-  cookies+=offline.gain;
-  totalCookiesEarned+=offline.gain;
-  toast("Offline reward: "+fmt(offline.gain));
-}
-renderAll();
-scheduleGoldenCookie();
-scheduleRandomEvent();
-
-/* ---------- UI wiring ---------- */
-
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click",()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
-    const which=tab.dataset.tab;
-    ["buildings","upgrades","boosts","quests","rush","leaderboard","settings"].forEach(id=>{
-      document.getElementById("panel-"+id).style.display=(id===which)?"":"none";
-    });
-  });
-});
-
-const cookieBtn=document.getElementById("cookieBtn");
-cookieBtn.addEventListener("click",e=>{
-  const now=Date.now();
-  if(now-lastClickAt<CLICK_RATE_LIMIT_MS)return;
-  lastClickAt=now;
-  cookies+=clickPower;
-  totalCookiesEarned+=clickPower;
-  updateQuestProgress("click",1);
-  const rect=cookieBtn.getBoundingClientRect();
-  spawnFloat("+"+clickPower,rect.left+rect.width/2,rect.top+rect.height/2);
-  playSound("click");
-  if(rushActive){
-    rushScore++;
-    document.getElementById("rushScore").textContent="Rush score: "+rushScore;
-  }
-  save();
-  renderStats();
-});
-
-document.getElementById("rushBtn").addEventListener("click",()=>{
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  document.querySelector('.tab[data-tab="rush"]').classList.add("active");
-  ["buildings","upgrades","boosts","quests","rush","leaderboard","settings"].forEach(id=>{
-    document.getElementById("panel-"+id).style.display=(id==="rush")?"":"none";
-  });
-});
-
-document.getElementById("startRushBtn").addEventListener("click",startRush);
-document.getElementById("submitRushBtn").addEventListener("click",()=>{
-  const name=document.getElementById("leaderName").value.trim()||"Anon";
-  submitLeaderboard(name,rushScore);
-  toast("Score submitted");
-});
-
-document.getElementById("exportBtn").addEventListener("click",exportSave);
-document.getElementById("importBtn").addEventListener("click",importSave);
-document.getElementById("resetBtn").addEventListener("click",()=>{
-  if(!confirm("Reset this run (keep stars)?"))return;
-  cookies=0;clickPower=1;owned=new Array(BUILDINGS.length).fill(0);buildingMult=new Array(BUILDINGS.length).fill(1);
-  boughtUpgrades=[];totalCookiesEarned=0;
-  save();renderAll();
-});
-
-document.getElementById("soundToggle").addEventListener("change",e=>{
-  soundEnabled=e.target.checked;
-  save();
-});
-document.getElementById("autoBuyerToggle").addEventListener("change",e=>{
-  autoBuyerEnabled=e.target.checked;
-  save();
-});
-document.getElementById("autoClipboardToggle").addEventListener("change",e=>{
-  autoClipboardEnabled=e.target.checked;
-  save();
-});
-
-document.getElementById("wipeAllBtn").addEventListener("click",wipeAll);
-
-/* ---------- End ---------- */
-</script>
-</body>
-</html>
+  document.getElementById("rushScore").textContent="Rush score: "+rushScore+" →
