@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Cookie Clicker+ by Jai — Big Content Edition</title>
+<title>Cookie Clicker+ by Jai — Massive Edition</title>
 <link rel="icon" href="data:,">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -75,7 +75,7 @@ body{
   <div class="header">
     <div>
       <div class="title">Cookie Clicker+ by Jai</div>
-      <div class="subtitle" id="subtitle">Big content • Anti‑macro • Autosave every 10s</div>
+      <div class="subtitle" id="subtitle">Massive content • Anti‑macro • Autosave every 10s</div>
     </div>
     <div class="controls">
       <button class="ctrl-btn" id="exportBtn">Export</button>
@@ -189,7 +189,7 @@ body{
 <div id="toastRoot"></div>
 
 <script>
-const GAME_VERSION = "cc-plus-jai-big-content-v1";
+const GAME_VERSION = "cc-plus-jai-massive-v1";
 const REPO = (window.location.pathname.split("/")[1] || "default").toLowerCase();
 const SAVE_KEY = REPO + "_cookie_clicker_plus_save";
 const BACKUP_HISTORY_KEY = SAVE_KEY + "_backups";
@@ -241,8 +241,8 @@ function applySkin(id){
   });
 }
 
-/* ---------- Big content definitions (buildings, boosts, upgrades, achievements, quests) continue in PART 2 ---------- */
-/* ---------- Buildings (lots) ---------- */
+/* ---------- Massive content (buildings, boosts, upgrades, achievements, quests, systems) continues in PART 2 ---------- */
+/* ---------- MASSIVE BUILDINGS LIST ---------- */
 
 const BUILDINGS = [
   {id:0, name:"Cursor", icon:"👆", baseCost:50, baseCps:0.1},
@@ -258,16 +258,23 @@ const BUILDINGS = [
   {id:10, name:"Galaxy Oven", icon:"🌌", baseCost:9000000000000, baseCps:9000000},
   {id:11, name:"Quantum Chef", icon:"🧪", baseCost:60000000000000, baseCps:60000000},
   {id:12, name:"Black Hole Kitchen", icon:"🕳️", baseCost:300000000000000, baseCps:300000000},
+
+  /* MASSIVE NEW CONTENT */
   {id:13, name:"Stellar Mixer", icon:"⭐", baseCost:1e16, baseCps:1.5e9},
   {id:14, name:"Nebula Mill", icon:"🌠", baseCost:5e16, baseCps:7e9},
   {id:15, name:"Dark Matter Oven", icon:"⚫", baseCost:2e17, baseCps:3.5e10},
   {id:16, name:"Singularity Kitchen", icon:"♾️", baseCost:1e18, baseCps:2e11},
   {id:17, name:"Multiverse Bakery", icon:"🌐", baseCost:5e18, baseCps:1e12},
   {id:18, name:"Reality Bender", icon:"🌀", baseCost:2e19, baseCps:5e12},
-  {id:19, name:"Chrono Oven", icon:"⌛", baseCost:1e20, baseCps:2.5e13}
+  {id:19, name:"Chrono Oven", icon:"⌛", baseCost:1e20, baseCps:2.5e13},
+  {id:20, name:"Entropy Reactor", icon:"🔥", baseCost:8e20, baseCps:1e14},
+  {id:21, name:"Infinity Forge", icon:"💠", baseCost:3e21, baseCps:5e14},
+  {id:22, name:"Cosmic Loom", icon:"🧵", baseCost:1e22, baseCps:2e15},
+  {id:23, name:"Star Core", icon:"🌟", baseCost:5e22, baseCps:1e16},
+  {id:24, name:"Eternity Engine", icon:"♨️", baseCost:2e23, baseCps:5e16}
 ];
 
-/* ---------- Boosts ---------- */
+/* ---------- BOOSTS (balanced) ---------- */
 
 const BOOSTS = [
   { id:"cpsSmall", name:"+20% CPS (12s)", type:"cpsMult", mult:1.2, duration:12000, cost:5000 },
@@ -279,42 +286,42 @@ const BOOSTS = [
   { id:"hyperClick", name:"Hyper Click x5 (6s)", type:"clickMult", mult:5, duration:6000, cost:50000 }
 ];
 
-/* ---------- Upgrades (lots) ---------- */
+/* ---------- UPGRADES (hundreds) ---------- */
 
 let UPGRADES = [];
 function generateUpgrades(){
   UPGRADES = [];
   let id = 0;
 
-  // Click upgrades
-  for(let i=1;i<=40;i++){
+  /* CLICK UPGRADES */
+  for(let i=1;i<=60;i++){
     UPGRADES.push({
       id:id++,
       type:"click",
       name:`Click Boost ${i}`,
       desc:`Increase click power`,
-      cost:Math.floor(150*Math.pow(1.85,i)),
+      cost:Math.floor(200*Math.pow(1.85,i)),
       value:1+Math.floor(i/2)
     });
   }
 
-  // Building upgrades (3 per building, then more)
+  /* BUILDING UPGRADES */
   BUILDINGS.forEach((b,bi)=>{
-    for(let t=1;t<=8;t++){
+    for(let t=1;t<=12;t++){
       UPGRADES.push({
         id:id++,
         type:"building",
         buildingIndex:bi,
         name:`${b.name} Upgrade ${t}`,
         desc:`${b.name} CPS x${(1+0.3*t).toFixed(2)}`,
-        cost:Math.floor(b.baseCost*Math.pow(2.2,t)),
+        cost:Math.floor(b.baseCost*Math.pow(2.25,t)),
         mult:1+0.3*t
       });
     }
   });
 
-  // Global CPS upgrades
-  for(let g=1;g<=20;g++){
+  /* GLOBAL UPGRADES */
+  for(let g=1;g<=25;g++){
     UPGRADES.push({
       id:id++,
       type:"global",
@@ -325,8 +332,8 @@ function generateUpgrades(){
     });
   }
 
-  // Prestige upgrades (stars)
-  for(let p=1;p<=15;p++){
+  /* PRESTIGE UPGRADES */
+  for(let p=1;p<=20;p++){
     UPGRADES.push({
       id:id++,
       type:"prestige",
@@ -340,7 +347,7 @@ function generateUpgrades(){
 }
 generateUpgrades();
 
-/* ---------- Achievements (many) ---------- */
+/* ---------- ACHIEVEMENTS (lots) ---------- */
 
 const ACHIEVEMENTS = [
   {id:"a1",name:"First Click",desc:"Click once",check:()=>totalCookiesEarned>=1},
@@ -370,7 +377,7 @@ function checkAchievements(){
   });
 }
 
-/* ---------- Quests ---------- */
+/* ---------- QUESTS ---------- */
 
 function generateDailyQuests(){
   const today=new Date().toISOString().slice(0,10);
@@ -390,7 +397,6 @@ function generateDailyQuests(){
   localStorage.setItem(key,today);
   localStorage.setItem(SAVE_KEY+"_quests",JSON.stringify(quests));
 }
-
 function updateQuestProgress(type,amount=1){
   let changed=false;
   quests.forEach(q=>{
@@ -421,6 +427,7 @@ function claimQuest(id){
 /* ---------- Utility ---------- */
 
 function fmt(n){
+  if(n>=1e21) return (n/1e21).toFixed(2)+"Sx";
   if(n>=1e18) return (n/1e18).toFixed(2)+"E";
   if(n>=1e15) return (n/1e15).toFixed(2)+"Q";
   if(n>=1e12) return (n/1e12).toFixed(2)+"T";
@@ -537,9 +544,12 @@ function renderBuildings(){
 function renderUpgrades(){
   const root=document.getElementById("upgradesList");
   root.innerHTML="";
-  const visible=UPGRADES.filter(u=>!boughtUpgrades.includes(u.id)).sort((a,b)=>a.cost-b.cost).slice(0,120);
+  const visible=UPGRADES
+    .filter(u=>!boughtUpgrades.includes(u.id))
+    .sort((a,b)=>a.cost-b.cost)
+    .slice(0,160);
   visible.forEach(u=>{
-    const can=cookies>=u.cost && (!u.prestige || prestigeStars>=u.cost);
+    const can=!u.prestige ? cookies>=u.cost : prestigeStars>=u.cost;
     const card=document.createElement("div");
     card.className="card"+(can?"":" locked");
     card.addEventListener("click",()=>buyUpgrade(u));
@@ -665,67 +675,52 @@ function addCombo(){
   },120);
 }
 
-/* ---------- Click handling (anti‑macro) ---------- */
-// NEW anti‑macro that NEVER blocks normal clicking
-function canRegisterClick() {
-  const now = Date.now();
+/* ---------- Anti‑macro + click handler (Chromebook‑safe) ---------- */
 
-  // Reset window every second
-  if (now - clickWindow.ts > 1000) {
-    clickWindow.ts = now;
-    clickWindow.count = 0;
+let lastClickAt = 0;
+
+function canRegisterClick(){
+  const now=Date.now();
+  if(now-clickWindow.ts>1000){
+    clickWindow.ts=now;
+    clickWindow.count=0;
   }
-
-  // Allow up to MAX_CLICKS_PER_SECOND real clicks
-  if (clickWindow.count >= MAX_CLICKS_PER_SECOND) {
-    return false; // too fast = macro
-  }
-
+  if(clickWindow.count>=MAX_CLICKS_PER_SECOND) return false;
   clickWindow.count++;
-  lastClickAt = now;
+  lastClickAt=now;
   return true;
 }
 
-// NEW universal click handler (Chromebook‑safe)
-function handleCookieClick(ev) {
-  // Anti‑macro
-  if (!canRegisterClick()) return;
+function handleCookieClick(ev){
+  if(!canRegisterClick()) return;
 
-  // Calculate click power
-  const comboMult = 1 + (comboValue / 100) * 0.5;
+  const comboMult = 1 + (comboValue/100)*0.5;
   let power = clickPower * comboMult;
+  activeBoosts.forEach(b=>{if(b.type==="clickMult") power*=b.mult;});
 
-  // Apply click boosts
-  activeBoosts.forEach(b => {
-    if (b.type === "clickMult") power *= b.mult;
-  });
+  cookies+=power;
+  totalCookiesEarned+=power;
 
-  cookies += power;
-  totalCookiesEarned += power;
-
-  updateQuestProgress("click", 1);
-  updateQuestProgress("earn", power);
+  updateQuestProgress("click",1);
+  updateQuestProgress("earn",power);
 
   addCombo();
   renderStats();
 
-  // Floating text position
-  const rect = cookieBtn.getBoundingClientRect();
-  const x = ev.clientX || (rect.left + rect.width / 2);
-  const y = ev.clientY || (rect.top + rect.height / 2);
-  spawnFloat("+" + fmt(power), x, y);
+  const rect=document.getElementById("cookieBtn").getBoundingClientRect();
+  const x=ev.clientX || (rect.left+rect.width/2);
+  const y=ev.clientY || (rect.top+rect.height/2);
+  spawnFloat("+"+fmt(power),x,y);
 
-  // Crack animation
-  if (crackEnabled) {
-    const crack = document.getElementById("cookieCrack");
+  if(crackEnabled){
+    const crack=document.getElementById("cookieCrack");
     crack.classList.add("show");
-    setTimeout(() => crack.classList.remove("show"), 120);
+    setTimeout(()=>crack.classList.remove("show"),120);
   }
 
   playSound("click");
   checkAchievements();
 }
-
 
 /* ---------- Buying ---------- */
 
@@ -785,7 +780,7 @@ function buyBoost(b){
     const end=Date.now()+b.duration;
     const autoId=setInterval(()=>{
       if(Date.now()>end){clearInterval(autoId);return;}
-      handleCookieClick({currentTarget:document.getElementById("cookieBtn"),clientX:window.innerWidth/2,clientY:window.innerHeight/2});
+      handleCookieClick({clientX:window.innerWidth/2,clientY:window.innerHeight/2});
     },120);
   }
   renderStats();
@@ -814,7 +809,6 @@ function doPrestige(){
   save();
   renderAll();
 }
-
 /* ---------- Autosave / storage ---------- */
 
 function getBackups(){
@@ -909,9 +903,9 @@ function exportSave(){
   const raw=localStorage.getItem(SAVE_KEY);
   if(!raw){toast("No save to export.");return;}
   if(navigator.clipboard){
-    navigator.clipboard.writeText(raw).then(()=>toast("Save copied to clipboard."),()=>toast("Copy failed, but save exists in storage."));
+    navigator.clipboard.writeText(raw).then(()=>toast("Save copied to clipboard."),()=>toast("Copy failed."));
   }else{
-    toast("Clipboard not available, but save exists in storage.");
+    toast("Clipboard not available.");
   }
 }
 
@@ -930,7 +924,7 @@ function importSave(){
 }
 
 function softReset(){
-  if(!confirm("Soft reset? This keeps stars but wipes cookies, buildings, upgrades."))return;
+  if(!confirm("Soft reset? Keeps stars but wipes cookies, buildings, upgrades."))return;
   cookies=0;
   clickPower=1;
   owned=Array(BUILDINGS.length).fill(0);
@@ -939,27 +933,6 @@ function softReset(){
   totalCookiesEarned=0;
   save();
   renderAll();
-}
-
-/* ---------- Settings ---------- */
-
-function renderSettings(){
-  document.getElementById("soundToggle").checked=soundEnabled;
-  document.getElementById("autoBuyerToggle").checked=autoBuyerEnabled;
-  document.getElementById("autoClipboardToggle").checked=autoClipboardEnabled;
-  document.getElementById("crackToggle").checked=crackEnabled;
-  document.getElementById("backupCount").textContent=getBackups().length;
-
-  const skinsRow=document.getElementById("skinsRow");
-  skinsRow.innerHTML="";
-  SKINS.forEach(s=>{
-    const pill=document.createElement("div");
-    pill.className="skin-pill"+(currentSkin===s.id?" active":"");
-    pill.dataset.skin=s.id;
-    pill.textContent=s.name;
-    pill.addEventListener("click",()=>{applySkin(s.id);save();});
-    skinsRow.appendChild(pill);
-  });
 }
 
 /* ---------- Tabs ---------- */
@@ -980,9 +953,10 @@ function autoBuyerTick(){
   if(!autoBuyerEnabled)return;
   const cps=totalCps();
   if(cps<=0)return;
-  // buy cheapest building we can afford that increases cps
+
   let bestIndex=-1;
   let bestCost=Infinity;
+
   for(let i=0;i<BUILDINGS.length;i++){
     const cost=buildingCost(i);
     if(cookies>=cost && cost<bestCost){
@@ -990,6 +964,7 @@ function autoBuyerTick(){
       bestIndex=i;
     }
   }
+
   if(bestIndex>=0) buyBuilding(bestIndex);
 }
 
@@ -1009,9 +984,7 @@ setInterval(mainLoop,100);
 
 /* ---------- Autosave timer ---------- */
 
-setInterval(()=>{
-  save();
-},AUTOSAVE_INTERVAL_MS);
+setInterval(()=>save(),AUTOSAVE_INTERVAL_MS);
 
 /* ---------- Init ---------- */
 
@@ -1023,8 +996,12 @@ function init(){
   renderAll();
 
   const cookieBtn=document.getElementById("cookieBtn");
-  cookieBtn.addEventListener("click",handleCookieClick);
-  cookieBtn.addEventListener("touchstart",e=>{e.preventDefault();handleCookieClick(e.touches[0]||e);},{passive:false});
+
+  cookieBtn.addEventListener("mousedown",handleCookieClick);
+  cookieBtn.addEventListener("touchstart",e=>{
+    e.preventDefault();
+    handleCookieClick(e.touches[0]||e);
+  },{passive:false});
 
   document.getElementById("exportBtn").addEventListener("click",exportSave);
   document.getElementById("importBtn").addEventListener("click",importSave);
@@ -1034,8 +1011,9 @@ function init(){
   document.getElementById("autoBuyerToggle").addEventListener("change",e=>{autoBuyerEnabled=e.target.checked;save();});
   document.getElementById("autoClipboardToggle").addEventListener("change",e=>{autoClipboardEnabled=e.target.checked;save();});
   document.getElementById("crackToggle").addEventListener("change",e=>{crackEnabled=e.target.checked;save();});
+
   document.getElementById("wipeAllBtn").addEventListener("click",()=>{
-    if(!confirm("Wipe all local data? Backup will be kept."))return;
+    if(!confirm("Wipe ALL local data? Backup will be kept."))return;
     const raw=localStorage.getItem(SAVE_KEY);
     if(raw)pushBackup(raw);
     localStorage.removeItem(SAVE_KEY);
@@ -1044,9 +1022,6 @@ function init(){
   });
 
   document.getElementById("prestigeBtn").addEventListener("click",doPrestige);
-  document.getElementById("rushBtn").addEventListener("click",()=>{
-    toast("Rush mode not implemented in this build yet (content‑only edition).");
-  });
 
   checkAchievements();
 }
